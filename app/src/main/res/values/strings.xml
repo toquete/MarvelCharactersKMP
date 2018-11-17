@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Marvel Characters</string>
+    <string name="search_hint">Search Marvel characters</string>
 </resources>
