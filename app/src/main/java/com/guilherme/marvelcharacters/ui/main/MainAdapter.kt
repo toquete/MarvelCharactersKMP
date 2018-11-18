@@ -7,9 +7,8 @@ import android.view.ViewGroup
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.databinding.ItemListBinding
-import com.guilherme.marvelcharacters.infrastructure.AdapterItemsContract
 
-class MainAdapter(private var characters: List<Character>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), AdapterItemsContract {
+class MainAdapter(private var characters: List<Character>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding = DataBindingUtil.inflate<ItemListBinding>(LayoutInflater.from(parent.context),
@@ -22,11 +21,6 @@ class MainAdapter(private var characters: List<Character>) : RecyclerView.Adapte
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as BindingHolder).bind(characters[position].name)
-    }
-
-    override fun replaceItems(list: List<Any>) {
-        characters = list as List<Character>
-        notifyDataSetChanged()
     }
 
     inner class BindingHolder(private val binding: ItemListBinding) : RecyclerView.ViewHolder(binding.root) {
