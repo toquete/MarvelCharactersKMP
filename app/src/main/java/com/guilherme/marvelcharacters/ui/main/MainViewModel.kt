@@ -2,49 +2,46 @@ package com.guilherme.marvelcharacters.ui.main
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.databinding.ObservableBoolean
-import android.databinding.ObservableField
 import com.guilherme.marvelcharacters.BaseViewModel
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
-import com.guilherme.marvelcharacters.data.repository.CharacterRequestException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.lang.Exception
+import kotlin.coroutines.CoroutineContext
 
-class MainViewModel(private val characterRepository: CharacterRepository) : BaseViewModel() {
+class MainViewModel(
+    private val characterRepository: CharacterRepository,
+    coroutineContext: CoroutineContext
+) : BaseViewModel(coroutineContext) {
 
-    val isLoading = ObservableBoolean(false)
-
-    val isEmpty = ObservableBoolean(true)
-
-    val message = ObservableField<String>("Use the search box above!")
-
-    private val _characters = MutableLiveData<List<Character>>()
-
-    val characters: LiveData<List<Character>>
-        get() = _characters
+    private val _states = MutableLiveData<CharacterListState>()
+    val states: LiveData<CharacterListState>
+        get() = _states
 
     override val uiScope: CoroutineScope
         get() = super.uiScope
 
     fun onSearchCharacter(character: String) {
         uiScope.launch {
+            _states.value = CharacterListState.LoadingState
             try {
-                isLoading.set(true)
-                isEmpty.set(false)
                 val charactersList = characterRepository.getCharacters(character)
-                _characters.value = charactersList
-
-                if (charactersList.isEmpty()) {
-                    message.set("No characters with that name. Try again!")
-                    isEmpty.set(true)
+                _states.value = if (charactersList.isEmpty()) {
+                    CharacterListState.EmptyState("No characters with that name. Try again!")
+                } else {
+                    CharacterListState.Characters(charactersList)
                 }
-            } catch (error: CharacterRequestException) {
-                message.set(error.message)
-                isEmpty.set(true)
-            } finally {
-                isLoading.set(false)
+            } catch (error: Exception) {
+                _states.value = CharacterListState.ErrorState(error)
             }
         }
+    }
+
+    sealed class CharacterListState {
+        data class Characters(val characters: List<Character>) : CharacterListState()
+        data class ErrorState(val error: Exception) : CharacterListState()
+        data class EmptyState(val message: String) : CharacterListState()
+        object LoadingState : CharacterListState()
     }
 }
