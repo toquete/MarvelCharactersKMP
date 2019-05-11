@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
                 when (state) {
                     is MainViewModel.CharacterListState.LoadingState -> showLoading()
                     is MainViewModel.CharacterListState.Characters -> showCharacters(state.characters)
-                    is MainViewModel.CharacterListState.EmptyState -> showEmptyState(state.message)
+                    is MainViewModel.CharacterListState.EmptyState -> showEmptyState()
                     is MainViewModel.CharacterListState.ErrorState -> showError(state.error)
                 }
             }
@@ -79,9 +79,9 @@ class MainActivity : AppCompatActivity() {
         progressbar.visibility = View.GONE
     }
 
-    private fun showEmptyState(message: String) {
+    private fun showEmptyState() {
         hideLoading()
-        textview_message.text = message
+        textview_message.text = applicationContext.getString(R.string.empty_state_message)
         textview_message.visibility = View.VISIBLE
     }
 

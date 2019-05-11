@@ -28,7 +28,7 @@ class MainViewModel(
             try {
                 val charactersList = characterRepository.getCharacters(character)
                 _states.value = if (charactersList.isEmpty()) {
-                    CharacterListState.EmptyState("No characters with that name. Try again!")
+                    CharacterListState.EmptyState
                 } else {
                     CharacterListState.Characters(charactersList)
                 }
@@ -41,7 +41,7 @@ class MainViewModel(
     sealed class CharacterListState {
         data class Characters(val characters: List<Character>) : CharacterListState()
         data class ErrorState(val error: Exception) : CharacterListState()
-        data class EmptyState(val message: String) : CharacterListState()
+        object EmptyState : CharacterListState()
         object LoadingState : CharacterListState()
     }
 }
