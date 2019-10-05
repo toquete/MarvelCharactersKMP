@@ -14,7 +14,6 @@ class CharacterRepositoryImpl(private val api: Api) : CharacterRepository {
         val hash = String(Hex.encodeHex(DigestUtils.md5(ts + BuildConfig.MARVEL_PRIVATE_KEY + BuildConfig.MARVEL_KEY)))
 
         api.getCharacters(ts, hash, BuildConfig.MARVEL_KEY, name)
-            .await()
             .container
             .characters
     }
