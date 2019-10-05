@@ -19,12 +19,16 @@ class MainViewModel(
     val states: LiveData<CharacterListState>
         get() = _states
 
+    private val _showLoading = MutableLiveData<Boolean>()
+    val showLoading: LiveData<Boolean>
+        get() = _showLoading
+
     override val uiScope: CoroutineScope
         get() = super.uiScope
 
     fun onSearchCharacter(character: String) {
         uiScope.launch {
-            _states.value = CharacterListState.LoadingState
+            _showLoading.value = true
             try {
                 val charactersList = characterRepository.getCharacters(character)
                 _states.value = if (charactersList.isEmpty()) {
@@ -34,6 +38,8 @@ class MainViewModel(
                 }
             } catch (error: Exception) {
                 _states.value = CharacterListState.ErrorState(error)
+            } finally {
+                _showLoading.value = false
             }
         }
     }
@@ -42,6 +48,5 @@ class MainViewModel(
         data class Characters(val characters: List<Character>) : CharacterListState()
         data class ErrorState(val error: Exception) : CharacterListState()
         object EmptyState : CharacterListState()
-        object LoadingState : CharacterListState()
     }
 }
