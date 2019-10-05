@@ -1,34 +1,24 @@
 package com.guilherme.marvelcharacters.ui.main
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.data.model.Character
-import com.guilherme.marvelcharacters.data.repository.CharacterRepositoryImpl
-import com.guilherme.marvelcharacters.data.source.remote.RetrofitFactory
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.Dispatchers
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: MainViewModel
+    private val mainViewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val api = RetrofitFactory.makeRetrofitService()
-        val characterRepository = CharacterRepositoryImpl(api)
-
-        viewModel = ViewModelProviders.of(
-            this, MainViewModelFactory(characterRepository, Dispatchers.Main)
-        ).get(MainViewModel::class.java)
-
-        viewModel.states.observe(this, Observer { state ->
+        mainViewModel.states.observe(this, Observer { state ->
             state?.let {
                 when (state) {
                     is MainViewModel.CharacterListState.Characters -> showCharacters(state.characters)
@@ -38,11 +28,11 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.showLoading.observe(this, Observer { mustShowLoading ->
+        mainViewModel.showLoading.observe(this, Observer { mustShowLoading ->
             mustShowLoading?.let { handleLoading(it) }
         })
 
-        button.setOnClickListener { viewModel.onSearchCharacter(editText.text.toString()) }
+        button.setOnClickListener { mainViewModel.onSearchCharacter(editText.text.toString()) }
     }
 
     private fun showError(error: Exception) {
