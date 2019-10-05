@@ -55,12 +55,11 @@ class MainViewModelTest {
 
         viewModel.onSearchCharacter("spider")
 
-        verify(statesObserver, times(2)).onChanged(statesCaptor.capture())
+        verify(statesObserver).onChanged(statesCaptor.capture())
 
         with(statesCaptor.allValues) {
-            assertEquals(2, this.size)
-            assertEquals(MainViewModel.CharacterListState.LoadingState, this[0])
-            assertEquals(MainViewModel.CharacterListState.Characters(characterList), this[1])
+            assertEquals(1, this.size)
+            assertEquals(MainViewModel.CharacterListState.Characters(characterList), this[0])
         }
     }
 
@@ -72,12 +71,11 @@ class MainViewModelTest {
 
         viewModel.onSearchCharacter("spider")
 
-        verify(statesObserver, times(2)).onChanged(statesCaptor.capture())
+        verify(statesObserver).onChanged(statesCaptor.capture())
 
         with(statesCaptor.allValues) {
-            assertEquals(2, this.size)
-            assertEquals(MainViewModel.CharacterListState.LoadingState, this[0])
-            assertEquals(MainViewModel.CharacterListState.EmptyState, this[1])
+            assertEquals(1, this.size)
+            assertEquals(MainViewModel.CharacterListState.EmptyState, this[0])
         }
     }
 
@@ -88,12 +86,11 @@ class MainViewModelTest {
 
         viewModel.onSearchCharacter("spider")
 
-        verify(statesObserver, times(2)).onChanged(statesCaptor.capture())
+        verify(statesObserver).onChanged(statesCaptor.capture())
 
         with(statesCaptor.allValues) {
-            assertEquals(2, this.size)
-            assertEquals(MainViewModel.CharacterListState.LoadingState, this[0])
-            assertEquals(MainViewModel.CharacterListState.ErrorState(exception), this[1])
+            assertEquals(1, this.size)
+            assertEquals(MainViewModel.CharacterListState.ErrorState(exception), this[0])
         }
     }
 }
