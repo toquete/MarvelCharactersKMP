@@ -1,9 +1,11 @@
-package com.guilherme.marvelcharacters.ui.main
+package com.guilherme.marvelcharacters.ui.home
 
 import androidx.test.espresso.intent.rule.IntentsTestRule
 import com.guilherme.marvelcharacters.BaseTest
+import com.guilherme.marvelcharacters.MainActivity
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.model.Container
+import com.guilherme.marvelcharacters.data.model.Image
 import com.guilherme.marvelcharacters.data.model.Result
 import io.mockk.coEvery
 import org.junit.Rule
@@ -18,7 +20,7 @@ class MainActivityTest : BaseTest() {
     fun searchCharacter() {
         coEvery { api.getCharacters(any(), any(), any(), any()) } returns Result(
             container = Container(
-                characters = listOf(Character(id = 1, name = "Spider-Man", description = "xablau"))
+                characters = listOf(Character(id = 1, name = "Spider-Man", description = "xablau", thumbnail = Image("", "")))
             )
         )
 

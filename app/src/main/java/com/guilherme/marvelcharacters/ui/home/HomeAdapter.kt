@@ -1,4 +1,4 @@
-package com.guilherme.marvelcharacters.ui.main
+package com.guilherme.marvelcharacters.ui.home
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -8,7 +8,10 @@ import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.databinding.ItemListBinding
 
-class MainAdapter(private var characters: List<Character>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class HomeAdapter(
+    private val characters: List<Character>,
+    private val onClickListener: (Character) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false)
@@ -19,10 +22,13 @@ class MainAdapter(private var characters: List<Character>) : RecyclerView.Adapte
     override fun getItemCount() = characters.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as BindingHolder).binding.textviewCharacter.text = characters[position].name
+        with(holder as BindingHolder){
+            binding.textviewCharacter.text = characters[position].name
+            binding.textviewCharacter.setOnClickListener { onClickListener(characters[position]) }
+        }
     }
 
     inner class BindingHolder(item: View) : RecyclerView.ViewHolder(item) {
-        val binding = ItemListBinding.bind(item)
+        val binding: ItemListBinding = ItemListBinding.bind(item)
     }
 }

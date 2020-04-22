@@ -3,9 +3,10 @@ package com.guilherme.marvelcharacters
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.guilherme.marvelcharacters.data.model.Character
+import com.guilherme.marvelcharacters.data.model.Image
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
 import com.guilherme.marvelcharacters.infrastructure.TestCoroutineRule
-import com.guilherme.marvelcharacters.ui.main.MainViewModel
+import com.guilherme.marvelcharacters.ui.home.HomeViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.RelaxedMockK
@@ -16,12 +17,12 @@ import org.junit.Rule
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class MainViewModelTest {
+class HomeViewModelTest {
 
-    lateinit var viewModel: MainViewModel
+    lateinit var viewModel: HomeViewModel
 
     @RelaxedMockK
-    lateinit var statesObserver: Observer<MainViewModel.CharacterListState>
+    lateinit var statesObserver: Observer<HomeViewModel.CharacterListState>
 
     @RelaxedMockK
     lateinit var characterRepository: CharacterRepository
@@ -35,21 +36,21 @@ class MainViewModelTest {
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-        viewModel = MainViewModel(characterRepository, testCoroutineRule.testCoroutineDispatcher).apply {
+        viewModel = HomeViewModel(characterRepository, testCoroutineRule.testCoroutineDispatcher).apply {
             states.observeForever(statesObserver)
         }
     }
 
     @Test
     fun onSearchCharacter_getCharacterList_success() = testCoroutineRule.runBlockingTest {
-        val character = Character(0, "Spider-Man", "The Amazing Spider-Man")
+        val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
         val characterList = listOf(character)
 
         coEvery { characterRepository.getCharacters(any()) } returns characterList
 
         viewModel.onSearchCharacter("spider")
 
-        verify { statesObserver.onChanged(MainViewModel.CharacterListState.Characters(characterList)) }
+        verify { statesObserver.onChanged(HomeViewModel.CharacterListState.Characters(characterList)) }
     }
 
     @Test
@@ -60,7 +61,7 @@ class MainViewModelTest {
 
         viewModel.onSearchCharacter("spider")
 
-        verify { statesObserver.onChanged(MainViewModel.CharacterListState.EmptyState) }
+        verify { statesObserver.onChanged(HomeViewModel.CharacterListState.EmptyState) }
     }
 
     @Test
@@ -70,6 +71,6 @@ class MainViewModelTest {
 
         viewModel.onSearchCharacter("spider")
 
-        verify { statesObserver.onChanged(MainViewModel.CharacterListState.ErrorState(exception)) }
+        verify { statesObserver.onChanged(HomeViewModel.CharacterListState.ErrorState(exception)) }
     }
 }

@@ -1,4 +1,4 @@
-package com.guilherme.marvelcharacters.ui.main
+package com.guilherme.marvelcharacters.ui.home
 
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView

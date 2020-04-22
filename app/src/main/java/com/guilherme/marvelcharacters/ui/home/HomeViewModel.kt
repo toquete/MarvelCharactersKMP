@@ -1,4 +1,4 @@
-package com.guilherme.marvelcharacters.ui.main
+package com.guilherme.marvelcharacters.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
-class MainViewModel(
+class HomeViewModel(
     private val characterRepository: CharacterRepository,
     coroutineContext: CoroutineContext
 ) : BaseViewModel(coroutineContext) {
