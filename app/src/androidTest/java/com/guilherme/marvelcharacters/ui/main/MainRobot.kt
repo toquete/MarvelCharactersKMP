@@ -29,7 +29,7 @@ class MainRobot {
     }
 
     fun checkItemIsVisible(text: String) {
-        onView(withId(R.id.recyclerview_characters))
+        onView(withId(R.id.recyclerviewCharacters))
             .perform(scrollTo<RecyclerView.ViewHolder>(withText(text)))
 
         onView(withText(text))

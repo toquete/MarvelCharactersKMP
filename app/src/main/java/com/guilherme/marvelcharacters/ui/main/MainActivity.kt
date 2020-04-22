@@ -7,16 +7,19 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.data.model.Character
-import kotlinx.android.synthetic.main.activity_main.*
+import com.guilherme.marvelcharacters.databinding.ActivityMainBinding
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by viewModel()
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         mainViewModel.states.observe(this, Observer { state ->
             state?.let {
@@ -32,28 +35,32 @@ class MainActivity : AppCompatActivity() {
             mustShowLoading?.let { handleLoading(it) }
         })
 
-        button.setOnClickListener { mainViewModel.onSearchCharacter(editText.text.toString()) }
+        binding.button.setOnClickListener { mainViewModel.onSearchCharacter(binding.editText.text.toString()) }
     }
 
     private fun showError(error: Exception) {
-        recyclerview_characters.visibility = View.GONE
-        textview_message.text = error.message
-        textview_message.visibility = View.VISIBLE
+        with(binding) {
+            recyclerviewCharacters.visibility = View.GONE
+            textviewMessage.text = error.message
+            textviewMessage.visibility = View.VISIBLE
+        }
     }
 
     private fun handleLoading(mustShowLoading: Boolean) {
-        progressbar.visibility = if (mustShowLoading) View.VISIBLE else View.GONE
+        binding.progressBar.visibility = if (mustShowLoading) View.VISIBLE else View.GONE
     }
 
     private fun showEmptyState() {
-        recyclerview_characters.visibility = View.GONE
-        textview_message.text = applicationContext.getString(R.string.empty_state_message)
-        textview_message.visibility = View.VISIBLE
+        with(binding) {
+            recyclerviewCharacters.visibility = View.GONE
+            textviewMessage.text = applicationContext.getString(R.string.empty_state_message)
+            textviewMessage.visibility = View.VISIBLE
+        }
     }
 
     private fun showCharacters(list: List<Character>) {
-        textview_message.visibility = View.GONE
-        with(recyclerview_characters) {
+        binding.textviewMessage.visibility = View.GONE
+        with(binding.recyclerviewCharacters) {
             layoutManager = LinearLayoutManager(context)
             adapter = MainAdapter(list)
             visibility = View.VISIBLE
