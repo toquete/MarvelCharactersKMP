@@ -4,42 +4,44 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
+import com.guilherme.marvelcharacters.infrastructure.TestCoroutineRule
 import com.guilherme.marvelcharacters.ui.main.MainViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
-import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.verify
-import kotlinx.coroutines.Dispatchers
-import org.junit.Assert.assertEquals
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@ExperimentalCoroutinesApi
 class MainViewModelTest {
 
     lateinit var viewModel: MainViewModel
 
-    @MockK(relaxed = true)
+    @RelaxedMockK
     lateinit var statesObserver: Observer<MainViewModel.CharacterListState>
 
-    @MockK(relaxed = true)
+    @RelaxedMockK
     lateinit var characterRepository: CharacterRepository
-
-    private val statesCaptor = mutableListOf<MainViewModel.CharacterListState>()
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
+    @get:Rule
+    val testCoroutineRule = TestCoroutineRule()
+
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-        viewModel = MainViewModel(characterRepository, Dispatchers.Unconfined).apply {
+        viewModel = MainViewModel(characterRepository, testCoroutineRule.testCoroutineDispatcher).apply {
             states.observeForever(statesObserver)
         }
     }
 
     @Test
-    fun onSearchCharacter_getCharacterList_success() {
+    fun onSearchCharacter_getCharacterList_success() = testCoroutineRule.runBlockingTest {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man")
         val characterList = listOf(character)
 
@@ -47,42 +49,27 @@ class MainViewModelTest {
 
         viewModel.onSearchCharacter("spider")
 
-        verify { statesObserver.onChanged(capture(statesCaptor)) }
-
-        with(statesCaptor) {
-            assertEquals(1, this.size)
-            assertEquals(MainViewModel.CharacterListState.Characters(characterList), this[0])
-        }
+        verify { statesObserver.onChanged(MainViewModel.CharacterListState.Characters(characterList)) }
     }
 
     @Test
-    fun onSearchCharacter_getCharacterList_emptyList() {
+    fun onSearchCharacter_getCharacterList_emptyList() = testCoroutineRule.runBlockingTest {
         val characterList = emptyList<Character>()
 
         coEvery { characterRepository.getCharacters(any()) } returns characterList
 
         viewModel.onSearchCharacter("spider")
 
-        verify { statesObserver.onChanged(capture(statesCaptor)) }
-
-        with(statesCaptor) {
-            assertEquals(1, this.size)
-            assertEquals(MainViewModel.CharacterListState.EmptyState, this[0])
-        }
+        verify { statesObserver.onChanged(MainViewModel.CharacterListState.EmptyState) }
     }
 
     @Test
-    fun onSearchCharacter_getCharacterList_error() {
+    fun onSearchCharacter_getCharacterList_error() = testCoroutineRule.runBlockingTest {
         val exception = Exception("This is an error")
         coEvery { characterRepository.getCharacters(any()) } throws exception
 
         viewModel.onSearchCharacter("spider")
 
-        verify { statesObserver.onChanged(capture(statesCaptor)) }
-
-        with(statesCaptor) {
-            assertEquals(1, this.size)
-            assertEquals(MainViewModel.CharacterListState.ErrorState(exception), this[0])
-        }
+        verify { statesObserver.onChanged(MainViewModel.CharacterListState.ErrorState(exception)) }
     }
 }
