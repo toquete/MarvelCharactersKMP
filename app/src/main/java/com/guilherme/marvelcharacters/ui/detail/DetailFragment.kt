@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.bumptech.glide.Glide
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.databinding.FragmentDetailBinding
 
@@ -28,7 +29,16 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
 
-        binding.toolbar.title = args.character.name
+        binding.collapsingToolbarLayout.title = args.character.name
+        binding.description.text = if (args.character.description.isEmpty()) {
+            "No description available"
+        } else {
+            args.character.description
+        }
+        Glide.with(this)
+            .load("${args.character.thumbnail.path}.${args.character.thumbnail.extension}")
+            .centerCrop()
+            .into(binding.imageView)
     }
 
     override fun onDestroyView() {
