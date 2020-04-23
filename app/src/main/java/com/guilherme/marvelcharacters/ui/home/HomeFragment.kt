@@ -1,13 +1,12 @@
 package com.guilherme.marvelcharacters.ui.home
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.data.model.Character
@@ -39,9 +38,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             mustShowLoading?.let { handleLoading(binding, it) }
         })
 
-        binding.button.setOnClickListener { homeViewModel.onSearchCharacter(binding.editText.text.toString()) }
-
-        setupToolbar(binding)
+        binding.button.setOnClickListener {
+            closeKeyboard(binding)
+            homeViewModel.onSearchCharacter(binding.editText.text.toString())
+        }
     }
 
     override fun onDestroyView() {
@@ -49,10 +49,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         homeBinding = null
     }
 
-    private fun setupToolbar(binding: FragmentHomeBinding) {
-        val navController = findNavController()
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
+    private fun closeKeyboard(binding: FragmentHomeBinding) {
+        (activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).run {
+            hideSoftInputFromWindow(binding.button.windowToken, 0)
+        }
     }
 
     private fun showError(binding: FragmentHomeBinding, error: Exception) {

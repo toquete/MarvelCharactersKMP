@@ -22,4 +22,9 @@
             android:name="character"
             app:argType="com.guilherme.marvelcharacters.data.model.Character" />
     </fragment>
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.guilherme.marvelcharacters.ui.favorites.FavoritesFragment"
+        android:label="Favorites"
+        tools:layout="@layout/fragment_favorites" />
 </navigation>
