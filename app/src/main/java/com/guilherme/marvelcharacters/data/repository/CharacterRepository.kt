@@ -31,5 +31,5 @@ class CharacterRepository(
 
     suspend fun deleteFavoriteCharacter(character: Character) = withContext(coroutineContext) { characterDao.delete(character) }
 
-    suspend fun deleteAllFavoriteCharacter() = withContext(coroutineContext) { characterDao.deleteAll() }
+    suspend fun deleteAllFavoriteCharacters() = withContext(coroutineContext) { characterDao.deleteAll() }
 }

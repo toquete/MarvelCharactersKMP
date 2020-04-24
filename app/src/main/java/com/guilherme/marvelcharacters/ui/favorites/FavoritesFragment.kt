@@ -1,33 +1,31 @@
 package com.guilherme.marvelcharacters.ui.favorites
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.guilherme.marvelcharacters.R
+import com.guilherme.marvelcharacters.databinding.FragmentFavoritesBinding
+import org.koin.android.ext.android.inject
 
-class FavoritesFragment : Fragment() {
+class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
 
-    companion object {
-        fun newInstance() = FavoritesFragment()
+    private var favoritesBinding: FragmentFavoritesBinding? = null
+
+    private val favoritesViewModel: FavoritesViewModel by inject()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val binding = FragmentFavoritesBinding.bind(view)
+        favoritesBinding = binding
+
+        favoritesViewModel.list.observe(viewLifecycleOwner, Observer { list ->
+            binding.recyclerViewFavorites.adapter = FavoritesAdapter(list)
+        })
     }
 
-    private lateinit var viewModel: FavoritesViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_favorites, container, false)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        favoritesBinding = null
     }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(FavoritesViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
-
 }
