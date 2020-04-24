@@ -12,19 +12,19 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/actionToDetail"
-            app:destination="@id/detailFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/detailFragment"
-        android:name="com.guilherme.marvelcharacters.ui.detail.DetailFragment"
-        tools:layout="@layout/fragment_detail" >
-        <argument
-            android:name="character"
-            app:argType="com.guilherme.marvelcharacters.data.model.Character" />
+            app:destination="@id/detailActivity" />
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="com.guilherme.marvelcharacters.ui.favorites.FavoritesFragment"
         android:label="Favorites"
         tools:layout="@layout/fragment_favorites" />
+    <activity
+        android:id="@+id/detailActivity"
+        android:name="com.guilherme.marvelcharacters.ui.detail.DetailActivity"
+        android:label="DetailActivity" >
+        <argument
+            android:name="character"
+            app:argType="com.guilherme.marvelcharacters.data.model.Character" />
+    </activity>
 </navigation>
