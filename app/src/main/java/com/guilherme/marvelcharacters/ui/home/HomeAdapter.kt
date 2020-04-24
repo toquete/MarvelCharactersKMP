@@ -1,19 +1,20 @@
 package com.guilherme.marvelcharacters.ui.home
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.widget.RecyclerView
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.databinding.ItemListBinding
 
-class HomeAdapter(
-    private val characters: List<Character>,
-    private val onClickListener: (Character) -> Unit
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class HomeAdapter(private val onClickListener: (Character) -> Unit) : RecyclerView.Adapter<HomeAdapter.BindingHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    var characters: List<Character> = listOf()
+    var tracker: SelectionTracker<Long>? = null
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false)
 
         return BindingHolder(view)
@@ -21,14 +22,21 @@ class HomeAdapter(
 
     override fun getItemCount() = characters.size
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        with(holder as BindingHolder){
-            binding.textviewCharacter.text = characters[position].name
-            binding.textviewCharacter.setOnClickListener { onClickListener(characters[position]) }
-        }
+    override fun getItemId(position: Int) = position.toLong()
+
+    override fun onBindViewHolder(holder: BindingHolder, position: Int) {
+        val character = characters[position]
+        holder.bind(character, tracker?.isSelected(position.toLong()))
     }
 
     inner class BindingHolder(item: View) : RecyclerView.ViewHolder(item) {
-        val binding: ItemListBinding = ItemListBinding.bind(item)
+        private val binding: ItemListBinding = ItemListBinding.bind(item)
+
+        fun bind(character: Character, isActivated: Boolean? = false) {
+            binding.textviewCharacter.text = character.name
+            itemView.isActivated = isActivated ?: false
+
+            binding.textviewCharacter.setOnClickListener { onClickListener(character) }
+        }
     }
 }
