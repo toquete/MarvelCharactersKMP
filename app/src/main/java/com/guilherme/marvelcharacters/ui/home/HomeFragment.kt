@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.databinding.FragmentHomeBinding
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.stateViewModel
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private var homeBinding: FragmentHomeBinding? = null
 
-    private val homeViewModel: HomeViewModel by viewModel()
+    private val homeViewModel: HomeViewModel by stateViewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -33,6 +33,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
             }
         })
+
+        homeViewModel.list.observe(viewLifecycleOwner, Observer { list -> showCharacters(binding, list) })
 
         homeViewModel.showLoading.observe(viewLifecycleOwner, Observer { mustShowLoading ->
             mustShowLoading?.let { handleLoading(binding, it) }

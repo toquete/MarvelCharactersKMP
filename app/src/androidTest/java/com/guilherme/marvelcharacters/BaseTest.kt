@@ -1,6 +1,7 @@
 package com.guilherme.marvelcharacters
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.guilherme.marvelcharacters.data.source.local.CharacterDatabase
 import com.guilherme.marvelcharacters.data.source.remote.Api
 import org.junit.After
 import org.junit.runner.RunWith
@@ -12,9 +13,11 @@ import org.koin.test.inject
 abstract class BaseTest : KoinTest {
 
     protected val api: Api by inject()
+    protected val db: CharacterDatabase by inject()
 
     @After
     fun tearDown() {
+        db.close()
         stopKoin()
     }
 }

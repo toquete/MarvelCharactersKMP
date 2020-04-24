@@ -10,6 +10,7 @@ import com.guilherme.marvelcharacters.ui.home.HomeViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
@@ -36,7 +37,7 @@ class HomeViewModelTest {
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-        viewModel = HomeViewModel(characterRepository, testCoroutineRule.testCoroutineDispatcher).apply {
+        viewModel = HomeViewModel(characterRepository, testCoroutineRule.testCoroutineDispatcher, mockk(relaxed = true)).apply {
             states.observeForever(statesObserver)
         }
     }

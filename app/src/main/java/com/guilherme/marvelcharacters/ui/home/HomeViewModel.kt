@@ -2,35 +2,38 @@ package com.guilherme.marvelcharacters.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.guilherme.marvelcharacters.BaseViewModel
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
+
+private const val CHARACTER_LIST = "character_list"
 
 class HomeViewModel(
     private val characterRepository: CharacterRepository,
-    coroutineContext: CoroutineContext
-) : BaseViewModel(coroutineContext) {
+    private val coroutineContext: CoroutineContext,
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
     private val _states = MutableLiveData<CharacterListState>()
-    val states: LiveData<CharacterListState>
-        get() = _states
+    val states: LiveData<CharacterListState> = _states
 
     private val _showLoading = MutableLiveData<Boolean>()
-    val showLoading: LiveData<Boolean>
-        get() = _showLoading
+    val showLoading: LiveData<Boolean> = _showLoading
 
-    override val uiScope: CoroutineScope
-        get() = super.uiScope
+    private val _list: MutableLiveData<List<Character>> = savedStateHandle.getLiveData(CHARACTER_LIST)
+    val list: LiveData<List<Character>> = _list
 
     fun onSearchCharacter(character: String) {
-        uiScope.launch {
+        viewModelScope.launch(coroutineContext) {
             _showLoading.value = true
             try {
                 val charactersList = characterRepository.getCharacters(character)
+                savedStateHandle.set(CHARACTER_LIST, charactersList)
+
                 _states.value = if (charactersList.isEmpty()) {
                     CharacterListState.EmptyState
                 } else {
