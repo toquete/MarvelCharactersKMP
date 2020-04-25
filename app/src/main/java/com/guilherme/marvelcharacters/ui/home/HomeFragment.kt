@@ -105,7 +105,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun navigateToDetail(character: Character) {
-        HomeFragmentDirections.actionToDetail(character).run {
+        HomeFragmentDirections.actionHomeToDetail(character).run {
             findNavController().navigate(this)
         }
     }

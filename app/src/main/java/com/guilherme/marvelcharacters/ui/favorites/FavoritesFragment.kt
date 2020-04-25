@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.databinding.FragmentFavoritesBinding
 import org.koin.android.ext.android.inject
@@ -20,7 +21,11 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
         favoritesBinding = binding
 
         favoritesViewModel.list.observe(viewLifecycleOwner, Observer { list ->
-            binding.recyclerViewFavorites.adapter = FavoritesAdapter(list)
+            binding.recyclerViewFavorites.adapter = FavoritesAdapter(list) { character ->
+                FavoritesFragmentDirections.actionFavoritesToDetail(character).apply {
+                    findNavController().navigate(this)
+                }
+            }
         })
     }
 

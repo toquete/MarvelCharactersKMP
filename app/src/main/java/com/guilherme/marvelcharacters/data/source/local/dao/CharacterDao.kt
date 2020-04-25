@@ -15,7 +15,7 @@ interface CharacterDao {
     fun getCharacterList(): LiveData<List<Character>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(characters: List<Character>)
+    suspend fun insert(character: Character)
 
     @Query("DELETE FROM character")
     suspend fun deleteAll()

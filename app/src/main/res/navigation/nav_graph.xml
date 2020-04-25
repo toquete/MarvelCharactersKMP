@@ -11,14 +11,18 @@
         android:label="Marvel Characters"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/actionToDetail"
+            android:id="@+id/actionHomeToDetail"
             app:destination="@id/detailActivity" />
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="com.guilherme.marvelcharacters.ui.favorites.FavoritesFragment"
         android:label="Favorites"
-        tools:layout="@layout/fragment_favorites" />
+        tools:layout="@layout/fragment_favorites" >
+        <action
+            android:id="@+id/actionFavoritesToDetail"
+            app:destination="@id/detailActivity" />
+    </fragment>
     <activity
         android:id="@+id/detailActivity"
         android:name="com.guilherme.marvelcharacters.ui.detail.DetailActivity"

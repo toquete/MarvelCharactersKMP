@@ -8,9 +8,12 @@ import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.databinding.ItemListBinding
 
-class FavoritesAdapter(private val characters: List<Character>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class FavoritesAdapter(
+    private val characters: List<Character>,
+    private val onClickListener: (Character) -> Unit
+) : RecyclerView.Adapter<FavoritesAdapter.BindingHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoritesAdapter.BindingHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false)
 
         return BindingHolder(view)
@@ -18,13 +21,17 @@ class FavoritesAdapter(private val characters: List<Character>) : RecyclerView.A
 
     override fun getItemCount() = characters.size
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        with(holder as BindingHolder){
-            binding.textviewCharacter.text = characters[position].name
-        }
+    override fun onBindViewHolder(holder: FavoritesAdapter.BindingHolder, position: Int) {
+        val character = characters[position]
+        holder.bind(character)
     }
 
     inner class BindingHolder(item: View) : RecyclerView.ViewHolder(item) {
-        val binding: ItemListBinding = ItemListBinding.bind(item)
+        private val binding: ItemListBinding = ItemListBinding.bind(item)
+
+        fun bind(character: Character) {
+            binding.textviewCharacter.text = character.name
+            itemView.setOnClickListener { onClickListener(character) }
+        }
     }
 }
