@@ -21,5 +21,5 @@ interface CharacterDao {
     suspend fun deleteAll()
 
     @Delete
-    suspend fun delete(character: Character)
+    suspend fun delete(characters: List<Character>)
 }

@@ -29,7 +29,7 @@ class CharacterRepository(
 
     suspend fun insertFavoriteCharacters(characters: List<Character>) = withContext(coroutineContext) { characterDao.insert(characters) }
 
-    suspend fun deleteFavoriteCharacter(character: Character) = withContext(coroutineContext) { characterDao.delete(character) }
+    suspend fun deleteFavoriteCharacters(characters: List<Character>) = withContext(coroutineContext) { characterDao.delete(characters) }
 
     suspend fun deleteAllFavoriteCharacters() = withContext(coroutineContext) { characterDao.deleteAll() }
 }

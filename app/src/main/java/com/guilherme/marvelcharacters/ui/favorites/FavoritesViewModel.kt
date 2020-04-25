@@ -19,8 +19,8 @@ class FavoritesViewModel(
         characterRepository.insertFavoriteCharacters(characters)
     }
 
-    fun deleteCharacter(character: Character) = viewModelScope.launch(coroutineContext) {
-        characterRepository.deleteFavoriteCharacter(character)
+    fun deleteCharacters(characters: List<Character>) = viewModelScope.launch(coroutineContext) {
+        characterRepository.deleteFavoriteCharacters(characters)
     }
 
     fun deleteAllCharacters() = viewModelScope.launch(coroutineContext) { characterRepository.deleteAllFavoriteCharacters() }
