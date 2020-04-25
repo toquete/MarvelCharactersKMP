@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.guilherme.marvelcharacters.Event
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
 import kotlinx.coroutines.launch
@@ -26,6 +27,9 @@ class HomeViewModel(
 
     private val _list: MutableLiveData<List<Character>> = savedStateHandle.getLiveData(CHARACTER_LIST)
     val list: LiveData<List<Character>> = _list
+
+    private val _navigateToDetail = MutableLiveData<Event<Character>>()
+    val navigateToDetail: LiveData<Event<Character>> = _navigateToDetail
 
     fun onSearchCharacter(character: String) {
         viewModelScope.launch(coroutineContext) {

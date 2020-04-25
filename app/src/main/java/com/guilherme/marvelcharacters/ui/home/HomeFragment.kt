@@ -7,6 +7,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.guilherme.marvelcharacters.EventObserver
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.databinding.FragmentHomeBinding
@@ -25,6 +26,29 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val binding = FragmentHomeBinding.bind(view)
         homeBinding = binding
 
+        setupObservers(binding)
+        setupScreenBindings(binding)
+        setupAdapter(binding)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        homeBinding = null
+    }
+
+    private fun setupAdapter(binding: FragmentHomeBinding) {
+        homeAdapter = HomeAdapter { character -> navigateToDetail(character) }
+        binding.recyclerviewCharacters.adapter = homeAdapter
+    }
+
+    private fun setupScreenBindings(binding: FragmentHomeBinding) {
+        binding.button.setOnClickListener {
+            closeKeyboard(binding)
+            homeViewModel.onSearchCharacter(binding.editText.text.toString())
+        }
+    }
+
+    private fun setupObservers(binding: FragmentHomeBinding) {
         homeViewModel.states.observe(viewLifecycleOwner, Observer { state ->
             state?.let {
                 when (state) {
@@ -41,18 +65,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             mustShowLoading?.let { handleLoading(binding, it) }
         })
 
-        binding.button.setOnClickListener {
-            closeKeyboard(binding)
-            homeViewModel.onSearchCharacter(binding.editText.text.toString())
-        }
-
-        homeAdapter = HomeAdapter { character -> navigateToDetail(character) }
-        binding.recyclerviewCharacters.adapter = homeAdapter
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        homeBinding = null
+        homeViewModel.navigateToDetail.observe(viewLifecycleOwner, EventObserver { character ->
+            navigateToDetail(character)
+        })
     }
 
     private fun closeKeyboard(binding: FragmentHomeBinding) {
