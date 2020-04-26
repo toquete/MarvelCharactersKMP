@@ -7,13 +7,13 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.databinding.FragmentFavoritesBinding
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
 
     private var favoritesBinding: FragmentFavoritesBinding? = null
 
-    private val favoritesViewModel: FavoritesViewModel by inject()
+    private val favoritesViewModel: FavoritesViewModel by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

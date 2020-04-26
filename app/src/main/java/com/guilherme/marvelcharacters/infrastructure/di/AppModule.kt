@@ -2,6 +2,7 @@ package com.guilherme.marvelcharacters.infrastructure.di
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.room.Room
+import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
 import com.guilherme.marvelcharacters.data.source.local.CharacterDatabase
 import com.guilherme.marvelcharacters.data.source.remote.RetrofitFactory
@@ -21,5 +22,5 @@ val appModule = module {
     single { CharacterRepository(get(), get(), Dispatchers.IO) }
     viewModel { (handle: SavedStateHandle) -> HomeViewModel(get(), Dispatchers.Main, handle) }
     viewModel { FavoritesViewModel(get(), Dispatchers.IO) }
-    viewModel { DetailViewModel(get(), Dispatchers.Main) }
+    viewModel { (character: Character) -> DetailViewModel(character, get(), Dispatchers.Main) }
 }

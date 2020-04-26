@@ -8,7 +8,8 @@ import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.databinding.ActivityDetailBinding
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class DetailActivity : AppCompatActivity() {
 
@@ -16,7 +17,7 @@ class DetailActivity : AppCompatActivity() {
 
     private val args: DetailActivityArgs by navArgs()
 
-    private val detailViewModel: DetailViewModel by inject()
+    private val detailViewModel: DetailViewModel by viewModel { parametersOf(args.character) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,13 +31,22 @@ class DetailActivity : AppCompatActivity() {
     private fun setupObservers() {
         detailViewModel.state.observe(this, Observer { state ->
             when (state) {
-                is DetailViewModel.DetailState.Success -> {
-                    Snackbar.make(binding.collapsingToolbarLayout, "Success!", Snackbar.LENGTH_SHORT).show()
+                is DetailViewModel.DetailState.CharacterSaved -> {
+                    Snackbar.make(binding.collapsingToolbarLayout, R.string.character_added, Snackbar.LENGTH_SHORT).show()
+                }
+                is DetailViewModel.DetailState.CharacterDeleted -> {
+                    Snackbar.make(binding.collapsingToolbarLayout, R.string.character_deleted, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.undo) { detailViewModel.onUndoClick() }
+                        .show()
                 }
                 is DetailViewModel.DetailState.Error -> {
                     Snackbar.make(binding.collapsingToolbarLayout, state.error.message.toString(), Snackbar.LENGTH_LONG).show()
                 }
             }
+        })
+
+        detailViewModel.isCharacterFavorite.observe(this, Observer { isFavorite ->
+            binding.fab.isActivated = isFavorite
         })
     }
 
@@ -52,6 +62,6 @@ class DetailActivity : AppCompatActivity() {
             .centerCrop()
             .into(binding.imageView)
 
-        binding.fab.setOnClickListener { detailViewModel.onFabClick(args.character) }
+        binding.fab.setOnClickListener { detailViewModel.onFabClick() }
     }
 }

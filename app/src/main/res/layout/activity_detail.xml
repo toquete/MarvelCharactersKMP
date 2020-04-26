@@ -78,7 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:backgroundTint="@color/colorAccent"
-        android:src="@drawable/ic_favorite_border_white_24dp"
+        android:src="@drawable/favorite_selector"
         app:layout_anchor="@id/appbarLayout"
         app:layout_anchorGravity="bottom|end"
         app:tint="@android:color/white" />

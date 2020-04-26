@@ -4,4 +4,7 @@
     <string name="start_message">Use the search box above!</string>
     <string name="empty_state_message">No characters with that name. Try again!</string>
     <string name="no_description_available">No description available</string>
+    <string name="character_added">Character added!</string>
+    <string name="character_deleted">Character deleted!</string>
+    <string name="undo">Undo</string>
 </resources>

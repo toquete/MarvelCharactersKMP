@@ -14,6 +14,9 @@ interface CharacterDao {
     @Query("SELECT * FROM character")
     fun getCharacterList(): LiveData<List<Character>>
 
+    @Query("SELECT COUNT(*) FROM character WHERE id = :id")
+    fun isCharacterFavorite(id: Int): LiveData<Boolean>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(character: Character)
 
@@ -21,5 +24,5 @@ interface CharacterDao {
     suspend fun deleteAll()
 
     @Delete
-    suspend fun delete(characters: List<Character>)
+    suspend fun delete(character: Character)
 }

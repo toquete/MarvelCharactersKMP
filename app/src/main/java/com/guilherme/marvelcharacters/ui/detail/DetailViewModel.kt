@@ -6,12 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
-import com.guilherme.marvelcharacters.data.source.local.dao.CharacterDao
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
 class DetailViewModel(
+    private val character: Character,
     private val characterRepository: CharacterRepository,
     private val coroutineContext: CoroutineContext
 ) : ViewModel() {
@@ -19,17 +18,37 @@ class DetailViewModel(
     private val _state = MutableLiveData<DetailState>()
     val state: LiveData<DetailState> = _state
 
-    fun onFabClick(character: Character) = viewModelScope.launch(coroutineContext) {
+    val isCharacterFavorite: LiveData<Boolean> = characterRepository.isCharacterFavorite(character.id)
+
+    fun onFabClick() = viewModelScope.launch(coroutineContext) {
+        try {
+            isCharacterFavorite.value?.let { isFavorite ->
+                if (isFavorite) {
+                    characterRepository.deleteFavoriteCharacter(character)
+                    _state.value = DetailState.CharacterDeleted
+                } else {
+                    characterRepository.insertFavoriteCharacter(character)
+                    _state.value = DetailState.CharacterSaved
+                }
+            } ?: run {
+                _state.value = DetailState.Error(Exception("Does this character exist??"))
+            }
+        } catch (error: Exception) {
+            _state.value = DetailState.Error(error)
+        }
+    }
+
+    fun onUndoClick() = viewModelScope.launch(coroutineContext) {
         try {
             characterRepository.insertFavoriteCharacter(character)
-            _state.value = DetailState.Success
         } catch (error: Exception) {
             _state.value = DetailState.Error(error)
         }
     }
 
     sealed class DetailState {
-        object Success : DetailState()
+        object CharacterSaved : DetailState()
+        object CharacterDeleted : DetailState()
         data class Error(val error: Exception) : DetailState()
     }
 }

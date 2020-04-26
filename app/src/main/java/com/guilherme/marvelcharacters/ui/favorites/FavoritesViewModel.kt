@@ -15,8 +15,8 @@ class FavoritesViewModel(
 
     val list: LiveData<List<Character>> = characterRepository.getFavoriteCharacters()
 
-    fun deleteCharacters(characters: List<Character>) = viewModelScope.launch(coroutineContext) {
-        characterRepository.deleteFavoriteCharacters(characters)
+    fun deleteCharacter(character: Character) = viewModelScope.launch(coroutineContext) {
+        characterRepository.deleteFavoriteCharacter(character)
     }
 
     fun deleteAllCharacters() = viewModelScope.launch(coroutineContext) { characterRepository.deleteAllFavoriteCharacters() }

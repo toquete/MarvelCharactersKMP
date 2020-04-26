@@ -25,11 +25,13 @@ class CharacterRepository(
             .characters
     }
 
+    fun isCharacterFavorite(id: Int): LiveData<Boolean> = characterDao.isCharacterFavorite(id)
+
     fun getFavoriteCharacters(): LiveData<List<Character>> = characterDao.getCharacterList()
 
     suspend fun insertFavoriteCharacter(character: Character) = withContext(coroutineContext) { characterDao.insert(character) }
 
-    suspend fun deleteFavoriteCharacters(characters: List<Character>) = withContext(coroutineContext) { characterDao.delete(characters) }
+    suspend fun deleteFavoriteCharacter(character: Character) = withContext(coroutineContext) { characterDao.delete(character) }
 
     suspend fun deleteAllFavoriteCharacters() = withContext(coroutineContext) { characterDao.deleteAll() }
 }
