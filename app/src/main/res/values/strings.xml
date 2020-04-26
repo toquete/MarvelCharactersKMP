@@ -7,4 +7,7 @@
     <string name="character_added">Character added!</string>
     <string name="character_deleted">Character deleted!</string>
     <string name="undo">Undo</string>
+    <string name="delete_dialog_title">Delete all</string>
+    <string name="delete_dialog_message">Delete all favorite characters?</string>
+    <string name="delete">delete</string>
 </resources>

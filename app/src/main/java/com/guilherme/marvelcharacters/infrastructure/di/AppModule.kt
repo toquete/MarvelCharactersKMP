@@ -21,6 +21,6 @@ val appModule = module {
     single { RetrofitFactory.makeRetrofitService() }
     single { CharacterRepository(get(), get(), Dispatchers.IO) }
     viewModel { (handle: SavedStateHandle) -> HomeViewModel(get(), Dispatchers.Main, handle) }
-    viewModel { FavoritesViewModel(get(), Dispatchers.IO) }
+    viewModel { FavoritesViewModel(get(), Dispatchers.Main) }
     viewModel { (character: Character) -> DetailViewModel(character, get(), Dispatchers.Main) }
 }

@@ -51,6 +51,10 @@ class HomeViewModel(
         }
     }
 
+    fun onItemClick(character: Character) {
+        _navigateToDetail.value = Event(character)
+    }
+
     sealed class CharacterListState {
         data class Characters(val characters: List<Character>) : CharacterListState()
         data class ErrorState(val error: Exception) : CharacterListState()

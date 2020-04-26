@@ -37,7 +37,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun setupAdapter(binding: FragmentHomeBinding) {
-        homeAdapter = HomeAdapter { character -> navigateToDetail(character) }
+        homeAdapter = HomeAdapter { character -> homeViewModel.onItemClick(character) }
         binding.recyclerviewCharacters.adapter = homeAdapter
     }
 
@@ -91,7 +91,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun showEmptyState(binding: FragmentHomeBinding) {
         binding.run {
             recyclerviewCharacters.visibility = View.GONE
-            textviewMessage.text = context?.getString(R.string.empty_state_message)
+            textviewMessage.text = resources.getString(R.string.empty_state_message)
             textviewMessage.visibility = View.VISIBLE
         }
     }

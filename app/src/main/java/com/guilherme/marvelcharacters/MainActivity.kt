@@ -27,5 +27,6 @@ class MainActivity : AppCompatActivity() {
     private fun setupToolbar(navController: NavController) {
         val appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.favoritesFragment))
         binding.mainToolbar.setupWithNavController(navController, appBarConfiguration)
+        setSupportActionBar(binding.mainToolbar)
     }
 }

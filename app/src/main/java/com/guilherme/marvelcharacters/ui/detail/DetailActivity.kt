@@ -32,15 +32,15 @@ class DetailActivity : AppCompatActivity() {
         detailViewModel.state.observe(this, Observer { state ->
             when (state) {
                 is DetailViewModel.DetailState.CharacterSaved -> {
-                    Snackbar.make(binding.collapsingToolbarLayout, R.string.character_added, Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.fab, R.string.character_added, Snackbar.LENGTH_SHORT).show()
                 }
                 is DetailViewModel.DetailState.CharacterDeleted -> {
-                    Snackbar.make(binding.collapsingToolbarLayout, R.string.character_deleted, Snackbar.LENGTH_LONG)
+                    Snackbar.make(binding.fab, R.string.character_deleted, Snackbar.LENGTH_LONG)
                         .setAction(R.string.undo) { detailViewModel.onUndoClick() }
                         .show()
                 }
                 is DetailViewModel.DetailState.Error -> {
-                    Snackbar.make(binding.collapsingToolbarLayout, state.error.message.toString(), Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(binding.fab, state.error.message.toString(), Snackbar.LENGTH_LONG).show()
                 }
             }
         })
