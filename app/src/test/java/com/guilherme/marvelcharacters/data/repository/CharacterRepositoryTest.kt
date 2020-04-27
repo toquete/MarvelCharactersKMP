@@ -93,8 +93,6 @@ class CharacterRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `deleteAllFavoriteCharacters - verifica chamada ao banco de dados`() = runBlockingTest {
-        val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
-
         characterRepository.deleteAllFavoriteCharacters()
 
         coVerify { characterDao.deleteAll() }
