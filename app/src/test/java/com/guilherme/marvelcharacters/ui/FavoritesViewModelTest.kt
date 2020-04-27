@@ -1,43 +1,31 @@
 package com.guilherme.marvelcharacters.ui
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.model.Image
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
-import com.guilherme.marvelcharacters.infrastructure.TestCoroutineRule
+import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import com.guilherme.marvelcharacters.ui.favorites.FavoritesViewModel
 import com.guilherme.marvelcharacters.util.getOrAwaitValue
 import com.guilherme.marvelcharacters.util.observeForTesting
-import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class FavoritesViewModelTest {
+class FavoritesViewModelTest : BaseUnitTest() {
 
-    lateinit var favoritesViewModel: FavoritesViewModel
+    private lateinit var favoritesViewModel: FavoritesViewModel
 
     @RelaxedMockK
-    lateinit var characterRepository: CharacterRepository
+    private lateinit var characterRepository: CharacterRepository
 
-    @get:Rule
-    val rule = InstantTaskExecutorRule()
-
-    @get:Rule
-    val testCoroutineRule = TestCoroutineRule()
-
-    @Before
-    fun setUp() {
-        MockKAnnotations.init(this)
+    override fun setUp() {
+        super.setUp()
         favoritesViewModel = FavoritesViewModel(characterRepository, testCoroutineRule.testCoroutineDispatcher)
     }
 

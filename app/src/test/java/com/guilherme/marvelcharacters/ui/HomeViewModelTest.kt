@@ -1,45 +1,34 @@
 package com.guilherme.marvelcharacters.ui
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.model.Image
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
-import com.guilherme.marvelcharacters.infrastructure.TestCoroutineRule
+import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import com.guilherme.marvelcharacters.ui.home.HomeViewModel
 import com.guilherme.marvelcharacters.util.getOrAwaitValue
 import com.guilherme.marvelcharacters.util.observeForTesting
-import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.verifySequence
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class HomeViewModelTest {
+class HomeViewModelTest : BaseUnitTest() {
 
-    lateinit var viewModel: HomeViewModel
-
-    @RelaxedMockK
-    lateinit var characterRepository: CharacterRepository
+    private lateinit var homeViewModel: HomeViewModel
 
     @RelaxedMockK
-    lateinit var observer: Observer<HomeViewModel.CharacterListState>
+    private lateinit var characterRepository: CharacterRepository
 
-    @get:Rule
-    val rule = InstantTaskExecutorRule()
+    @RelaxedMockK
+    private lateinit var observer: Observer<HomeViewModel.CharacterListState>
 
-    @get:Rule
-    val testCoroutineRule = TestCoroutineRule()
-
-    @Before
-    fun setup() {
-        MockKAnnotations.init(this)
-        viewModel = HomeViewModel(characterRepository, testCoroutineRule.testCoroutineDispatcher)
+    override fun setUp() {
+        super.setUp()
+        homeViewModel = HomeViewModel(characterRepository, testCoroutineRule.testCoroutineDispatcher)
     }
 
     @Test
@@ -49,8 +38,8 @@ class HomeViewModelTest {
 
         coEvery { characterRepository.getCharacters(any()) } returns characterList
 
-        viewModel.states.observeForTesting(observer) {
-            viewModel.onSearchCharacter("spider")
+        homeViewModel.states.observeForTesting(observer) {
+            homeViewModel.onSearchCharacter("spider")
 
             verifySequence {
                 observer.onChanged(HomeViewModel.CharacterListState.Loading)
@@ -65,8 +54,8 @@ class HomeViewModelTest {
 
         coEvery { characterRepository.getCharacters(any()) } returns characterList
 
-        viewModel.states.observeForTesting(observer) {
-            viewModel.onSearchCharacter("spider")
+        homeViewModel.states.observeForTesting(observer) {
+            homeViewModel.onSearchCharacter("spider")
 
             verifySequence {
                 observer.onChanged(HomeViewModel.CharacterListState.Loading)
@@ -80,8 +69,8 @@ class HomeViewModelTest {
         val exception = Exception("This is an error")
         coEvery { characterRepository.getCharacters(any()) } throws exception
 
-        viewModel.states.observeForTesting(observer) {
-            viewModel.onSearchCharacter("spider")
+        homeViewModel.states.observeForTesting(observer) {
+            homeViewModel.onSearchCharacter("spider")
 
             verifySequence {
                 observer.onChanged(HomeViewModel.CharacterListState.Loading)
@@ -94,10 +83,10 @@ class HomeViewModelTest {
     fun `onItemClick - envia personagem para tela de detalhe`() {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
 
-        viewModel.navigateToDetail.observeForTesting {
-            viewModel.onItemClick(character)
+        homeViewModel.navigateToDetail.observeForTesting {
+            homeViewModel.onItemClick(character)
 
-            assertThat(viewModel.navigateToDetail.getOrAwaitValue().peekContent()).isEqualTo(character)
+            assertThat(homeViewModel.navigateToDetail.getOrAwaitValue().peekContent()).isEqualTo(character)
         }
     }
 }
