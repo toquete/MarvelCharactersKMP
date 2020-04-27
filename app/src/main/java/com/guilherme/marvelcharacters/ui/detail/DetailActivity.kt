@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
+import com.guilherme.marvelcharacters.EventObserver
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.databinding.ActivityDetailBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -29,25 +30,21 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun setupObservers() {
-        detailViewModel.state.observe(this, Observer { state ->
-            when (state) {
-                is DetailViewModel.DetailState.CharacterSaved -> {
-                    Snackbar.make(binding.fab, R.string.character_added, Snackbar.LENGTH_SHORT).show()
-                }
-                is DetailViewModel.DetailState.CharacterDeleted -> {
-                    Snackbar.make(binding.fab, R.string.character_deleted, Snackbar.LENGTH_LONG)
-                        .setAction(R.string.undo) { detailViewModel.onUndoClick() }
-                        .show()
-                }
-                is DetailViewModel.DetailState.Error -> {
-                    Snackbar.make(binding.fab, state.error.message.toString(), Snackbar.LENGTH_LONG).show()
-                }
-            }
+        detailViewModel.snackbarMessage.observe(this, EventObserver { result ->
+            showSnackbar(result.first, result.second)
         })
 
         detailViewModel.isCharacterFavorite.observe(this, Observer { isFavorite ->
             binding.fab.isActivated = isFavorite
         })
+    }
+
+    private fun showSnackbar(stringId: Int, showAction: Boolean) {
+        Snackbar.make(binding.fab, stringId, Snackbar.LENGTH_LONG).apply {
+            if (showAction) {
+                setAction(R.string.undo) { detailViewModel.onUndoClick() }
+            }
+        }.show()
     }
 
     private fun setupViewBindings() {
