@@ -1,4 +1,4 @@
-package com.guilherme.marvelcharacters
+package com.guilherme.marvelcharacters.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
