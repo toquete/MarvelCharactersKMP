@@ -7,6 +7,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.guilherme.marvelcharacters.EventObserver
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.data.model.Character
@@ -47,6 +48,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun setupAdapter() {
         homeAdapter = HomeAdapter { character -> homeViewModel.onItemClick(character) }
         homeBinding.recyclerviewCharacters.adapter = homeAdapter
+        homeBinding.recyclerviewCharacters.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
     }
 
     private fun setupScreenBindings() {

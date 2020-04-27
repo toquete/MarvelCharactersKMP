@@ -8,6 +8,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.guilherme.marvelcharacters.EventObserver
@@ -55,6 +56,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
             favoritesBinding.recyclerViewFavorites.adapter = FavoritesAdapter(list) { character ->
                 favoritesViewModel.onFavoriteItemClick(character)
             }
+            favoritesBinding.recyclerViewFavorites.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             setHasOptionsMenu(list.isNotEmpty())
         })
 
