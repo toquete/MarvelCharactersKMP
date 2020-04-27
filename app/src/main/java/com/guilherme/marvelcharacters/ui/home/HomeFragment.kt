@@ -11,15 +11,21 @@ import com.guilherme.marvelcharacters.EventObserver
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.databinding.FragmentHomeBinding
-import org.koin.androidx.viewmodel.ext.android.stateViewModel
+import com.guilherme.marvelcharacters.infrastructure.extensions.sharedGraphViewModel
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private var homeBinding: FragmentHomeBinding? = null
 
-    private val homeViewModel: HomeViewModel by stateViewModel()
+    private val homeViewModel: HomeViewModel by sharedGraphViewModel(R.id.nav_graph)
 
     private lateinit var homeAdapter: HomeAdapter
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        homeViewModel.query?.let { homeBinding?.editText?.setText(it) }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -33,6 +39,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        homeViewModel.query = homeBinding?.editText?.text.toString()
         homeBinding = null
     }
 
@@ -58,8 +65,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
             }
         })
-
-        homeViewModel.list.observe(viewLifecycleOwner, Observer { list -> showCharacters(binding, list) })
 
         homeViewModel.showLoading.observe(viewLifecycleOwner, Observer { mustShowLoading ->
             mustShowLoading?.let { handleLoading(binding, it) }

@@ -2,7 +2,6 @@ package com.guilherme.marvelcharacters.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.Event
@@ -11,12 +10,9 @@ import com.guilherme.marvelcharacters.data.repository.CharacterRepository
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-private const val CHARACTER_LIST = "character_list"
-
 class HomeViewModel(
     private val characterRepository: CharacterRepository,
-    private val coroutineContext: CoroutineContext,
-    private val savedStateHandle: SavedStateHandle
+    private val coroutineContext: CoroutineContext
 ) : ViewModel() {
 
     private val _states = MutableLiveData<CharacterListState>()
@@ -25,18 +21,16 @@ class HomeViewModel(
     private val _showLoading = MutableLiveData<Boolean>()
     val showLoading: LiveData<Boolean> = _showLoading
 
-    private val _list: MutableLiveData<List<Character>> = savedStateHandle.getLiveData(CHARACTER_LIST)
-    val list: LiveData<List<Character>> = _list
-
     private val _navigateToDetail = MutableLiveData<Event<Character>>()
     val navigateToDetail: LiveData<Event<Character>> = _navigateToDetail
+
+    var query: String? = null
 
     fun onSearchCharacter(character: String) {
         viewModelScope.launch(coroutineContext) {
             _showLoading.value = true
             try {
                 val charactersList = characterRepository.getCharacters(character)
-                savedStateHandle.set(CHARACTER_LIST, charactersList)
 
                 _states.value = if (charactersList.isEmpty()) {
                     CharacterListState.EmptyState

@@ -20,7 +20,7 @@ val appModule = module {
     single { get<CharacterDatabase>().characterDao() }
     single { RetrofitFactory.makeRetrofitService() }
     single { CharacterRepository(get(), get(), Dispatchers.IO) }
-    viewModel { (handle: SavedStateHandle) -> HomeViewModel(get(), Dispatchers.Main, handle) }
+    viewModel { HomeViewModel(get(), Dispatchers.Main) }
     viewModel { FavoritesViewModel(get(), Dispatchers.Main) }
     viewModel { (character: Character) -> DetailViewModel(character, get(), Dispatchers.Main) }
 }

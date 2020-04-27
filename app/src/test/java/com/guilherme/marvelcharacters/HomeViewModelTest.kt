@@ -26,9 +26,6 @@ class HomeViewModelTest {
     @RelaxedMockK
     lateinit var characterRepository: CharacterRepository
 
-    @RelaxedMockK
-    lateinit var savedStateHandle: SavedStateHandle
-
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
@@ -38,7 +35,7 @@ class HomeViewModelTest {
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-        viewModel = HomeViewModel(characterRepository, testCoroutineRule.testCoroutineDispatcher, savedStateHandle)
+        viewModel = HomeViewModel(characterRepository, testCoroutineRule.testCoroutineDispatcher)
     }
 
     @Test
