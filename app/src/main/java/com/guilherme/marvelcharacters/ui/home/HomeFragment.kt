@@ -15,7 +15,9 @@ import com.guilherme.marvelcharacters.infrastructure.extensions.sharedGraphViewM
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
-    private var homeBinding: FragmentHomeBinding? = null
+    private var _homeBinding: FragmentHomeBinding? = null
+
+    private val homeBinding get() = _homeBinding!!
 
     private val homeViewModel: HomeViewModel by sharedGraphViewModel(R.id.nav_graph)
 
@@ -24,50 +26,48 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        homeViewModel.query?.let { homeBinding?.editText?.setText(it) }
+        homeViewModel.query?.let { homeBinding.editText.setText(it) }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentHomeBinding.bind(view)
-        homeBinding = binding
+        _homeBinding = FragmentHomeBinding.bind(view)
 
-        setupObservers(binding)
-        setupScreenBindings(binding)
-        setupAdapter(binding)
+        setupObservers()
+        setupScreenBindings()
+        setupAdapter()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        homeViewModel.query = homeBinding?.editText?.text.toString()
-        homeBinding = null
+        homeViewModel.query = homeBinding.editText.text.toString()
+        _homeBinding = null
     }
 
-    private fun setupAdapter(binding: FragmentHomeBinding) {
+    private fun setupAdapter() {
         homeAdapter = HomeAdapter { character -> homeViewModel.onItemClick(character) }
-        binding.recyclerviewCharacters.adapter = homeAdapter
+        homeBinding.recyclerviewCharacters.adapter = homeAdapter
     }
 
-    private fun setupScreenBindings(binding: FragmentHomeBinding) {
-        binding.button.setOnClickListener {
-            closeKeyboard(binding)
-            homeViewModel.onSearchCharacter(binding.editText.text.toString())
+    private fun setupScreenBindings() {
+        homeBinding.run {
+            button.setOnClickListener {
+                closeKeyboard()
+                homeViewModel.onSearchCharacter(editText.text.toString())
+            }
         }
     }
 
-    private fun setupObservers(binding: FragmentHomeBinding) {
+    private fun setupObservers() {
         homeViewModel.states.observe(viewLifecycleOwner, Observer { state ->
             state?.let {
                 when (state) {
-                    is HomeViewModel.CharacterListState.Characters -> showCharacters(binding, state.characters)
-                    is HomeViewModel.CharacterListState.EmptyState -> showEmptyState(binding)
-                    is HomeViewModel.CharacterListState.ErrorState -> showError(binding, state.error)
+                    is HomeViewModel.CharacterListState.Characters -> showCharacters(state.characters)
+                    is HomeViewModel.CharacterListState.EmptyState -> showEmptyState()
+                    is HomeViewModel.CharacterListState.ErrorState -> showError(state.error)
+                    is HomeViewModel.CharacterListState.Loading -> handleLoading(mustShowLoading = true)
                 }
             }
-        })
-
-        homeViewModel.showLoading.observe(viewLifecycleOwner, Observer { mustShowLoading ->
-            mustShowLoading?.let { handleLoading(binding, it) }
         })
 
         homeViewModel.navigateToDetail.observe(viewLifecycleOwner, EventObserver { character ->
@@ -75,38 +75,49 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         })
     }
 
-    private fun closeKeyboard(binding: FragmentHomeBinding) {
+    private fun closeKeyboard() {
         (activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).run {
-            hideSoftInputFromWindow(binding.button.windowToken, 0)
+            hideSoftInputFromWindow(homeBinding.button.windowToken, 0)
         }
     }
 
-    private fun showError(binding: FragmentHomeBinding, error: Exception) {
-        binding.run {
+    private fun showError(error: Exception) {
+        handleLoading(mustShowLoading = false)
+        homeBinding.run {
             recyclerviewCharacters.visibility = View.GONE
             textviewMessage.text = error.message
             textviewMessage.visibility = View.VISIBLE
         }
     }
 
-    private fun handleLoading(binding: FragmentHomeBinding, mustShowLoading: Boolean) {
-        binding.progressBar.visibility = if (mustShowLoading) View.VISIBLE else View.GONE
+    private fun handleLoading(mustShowLoading: Boolean) {
+        homeBinding.run {
+            if (mustShowLoading) {
+                recyclerviewCharacters.visibility = View.GONE
+                textviewMessage.visibility = View.GONE
+                progressBar.visibility = View.VISIBLE
+            } else {
+                progressBar.visibility = View.GONE
+            }
+        }
     }
 
-    private fun showEmptyState(binding: FragmentHomeBinding) {
-        binding.run {
+    private fun showEmptyState() {
+        handleLoading(mustShowLoading = false)
+        homeBinding.run {
             recyclerviewCharacters.visibility = View.GONE
             textviewMessage.text = resources.getString(R.string.empty_state_message)
             textviewMessage.visibility = View.VISIBLE
         }
     }
 
-    private fun showCharacters(binding: FragmentHomeBinding, list: List<Character>) {
+    private fun showCharacters(list: List<Character>) {
+        handleLoading(mustShowLoading = false)
         homeAdapter.characters = list
         homeAdapter.notifyDataSetChanged()
 
-        binding.textviewMessage.visibility = View.GONE
-        binding.recyclerviewCharacters.visibility = View.VISIBLE
+        homeBinding.textviewMessage.visibility = View.GONE
+        homeBinding.recyclerviewCharacters.visibility = View.VISIBLE
     }
 
     private fun navigateToDetail(character: Character) {

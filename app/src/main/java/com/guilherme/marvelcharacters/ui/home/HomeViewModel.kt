@@ -18,9 +18,6 @@ class HomeViewModel(
     private val _states = MutableLiveData<CharacterListState>()
     val states: LiveData<CharacterListState> = _states
 
-    private val _showLoading = MutableLiveData<Boolean>()
-    val showLoading: LiveData<Boolean> = _showLoading
-
     private val _navigateToDetail = MutableLiveData<Event<Character>>()
     val navigateToDetail: LiveData<Event<Character>> = _navigateToDetail
 
@@ -28,7 +25,7 @@ class HomeViewModel(
 
     fun onSearchCharacter(character: String) {
         viewModelScope.launch(coroutineContext) {
-            _showLoading.value = true
+            _states.value = CharacterListState.Loading
             try {
                 val charactersList = characterRepository.getCharacters(character)
 
@@ -39,8 +36,6 @@ class HomeViewModel(
                 }
             } catch (error: Exception) {
                 _states.value = CharacterListState.ErrorState(error)
-            } finally {
-                _showLoading.value = false
             }
         }
     }
@@ -53,5 +48,6 @@ class HomeViewModel(
         data class Characters(val characters: List<Character>) : CharacterListState()
         data class ErrorState(val error: Exception) : CharacterListState()
         object EmptyState : CharacterListState()
+        object Loading : CharacterListState()
     }
 }

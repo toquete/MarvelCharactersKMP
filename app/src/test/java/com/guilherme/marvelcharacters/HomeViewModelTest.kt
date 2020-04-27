@@ -2,7 +2,6 @@ package com.guilherme.marvelcharacters
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import androidx.lifecycle.SavedStateHandle
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.model.Image
@@ -11,8 +10,10 @@ import com.guilherme.marvelcharacters.infrastructure.TestCoroutineRule
 import com.guilherme.marvelcharacters.ui.home.HomeViewModel
 import com.guilherme.marvelcharacters.util.getOrAwaitValue
 import com.guilherme.marvelcharacters.util.observeForTesting
-import io.mockk.*
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
 import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.verifySequence
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
@@ -25,6 +26,9 @@ class HomeViewModelTest {
 
     @RelaxedMockK
     lateinit var characterRepository: CharacterRepository
+
+    @RelaxedMockK
+    lateinit var observer: Observer<HomeViewModel.CharacterListState>
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -45,9 +49,14 @@ class HomeViewModelTest {
 
         coEvery { characterRepository.getCharacters(any()) } returns characterList
 
-        viewModel.onSearchCharacter("spider")
+        viewModel.states.observeForTesting(observer) {
+            viewModel.onSearchCharacter("spider")
 
-        assertThat(viewModel.states.getOrAwaitValue()).isEqualTo(HomeViewModel.CharacterListState.Characters(characterList))
+            verifySequence {
+                observer.onChanged(HomeViewModel.CharacterListState.Loading)
+                observer.onChanged(HomeViewModel.CharacterListState.Characters(characterList))
+            }
+        }
     }
 
     @Test
@@ -56,9 +65,14 @@ class HomeViewModelTest {
 
         coEvery { characterRepository.getCharacters(any()) } returns characterList
 
-        viewModel.onSearchCharacter("spider")
+        viewModel.states.observeForTesting(observer) {
+            viewModel.onSearchCharacter("spider")
 
-        assertThat(viewModel.states.getOrAwaitValue()).isEqualTo(HomeViewModel.CharacterListState.EmptyState)
+            verifySequence {
+                observer.onChanged(HomeViewModel.CharacterListState.Loading)
+                observer.onChanged(HomeViewModel.CharacterListState.EmptyState)
+            }
+        }
     }
 
     @Test
@@ -66,26 +80,24 @@ class HomeViewModelTest {
         val exception = Exception("This is an error")
         coEvery { characterRepository.getCharacters(any()) } throws exception
 
-        viewModel.onSearchCharacter("spider")
-
-        assertThat(viewModel.states.getOrAwaitValue()).isEqualTo(HomeViewModel.CharacterListState.ErrorState(exception))
-    }
-
-    @Test
-    fun `onSearchCharacter - envia estado de carregamento da tela`() = testCoroutineRule.runBlockingTest {
-        val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
-        val characterList = listOf(character)
-        val observer = mockk<Observer<Boolean>>(relaxed = true)
-
-        coEvery { characterRepository.getCharacters(any()) } returns characterList
-
-        viewModel.showLoading.observeForTesting(observer) {
+        viewModel.states.observeForTesting(observer) {
             viewModel.onSearchCharacter("spider")
 
             verifySequence {
-                observer.onChanged(true)
-                observer.onChanged(false)
+                observer.onChanged(HomeViewModel.CharacterListState.Loading)
+                observer.onChanged(HomeViewModel.CharacterListState.ErrorState(exception))
             }
+        }
+    }
+
+    @Test
+    fun `onItemClick - envia personagem para tela de detalhe`() {
+        val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
+
+        viewModel.navigateToDetail.observeForTesting {
+            viewModel.onItemClick(character)
+
+            assertThat(viewModel.navigateToDetail.getOrAwaitValue().peekContent()).isEqualTo(character)
         }
     }
 }
