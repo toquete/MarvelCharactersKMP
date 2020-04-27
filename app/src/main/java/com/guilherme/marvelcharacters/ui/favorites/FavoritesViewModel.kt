@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.Event
+import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
 import kotlinx.coroutines.launch
@@ -15,8 +16,8 @@ class FavoritesViewModel(
     private val coroutineContext: CoroutineContext
 ) : ViewModel() {
 
-    private val _state = MutableLiveData<FavoritesState>()
-    val state: LiveData<FavoritesState> = _state
+    private val _snackbarMessage = MutableLiveData<Event<Int>>()
+    val snackbarMessage: LiveData<Event<Int>> = _snackbarMessage
 
     private val _navigateToDetail = MutableLiveData<Event<Character>>()
     val navigateToDetail: LiveData<Event<Character>> = _navigateToDetail
@@ -30,18 +31,13 @@ class FavoritesViewModel(
     fun onDeleteAllClick() = viewModelScope.launch(coroutineContext) {
         try {
             characterRepository.deleteAllFavoriteCharacters()
-            _state.value = FavoritesState.CharactersDeleted
+            _snackbarMessage.value = Event(R.string.character_deleted)
         } catch (exception: Exception) {
-            _state.value = FavoritesState.Error(exception)
+            _snackbarMessage.value = Event(R.string.error_message)
         }
     }
 
     fun onFavoriteItemClick(character: Character) {
         _navigateToDetail.value = Event(character)
-    }
-
-    sealed class FavoritesState {
-        object CharactersDeleted : FavoritesState()
-        data class Error(val error: Exception) : FavoritesState()
     }
 }

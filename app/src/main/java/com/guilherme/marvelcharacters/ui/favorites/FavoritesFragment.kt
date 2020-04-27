@@ -14,25 +14,26 @@ import com.guilherme.marvelcharacters.EventObserver
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.databinding.FragmentFavoritesBinding
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.guilherme.marvelcharacters.infrastructure.extensions.sharedGraphViewModel
 
 class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
 
-    private var favoritesBinding: FragmentFavoritesBinding? = null
+    private var _favoritesBinding: FragmentFavoritesBinding? = null
 
-    private val favoritesViewModel: FavoritesViewModel by viewModel()
+    private val favoritesBinding get() = _favoritesBinding!!
+
+    private val favoritesViewModel: FavoritesViewModel by sharedGraphViewModel(R.id.nav_graph)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentFavoritesBinding.bind(view)
-        favoritesBinding = binding
+        _favoritesBinding = FragmentFavoritesBinding.bind(view)
 
-        setupObservers(binding)
+        setupObservers()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        favoritesBinding = null
+        _favoritesBinding = null
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -49,30 +50,23 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
         }
     }
 
-    private fun setupObservers(binding: FragmentFavoritesBinding) {
+    private fun setupObservers() {
         favoritesViewModel.list.observe(viewLifecycleOwner, Observer { list ->
-            binding.recyclerViewFavorites.adapter = FavoritesAdapter(list) { character ->
+            favoritesBinding.recyclerViewFavorites.adapter = FavoritesAdapter(list) { character ->
                 favoritesViewModel.onFavoriteItemClick(character)
             }
             setHasOptionsMenu(list.isNotEmpty())
         })
 
-        favoritesViewModel.state.observe(viewLifecycleOwner, Observer { state ->
-            when (state) {
-                is FavoritesViewModel.FavoritesState.CharactersDeleted -> {
-                    Snackbar.make(binding.recyclerViewFavorites, R.string.character_deleted, Snackbar.LENGTH_LONG)
-                        .setAnchorView(R.id.bottomNavigation)
-                        .show()
-                }
-                is FavoritesViewModel.FavoritesState.Error -> {
-                    Snackbar.make(binding.recyclerViewFavorites, state.error.message.toString(), Snackbar.LENGTH_LONG).show()
-                }
-            }
-        })
+        favoritesViewModel.snackbarMessage.observe(viewLifecycleOwner, EventObserver { id -> showSnackbar(id) })
 
-        favoritesViewModel.navigateToDetail.observe(viewLifecycleOwner, EventObserver { character ->
-            navigateToDetail(character)
-        })
+        favoritesViewModel.navigateToDetail.observe(viewLifecycleOwner, EventObserver { character -> navigateToDetail(character) })
+    }
+
+    private fun showSnackbar(stringId: Int) {
+        Snackbar.make(favoritesBinding.recyclerViewFavorites, stringId, Snackbar.LENGTH_LONG)
+            .setAnchorView(R.id.bottomNavigation)
+            .show()
     }
 
     private fun navigateToDetail(character: Character) {
