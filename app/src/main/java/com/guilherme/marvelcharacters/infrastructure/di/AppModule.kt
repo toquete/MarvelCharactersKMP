@@ -1,6 +1,5 @@
 package com.guilherme.marvelcharacters.infrastructure.di
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.room.Room
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
