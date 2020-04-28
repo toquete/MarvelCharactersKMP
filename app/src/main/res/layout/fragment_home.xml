@@ -30,8 +30,10 @@
 
     <TextView
         android:id="@+id/textviewMessage"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:text="@string/start_message"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -24,7 +24,9 @@ final exclusion = [
         '**/*_*Provide*.*',
         '**/*Test*.*',
         'android/**/*.*',
-        '**/*Args*.*'
+        '**/*Args*.*',
+        '**/RetrofitFactory*.*',
+        '**/CustomApplication*.*'
 ]
 
 final androidExclusion = [

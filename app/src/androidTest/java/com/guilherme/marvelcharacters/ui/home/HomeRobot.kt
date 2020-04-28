@@ -76,4 +76,9 @@ class HomeRobot {
         onView(withId(R.id.homeFragment))
             .check(matches(isSelected()))
     }
+
+    fun checkMessage(message: String) {
+        onView(withId(R.id.textviewMessage))
+            .check(matches(withText(message)))
+    }
 }

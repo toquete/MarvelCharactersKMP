@@ -8,7 +8,6 @@ import com.guilherme.marvelcharacters.data.model.Container
 import com.guilherme.marvelcharacters.data.model.Image
 import com.guilherme.marvelcharacters.data.model.Result
 import io.mockk.coEvery
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
@@ -18,12 +17,6 @@ class HomeFragmentTest : BaseTest() {
 
     @get:Rule
     val rule = IntentsTestRule(MainActivity::class.java, true, true)
-
-    @Before
-    fun setUp() {
-        val result = Result(Container(listOf(character)))
-        coEvery { api.getCharacters(any(), any(), any(), any()) } returns result
-    }
 
     @Test
     fun checkScreenIsDisplayed() {
@@ -37,6 +30,8 @@ class HomeFragmentTest : BaseTest() {
 
     @Test
     fun searchCharacter() {
+        mockApiSuccess()
+
         home {
             clickEditText()
             typeEditText("spider")
@@ -47,6 +42,8 @@ class HomeFragmentTest : BaseTest() {
 
     @Test
     fun checkDetailScreenIsDisplayed() {
+        mockApiSuccess()
+
         home {
             clickEditText()
             typeEditText("spider")
@@ -55,5 +52,38 @@ class HomeFragmentTest : BaseTest() {
             clickItem("Spider-Man")
             checkDetailScreenIsDisplayed()
         }
+    }
+
+    @Test
+    fun checkErrorIsDisplayed() {
+        mockApiError("This is an error")
+
+        home {
+            clickEditText()
+            typeEditText("spider")
+            clickSearchButton()
+            checkMessage("This is an error")
+        }
+    }
+
+    @Test
+    fun checkEmptyStateMessageIsDisplayed() {
+        mockApiSuccess(isEmpty = true)
+
+        home {
+            clickEditText()
+            typeEditText("spider")
+            clickSearchButton()
+            checkMessage("No characters with that name. Try again!")
+        }
+    }
+
+    private fun mockApiSuccess(isEmpty: Boolean = false) {
+        val result = Result(Container(if (isEmpty) emptyList() else listOf(character)))
+        coEvery { api.getCharacters(any(), any(), any(), any()) } returns result
+    }
+
+    private fun mockApiError(message: String) {
+        coEvery { api.getCharacters(any(), any(), any(), any()) } throws IllegalArgumentException(message)
     }
 }
