@@ -4,17 +4,28 @@ jacoco {
     toolVersion = "0.8.5"
 }
 
-android {
-    testOptions {
-        unitTests.all {
-            jacoco {
-                includeNoLocationClasses = true
-            }
-        }
-    }
-}
-
 final testBuildType = 'debug'
+
+final exclusion = [
+        '**/R.class',
+        '**/R$*.class',
+        '**/BuildConfig.*',
+        '**/Manifest*.*',
+        '**/*$ViewInjector*.*',
+        '**/*$ViewBinder*.*',
+        '**/*Builder.*',
+        '**/*Contract.*',
+        '**/*_MembersInjector.class',
+        '**/*_MembersInjector*.*',
+        '**/*_*Factory*.*',
+        '**/*Component*.*',
+        '**/*Module*.*',
+        '**/*Binding*.*',
+        '**/*_*Provide*.*',
+        '**/*Test*.*',
+        'android/**/*.*',
+        '**/*Args*.*'
+]
 
 final androidExclusion = [
         '**/databinding/**/*.*',
@@ -33,10 +44,14 @@ final androidExclusion = [
         '**/*Adapter*.*',
         '**/*ViewPager*.*',
         '**/*ViewHolder*.*',
-        '**/*Module*.*'
+        '**/*Module*.*',
+        '**/*Database*.*',
+        '**/RetrofitFactory*.*',
+        '**/CustomApplication*.*'
 ]
 
 final unitTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/${testBuildType}/com/guilherme/marvelcharacters", excludes: androidExclusion)
+final uiTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/${testBuildType}/com/guilherme/marvelcharacters", excludes: exclusion)
 final mainSrc = "${project.projectDir}/src/main/java"
 
 task jacocoTestReport(type: JacocoReport, dependsOn: ["test${testBuildType.capitalize()}UnitTest"]) {
@@ -48,11 +63,65 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ["test${testBuildType.capit
         html.destination = file("${buildDir}/reports/jacoco")
     }
 
-    classDirectories.from = files([unitTree])
     sourceDirectories.from = files([mainSrc])
+    classDirectories.from = files([unitTree])
     executionData.from = fileTree(dir: "$buildDir", includes: ["jacoco/test${testBuildType.capitalize()}UnitTest.exec"])
 
     doLast {
         println "jacoco unit report has been generated to file://${reports.html.destination}/index.html"
+    }
+}
+
+task jacocoAndroidTestReport(type: JacocoReport, dependsOn: "create${testBuildType.capitalize()}CoverageReport") {
+    group = 'coverage'
+    reports {
+        xml.enabled = true
+        html.enabled = true
+        html.setDestination(file("${buildDir}/reports/jacoco/androidTest"))
+        xml.setDestination(file("${buildDir}/reports/jacoco/androidTest/androidTest.xml"))
+    }
+
+    sourceDirectories.from = files([mainSrc])
+    classDirectories.from = files([uiTree])
+    executionData.from = fileTree(dir: "$buildDir", includes: ['**/*.ec'])
+
+    doLast {
+        println "jacoco android report has been generated to file://${reports.html.destination}/index.html"
+    }
+}
+
+task jacocoFullTestReport(type: JacocoReport, dependsOn: ["jacocoTestReport", "jacocoAndroidTestReport"]) {
+    group = 'coverage'
+    reports {
+        xml.enabled = true
+        html.enabled = true
+        html.setDestination(file("${buildDir}/reports/jacoco/fullTest"))
+        xml.setDestination(file("${buildDir}/reports/jacoco/fullTest/fullTest.xml"))
+    }
+
+    sourceDirectories.from = files([mainSrc])
+    classDirectories.from = files([uiTree])
+    executionData.from = fileTree(dir: "$buildDir", includes: ["jacoco/test${testBuildType.capitalize()}UnitTest.exec", '**/*.ec'])
+
+    doLast {
+        println "jacoco full report has been generated to file://${reports.html.destination}/index.html"
+    }
+}
+
+task jacocoMergedTestReport(type: JacocoReport) {
+    group = 'coverage'
+    reports {
+        xml.enabled = true
+        html.enabled = true
+        html.setDestination(file("${buildDir}/reports/jacoco/mergedTest"))
+        xml.setDestination(file("${buildDir}/reports/jacoco/mergedTest/mergedTest.xml"))
+    }
+
+    sourceDirectories.from = files([mainSrc])
+    classDirectories.from = files([uiTree])
+    executionData.from = fileTree(dir: "$buildDir", includes: ["jacoco/test${testBuildType.capitalize()}UnitTest.exec", '**/*.ec'])
+
+    doLast {
+        println "jacoco merged report has been generated to file://${reports.html.destination}/index.html"
     }
 }
