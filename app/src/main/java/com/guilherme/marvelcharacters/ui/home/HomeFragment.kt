@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.widget.doOnTextChanged
@@ -80,6 +81,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
             filledTextField.editText?.doOnTextChanged { text, _, _, _ ->
                 button.isEnabled = !text.isNullOrEmpty()
+            }
+
+            searchEditText.setOnEditorActionListener { textView, actionId, _ ->
+                when (actionId) {
+                    EditorInfo.IME_ACTION_SEARCH -> {
+                        closeKeyboard()
+                        homeViewModel.onSearchCharacter(textView.text.toString())
+                        true
+                    }
+                    else -> false
+                }
             }
         }
     }
