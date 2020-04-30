@@ -7,11 +7,13 @@ import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.Event
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
+import com.guilherme.marvelcharacters.data.repository.PreferenceRepository
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 class HomeViewModel(
     private val characterRepository: CharacterRepository,
+    private val preferenceRepository: PreferenceRepository,
     private val coroutineContext: CoroutineContext
 ) : ViewModel() {
 
@@ -20,6 +22,8 @@ class HomeViewModel(
 
     private val _navigateToDetail = MutableLiveData<Event<Character>>()
     val navigateToDetail: LiveData<Event<Character>> = _navigateToDetail
+
+    val nightMode: LiveData<Int> = preferenceRepository.nightModeLive
 
     var query: String? = null
 
@@ -42,6 +46,10 @@ class HomeViewModel(
 
     fun onItemClick(character: Character) {
         _navigateToDetail.value = Event(character)
+    }
+
+    fun onActionItemClick() {
+        preferenceRepository.isDarkTheme = !preferenceRepository.isDarkTheme
     }
 
     sealed class CharacterListState {

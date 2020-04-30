@@ -1,8 +1,10 @@
 package com.guilherme.marvelcharacters.infrastructure.di
 
+import android.content.Context
 import androidx.room.Room
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
+import com.guilherme.marvelcharacters.data.repository.PreferenceRepository
 import com.guilherme.marvelcharacters.data.source.local.CharacterDatabase
 import com.guilherme.marvelcharacters.data.source.remote.RetrofitFactory
 import com.guilherme.marvelcharacters.ui.detail.DetailViewModel
@@ -13,13 +15,16 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 private const val DATABASE = "character_database"
+private const val DEFAULT_PREFERENCES = "default_preferences"
 
 val appModule = module {
     single { Room.databaseBuilder(get(), CharacterDatabase::class.java, DATABASE).build() }
     single { get<CharacterDatabase>().characterDao() }
     single { RetrofitFactory.makeRetrofitService() }
     single { CharacterRepository(get(), get(), Dispatchers.IO) }
-    viewModel { HomeViewModel(get(), Dispatchers.Main) }
+    single { get<Context>().getSharedPreferences(DEFAULT_PREFERENCES, Context.MODE_PRIVATE) }
+    single { PreferenceRepository(get()) }
+    viewModel { HomeViewModel(get(), get(), Dispatchers.Main) }
     viewModel { FavoritesViewModel(get(), Dispatchers.Main) }
     viewModel { (character: Character) -> DetailViewModel(character, get(), Dispatchers.Main) }
 }

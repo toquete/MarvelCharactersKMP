@@ -5,6 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.model.Image
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
+import com.guilherme.marvelcharacters.data.repository.PreferenceRepository
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import com.guilherme.marvelcharacters.ui.home.HomeViewModel
 import com.guilherme.marvelcharacters.util.getOrAwaitValue
@@ -24,11 +25,14 @@ class HomeViewModelTest : BaseUnitTest() {
     private lateinit var characterRepository: CharacterRepository
 
     @RelaxedMockK
+    private lateinit var preferenceRepository: PreferenceRepository
+
+    @RelaxedMockK
     private lateinit var observer: Observer<HomeViewModel.CharacterListState>
 
     override fun setUp() {
         super.setUp()
-        homeViewModel = HomeViewModel(characterRepository, testCoroutineRule.testCoroutineDispatcher)
+        homeViewModel = HomeViewModel(characterRepository, preferenceRepository, testCoroutineRule.testCoroutineDispatcher)
     }
 
     @Test
@@ -88,5 +92,14 @@ class HomeViewModelTest : BaseUnitTest() {
 
             assertThat(homeViewModel.navigateToDetail.getOrAwaitValue().peekContent()).isEqualTo(character)
         }
+    }
+
+    @Test
+    fun `onActionItemClick - realiza a troca de tema`() {
+        preferenceRepository.isDarkTheme = true
+
+        homeViewModel.onActionItemClick()
+
+        assertThat(preferenceRepository.isDarkTheme).isFalse()
     }
 }

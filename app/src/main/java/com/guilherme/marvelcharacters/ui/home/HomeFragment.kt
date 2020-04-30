@@ -58,13 +58,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (item.itemId == R.id.actionToggleTheme) {
-            AppCompatDelegate.setDefaultNightMode(
-                if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO) {
-                    AppCompatDelegate.MODE_NIGHT_YES
-                } else {
-                    AppCompatDelegate.MODE_NIGHT_NO
-                }
-            )
+            homeViewModel.onActionItemClick()
             true
         } else {
             super.onOptionsItemSelected(item)
@@ -104,6 +98,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         homeViewModel.navigateToDetail.observe(viewLifecycleOwner, EventObserver { character ->
             navigateToDetail(character)
+        })
+
+        homeViewModel.nightMode.observe(viewLifecycleOwner, Observer { mode ->
+            AppCompatDelegate.setDefaultNightMode(mode)
         })
     }
 
