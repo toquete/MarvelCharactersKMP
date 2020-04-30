@@ -2,8 +2,12 @@ package com.guilherme.marvelcharacters.ui.home
 
 import android.app.Activity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -35,6 +39,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
         _homeBinding = FragmentHomeBinding.bind(view)
 
+        setHasOptionsMenu(true)
         setupObservers()
         setupScreenBindings()
         setupAdapter()
@@ -44,6 +49,26 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onDestroyView()
         homeViewModel.query = homeBinding.filledTextField.editText?.text.toString()
         _homeBinding = null
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.home_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == R.id.actionToggleTheme) {
+            AppCompatDelegate.setDefaultNightMode(
+                if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO) {
+                    AppCompatDelegate.MODE_NIGHT_YES
+                } else {
+                    AppCompatDelegate.MODE_NIGHT_NO
+                }
+            )
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
     }
 
     private fun setupAdapter() {
