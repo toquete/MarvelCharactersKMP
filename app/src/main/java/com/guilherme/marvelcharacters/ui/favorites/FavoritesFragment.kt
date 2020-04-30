@@ -82,7 +82,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
             .setTitle(R.string.delete_dialog_title)
             .setMessage(R.string.delete_dialog_message)
             .setPositiveButton(R.string.delete) { _, _ -> favoritesViewModel.onDeleteAllClick() }
-            .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
+            .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
             .show()
     }
 }

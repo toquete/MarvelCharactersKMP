@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -27,7 +28,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        homeViewModel.query?.let { homeBinding.editText.setText(it) }
+        homeViewModel.query?.let { homeBinding.filledTextField.editText?.setText(it) }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,7 +42,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        homeViewModel.query = homeBinding.editText.text.toString()
+        homeViewModel.query = homeBinding.filledTextField.editText?.text.toString()
         _homeBinding = null
     }
 
@@ -55,7 +56,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         homeBinding.run {
             button.setOnClickListener {
                 closeKeyboard()
-                homeViewModel.onSearchCharacter(editText.text.toString())
+                homeViewModel.onSearchCharacter(filledTextField.editText?.text.toString())
+            }
+
+            filledTextField.editText?.doOnTextChanged { text, _, _, _ ->
+                button.isEnabled = !text.isNullOrEmpty()
             }
         }
     }

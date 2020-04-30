@@ -48,7 +48,6 @@ class HomeFragmentTest : BaseTest() {
             clickEditText()
             typeEditText("spider")
             clickSearchButton()
-            checkItemIsVisible("Spider-Man")
             clickItem("Spider-Man")
             checkDetailScreenIsDisplayed()
         }

@@ -12,6 +12,7 @@ import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isSelected
+import androidx.test.espresso.matcher.ViewMatchers.withChild
 import androidx.test.espresso.matcher.ViewMatchers.withHint
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
@@ -26,12 +27,12 @@ fun home(func: HomeRobot.() -> Unit) = HomeRobot().apply { func() }
 class HomeRobot {
 
     fun clickEditText() {
-        onView(withId(R.id.editText))
+        onView(withId(R.id.searchEditText))
             .perform(click())
     }
 
     fun typeEditText(text: String) {
-        onView(withId(R.id.editText))
+        onView(withId(R.id.searchEditText))
             .perform(typeText(text))
     }
 
@@ -42,7 +43,7 @@ class HomeRobot {
 
     fun checkItemIsVisible(text: String) {
         onView(withId(R.id.recyclerviewCharacters))
-            .perform(scrollTo<RecyclerView.ViewHolder>(withText(text)))
+            .perform(scrollTo<RecyclerView.ViewHolder>(withChild(withText(text))))
 
         onView(withText(text))
             .check(matches(isDisplayed()))
@@ -50,7 +51,7 @@ class HomeRobot {
 
     fun clickItem(text: String) {
         onView(withId(R.id.recyclerviewCharacters))
-            .perform(actionOnItem<RecyclerView.ViewHolder>(withText(text), click()))
+            .perform(actionOnItem<RecyclerView.ViewHolder>(withChild(withText(text)), click()))
     }
 
     fun checkDetailScreenIsDisplayed() {
@@ -63,7 +64,7 @@ class HomeRobot {
     }
 
     fun checkEditTextIsDisplayed() {
-        onView(withId(R.id.editText))
+        onView(withId(R.id.searchEditText))
             .check(matches(allOf(isDisplayed(), withHint("Character"))))
     }
 

@@ -11,9 +11,9 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItem
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
-import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isSelected
+import androidx.test.espresso.matcher.ViewMatchers.withChild
 import androidx.test.espresso.matcher.ViewMatchers.withClassName
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
@@ -50,7 +50,7 @@ class FavoritesRobot {
 
     fun clickItem(text: String) {
         onView(withId(R.id.recyclerViewFavorites))
-            .perform(actionOnItem<RecyclerView.ViewHolder>(withText(text), click()))
+            .perform(actionOnItem<RecyclerView.ViewHolder>(withChild(withText(text)), click()))
     }
 
     fun clickOverflowMenu(context: Context) {
@@ -87,6 +87,6 @@ class FavoritesRobot {
             .check(matches(withText("delete")))
 
         onView(withId(android.R.id.button2))
-            .check(matches(withText("Cancel")))
+            .check(matches(withText("cancel")))
     }
 }

@@ -32,7 +32,7 @@ class HomeAdapter(private val onClickListener: (Character) -> Unit) : RecyclerVi
 
         fun bind(character: Character) {
             binding.textviewCharacter.text = character.name
-            binding.textviewCharacter.setOnClickListener { onClickListener(character) }
+            itemView.setOnClickListener { onClickListener(character) }
         }
     }
 }
