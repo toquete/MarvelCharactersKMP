@@ -101,5 +101,4 @@ class DetailViewModelTest : BaseUnitTest() {
             assertThat(detailViewModel.snackbarMessage.getOrAwaitValue().peekContent()).isEqualTo(R.string.error_message to false)
         }
     }
-
 }

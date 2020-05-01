@@ -8,6 +8,8 @@ apply plugin: 'kotlin-kapt'
 
 apply plugin: "androidx.navigation.safeargs.kotlin"
 
+apply plugin: "org.jlleitschuh.gradle.ktlint"
+
 apply from: "$rootDir/tools/jacoco.gradle"
 
 android {
@@ -39,6 +41,14 @@ android {
 
     testOptions {
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
+    }
+
+    ktlint {
+        disabledRules = ["final-newline", "import-ordering"]
+        reporters {
+            reporter "plain"
+            reporter "json"
+        }
     }
 
     viewBinding.enabled = true

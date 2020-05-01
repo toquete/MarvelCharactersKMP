@@ -28,7 +28,6 @@ open class Event<out T>(private val content: T) {
     fun peekContent(): T = content
 }
 
-
 /**
  * An [Observer] for [Event]s, simplifying the pattern of checking if the [Event]'s content has
  * already been handled.

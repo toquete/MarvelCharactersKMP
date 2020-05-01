@@ -1,7 +1,6 @@
 package com.guilherme.marvelcharacters.data.source.remote
 
 import com.guilherme.marvelcharacters.data.model.Result
-import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 import retrofit2.http.Query
 
