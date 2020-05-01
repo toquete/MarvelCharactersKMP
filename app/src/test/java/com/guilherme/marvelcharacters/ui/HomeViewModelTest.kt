@@ -2,6 +2,7 @@ package com.guilherme.marvelcharacters.ui
 
 import androidx.lifecycle.Observer
 import com.google.common.truth.Truth.assertThat
+import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.model.Image
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
@@ -14,7 +15,11 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.verifySequence
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import okhttp3.ResponseBody
 import org.junit.Test
+import retrofit2.HttpException
+import retrofit2.Response
+import java.io.IOException
 
 @ExperimentalCoroutinesApi
 class HomeViewModelTest : BaseUnitTest() {
@@ -69,16 +74,34 @@ class HomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onSearchCharacter - envia estado de erro`() = testCoroutineRule.runBlockingTest {
-        val exception = Exception("This is an error")
-        coEvery { characterRepository.getCharacters(any()) } throws exception
+    fun `onSearchCharacter - envia estado de erro de requisição`() = testCoroutineRule.runBlockingTest {
+        coEvery { characterRepository.getCharacters(any()) } throws HttpException(
+            Response.error<String>(
+                404,
+                ResponseBody.create(null, "xablau")
+            )
+        )
 
         homeViewModel.states.observeForTesting(observer) {
             homeViewModel.onSearchCharacter("spider")
 
             verifySequence {
                 observer.onChanged(HomeViewModel.CharacterListState.Loading)
-                observer.onChanged(HomeViewModel.CharacterListState.ErrorState(exception))
+                observer.onChanged(HomeViewModel.CharacterListState.ErrorState(R.string.request_error_message))
+            }
+        }
+    }
+
+    @Test
+    fun `onSearchCharacter - envia estado de erro de internet`() = testCoroutineRule.runBlockingTest {
+        coEvery { characterRepository.getCharacters(any()) } throws IOException()
+
+        homeViewModel.states.observeForTesting(observer) {
+            homeViewModel.onSearchCharacter("spider")
+
+            verifySequence {
+                observer.onChanged(HomeViewModel.CharacterListState.Loading)
+                observer.onChanged(HomeViewModel.CharacterListState.ErrorState(R.string.network_error_message))
             }
         }
     }

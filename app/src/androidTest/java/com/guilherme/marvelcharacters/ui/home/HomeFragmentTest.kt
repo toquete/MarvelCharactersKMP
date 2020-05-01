@@ -8,8 +8,11 @@ import com.guilherme.marvelcharacters.data.model.Container
 import com.guilherme.marvelcharacters.data.model.Image
 import com.guilherme.marvelcharacters.data.model.Result
 import io.mockk.coEvery
+import okhttp3.ResponseBody
 import org.junit.Rule
 import org.junit.Test
+import retrofit2.HttpException
+import retrofit2.Response
 
 class HomeFragmentTest : BaseTest() {
 
@@ -54,14 +57,20 @@ class HomeFragmentTest : BaseTest() {
     }
 
     @Test
-    fun checkErrorIsDisplayed() {
-        mockApiError("This is an error")
+    fun checkRequestkErrorIsDisplayed() {
+        val exception = HttpException(
+            Response.error<String>(
+                404,
+                ResponseBody.create(null, "error")
+            )
+        )
+        mockApiError(exception)
 
         home {
             clickEditText()
             typeEditText("spider")
             clickSearchButton()
-            checkMessage("This is an error")
+            checkMessage("There was an error with your request. Try again later!")
         }
     }
 
@@ -82,7 +91,7 @@ class HomeFragmentTest : BaseTest() {
         coEvery { api.getCharacters(any(), any(), any(), any()) } returns result
     }
 
-    private fun mockApiError(message: String) {
-        coEvery { api.getCharacters(any(), any(), any(), any()) } throws IllegalArgumentException(message)
+    private fun mockApiError(exception: Exception) {
+        coEvery { api.getCharacters(any(), any(), any(), any()) } throws exception
     }
 }
