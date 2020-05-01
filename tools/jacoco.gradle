@@ -127,3 +127,8 @@ task jacocoMergedTestReport(type: JacocoReport) {
         println "jacoco merged report has been generated to file://${reports.html.destination}/index.html"
     }
 }
+
+coveralls {
+    sourceDirs = files([mainSrc]).flatten()
+    jacocoReportPath 'app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml'
+}
