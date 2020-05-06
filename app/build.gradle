@@ -8,6 +8,10 @@ apply plugin: 'kotlin-kapt'
 
 apply plugin: "androidx.navigation.safeargs.kotlin"
 
+apply plugin: "org.jlleitschuh.gradle.ktlint"
+
+apply plugin: 'io.gitlab.arturbosch.detekt'
+
 apply from: "$rootDir/tools/jacoco.gradle"
 
 android {
@@ -44,6 +48,29 @@ android {
 
     testOptions {
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
+    }
+
+    ktlint {
+        disabledRules = ["final-newline", "import-ordering"]
+        reporters {
+            reporter "plain"
+            reporter "json"
+        }
+    }
+
+    detekt {
+        config = files("../tools/detekt/detekt.yml")
+        reports {
+            html {
+                enabled = true
+            }
+            xml {
+                enabled = false
+            }
+            txt {
+                enabled = false
+            }
+        }
     }
 
     viewBinding.enabled = true

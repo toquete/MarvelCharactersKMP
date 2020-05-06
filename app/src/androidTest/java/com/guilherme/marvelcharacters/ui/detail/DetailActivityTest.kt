@@ -7,7 +7,6 @@ import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.model.Image
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 

@@ -18,4 +18,6 @@
     <string name="unknown_character">Does this character exist??</string>
     <string name="cancel">cancel</string>
     <string name="toggle_theme">Toggle Theme</string>
+    <string name="request_error_message">There was an error with your request. Try again later!</string>
+    <string name="network_error_message">Are you connected to the internet?</string>
 </resources>

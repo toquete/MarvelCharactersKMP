@@ -1,5 +1,6 @@
 package com.guilherme.marvelcharacters.ui.detail
 
+import android.database.sqlite.SQLiteException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -35,7 +36,7 @@ class DetailViewModel(
             } ?: run {
                 _snackbarMessage.value = Event(R.string.unknown_character to false)
             }
-        } catch (error: Exception) {
+        } catch (error: SQLiteException) {
             _snackbarMessage.value = Event(R.string.error_message to false)
         }
     }
@@ -43,7 +44,7 @@ class DetailViewModel(
     fun onUndoClick() = viewModelScope.launch(coroutineContext) {
         try {
             characterRepository.insertFavoriteCharacter(character)
-        } catch (error: Exception) {
+        } catch (error: SQLiteException) {
             _snackbarMessage.value = Event(R.string.error_message to false)
         }
     }

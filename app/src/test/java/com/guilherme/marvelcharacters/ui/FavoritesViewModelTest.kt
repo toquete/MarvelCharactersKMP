@@ -1,5 +1,6 @@
 package com.guilherme.marvelcharacters.ui
 
+import android.database.sqlite.SQLiteException
 import androidx.lifecycle.MutableLiveData
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.R
@@ -50,7 +51,7 @@ class FavoritesViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onDeleteAllClick - envia mensagem de erro`() = testCoroutineRule.runBlockingTest {
-        coEvery { characterRepository.deleteAllFavoriteCharacters() } throws Exception("This is an error")
+        coEvery { characterRepository.deleteAllFavoriteCharacters() } throws SQLiteException()
 
         favoritesViewModel.snackbarMessage.observeForTesting {
             favoritesViewModel.onDeleteAllClick()

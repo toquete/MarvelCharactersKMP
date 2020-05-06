@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -102,7 +103,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 when (state) {
                     is HomeViewModel.CharacterListState.Characters -> showCharacters(state.characters)
                     is HomeViewModel.CharacterListState.EmptyState -> showEmptyState()
-                    is HomeViewModel.CharacterListState.ErrorState -> showError(state.error)
+                    is HomeViewModel.CharacterListState.ErrorState -> showError(state.messageId)
                     is HomeViewModel.CharacterListState.Loading -> handleLoading(mustShowLoading = true)
                 }
             }
@@ -123,11 +124,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun showError(error: Exception) {
+    private fun showError(@StringRes messageId: Int) {
         handleLoading(mustShowLoading = false)
         homeBinding.run {
             recyclerviewCharacters.visibility = View.GONE
-            textviewMessage.text = error.message
+            textviewMessage.setText(messageId)
             textviewMessage.visibility = View.VISIBLE
         }
     }
@@ -148,7 +149,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         handleLoading(mustShowLoading = false)
         homeBinding.run {
             recyclerviewCharacters.visibility = View.GONE
-            textviewMessage.text = resources.getString(R.string.empty_state_message)
+            textviewMessage.setText(R.string.empty_state_message)
             textviewMessage.visibility = View.VISIBLE
         }
     }
@@ -167,5 +168,4 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             findNavController().navigate(this)
         }
     }
-
 }

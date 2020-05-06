@@ -1,5 +1,6 @@
 package com.guilherme.marvelcharacters.ui.favorites
 
+import android.database.sqlite.SQLiteException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -32,7 +33,7 @@ class FavoritesViewModel(
         try {
             characterRepository.deleteAllFavoriteCharacters()
             _snackbarMessage.value = Event(R.string.character_deleted)
-        } catch (exception: Exception) {
+        } catch (exception: SQLiteException) {
             _snackbarMessage.value = Event(R.string.error_message)
         }
     }

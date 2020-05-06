@@ -18,6 +18,9 @@ buildscript {
 
 plugins {
     id 'jacoco'
+    id "org.jlleitschuh.gradle.ktlint" version "9.2.1"
+    id "io.gitlab.arturbosch.detekt" version "1.8.0"
+    id 'com.github.kt3k.coveralls' version '2.8.4'
 }
 
 allprojects {

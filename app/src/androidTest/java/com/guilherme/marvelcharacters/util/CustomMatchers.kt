@@ -7,7 +7,6 @@ import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
 
-
 object CustomMatchers {
 
     fun isActivated(): Matcher<View> = object : TypeSafeMatcher<View>() {
@@ -27,7 +26,6 @@ object CustomMatchers {
             override fun matchesSafely(item: CollapsingToolbarLayout?): Boolean {
                 return item?.title == text
             }
-
         }
     }
 }
