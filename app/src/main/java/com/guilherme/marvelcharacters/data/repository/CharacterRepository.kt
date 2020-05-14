@@ -5,16 +5,10 @@ import com.guilherme.marvelcharacters.BuildConfig
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.source.local.dao.CharacterDao
 import com.guilherme.marvelcharacters.data.source.remote.Api
-import kotlinx.coroutines.withContext
 import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.DigestUtils
-import kotlin.coroutines.CoroutineContext
 
-class CharacterRepository(
-    private val api: Api,
-    private val characterDao: CharacterDao,
-    private val coroutineContext: CoroutineContext
-) {
+class CharacterRepository(private val api: Api, private val characterDao: CharacterDao) {
 
     suspend fun getCharacters(name: String): List<Character> {
         val ts = System.currentTimeMillis().toString()
@@ -29,9 +23,9 @@ class CharacterRepository(
 
     fun getFavoriteCharacters(): LiveData<List<Character>> = characterDao.getCharacterList()
 
-    suspend fun insertFavoriteCharacter(character: Character) = withContext(coroutineContext) { characterDao.insert(character) }
+    suspend fun insertFavoriteCharacter(character: Character) = characterDao.insert(character)
 
-    suspend fun deleteFavoriteCharacter(character: Character) = withContext(coroutineContext) { characterDao.delete(character) }
+    suspend fun deleteFavoriteCharacter(character: Character) = characterDao.delete(character)
 
-    suspend fun deleteAllFavoriteCharacters() = withContext(coroutineContext) { characterDao.deleteAll() }
+    suspend fun deleteAllFavoriteCharacters() = characterDao.deleteAll()
 }

@@ -21,7 +21,7 @@ val appModule = module {
     single { Room.databaseBuilder(get(), CharacterDatabase::class.java, DATABASE).build() }
     single { get<CharacterDatabase>().characterDao() }
     single { RetrofitFactory.makeRetrofitService() }
-    single { CharacterRepository(get(), get(), Dispatchers.IO) }
+    single { CharacterRepository(get(), get()) }
     single { get<Context>().getSharedPreferences(DEFAULT_PREFERENCES, Context.MODE_PRIVATE) }
     single { PreferenceRepository(get()) }
     viewModel { HomeViewModel(get(), get(), Dispatchers.Main) }

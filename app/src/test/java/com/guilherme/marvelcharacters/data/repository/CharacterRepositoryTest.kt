@@ -10,10 +10,10 @@ import com.guilherme.marvelcharacters.data.source.local.dao.CharacterDao
 import com.guilherme.marvelcharacters.data.source.remote.Api
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import com.guilherme.marvelcharacters.util.getOrAwaitValue
-import com.guilherme.marvelcharacters.util.observeForTesting
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -22,18 +22,14 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class CharacterRepositoryTest : BaseUnitTest() {
 
-    private lateinit var characterRepository: CharacterRepository
-
     @RelaxedMockK
     private lateinit var api: Api
 
     @RelaxedMockK
     private lateinit var characterDao: CharacterDao
 
-    override fun setUp() {
-        super.setUp()
-        characterRepository = CharacterRepository(api, characterDao, testCoroutineRule.testCoroutineDispatcher)
-    }
+    @InjectMockKs
+    private lateinit var characterRepository: CharacterRepository
 
     @Test
     fun `getCharacters - retorna lista de personagens`() = runBlockingTest {
@@ -54,9 +50,7 @@ class CharacterRepositoryTest : BaseUnitTest() {
 
         val result = characterRepository.isCharacterFavorite(id = 0)
 
-        result.observeForTesting {
-            assertThat(result.getOrAwaitValue()).isEqualTo(true)
-        }
+        assertThat(result.getOrAwaitValue()).isEqualTo(true)
     }
 
     @Test
@@ -68,9 +62,7 @@ class CharacterRepositoryTest : BaseUnitTest() {
 
         val result = characterRepository.getFavoriteCharacters()
 
-        result.observeForTesting {
-            assertThat(result.getOrAwaitValue()).isEqualTo(characters)
-        }
+        assertThat(result.getOrAwaitValue()).isEqualTo(characters)
     }
 
     @Test

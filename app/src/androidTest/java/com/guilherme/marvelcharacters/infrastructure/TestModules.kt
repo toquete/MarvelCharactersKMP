@@ -21,7 +21,7 @@ val testModule = module {
     single { mockk<Api>() }
     single { Room.inMemoryDatabaseBuilder(get(), CharacterDatabase::class.java).build() }
     single { get<CharacterDatabase>().characterDao() }
-    single { CharacterRepository(get(), get(), Dispatchers.IO) }
+    single { CharacterRepository(get(), get()) }
     single { get<Context>().getSharedPreferences(DEFAULT_PREFERENCES, Context.MODE_PRIVATE) }
     single { PreferenceRepository(get()) }
     viewModel { HomeViewModel(get(), get(), Dispatchers.Main) }
