@@ -12,14 +12,13 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.guilherme.marvelcharacters.EventObserver
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.databinding.FragmentHomeBinding
-import com.guilherme.marvelcharacters.infrastructure.extensions.sharedGraphViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
@@ -27,7 +26,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private val homeBinding get() = _homeBinding!!
 
-    private val homeViewModel: HomeViewModel by sharedGraphViewModel(R.id.nav_graph)
+    private val homeViewModel: HomeViewModel by viewModel()
 
     private lateinit var homeAdapter: HomeAdapter
 
@@ -98,7 +97,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun setupObservers() {
-        homeViewModel.states.observe(viewLifecycleOwner, Observer { state ->
+        homeViewModel.states.observe(viewLifecycleOwner) { state ->
             state?.let {
                 when (state) {
                     is HomeViewModel.CharacterListState.Characters -> showCharacters(state.characters)
@@ -107,15 +106,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     is HomeViewModel.CharacterListState.Loading -> handleLoading(mustShowLoading = true)
                 }
             }
-        })
+        }
 
         homeViewModel.navigateToDetail.observe(viewLifecycleOwner, EventObserver { character ->
             navigateToDetail(character)
         })
 
-        homeViewModel.nightMode.observe(viewLifecycleOwner, Observer { mode ->
+        homeViewModel.nightMode.observe(viewLifecycleOwner) { mode ->
             AppCompatDelegate.setDefaultNightMode(mode)
-        })
+        }
     }
 
     private fun closeKeyboard() {
