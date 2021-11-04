@@ -10,11 +10,9 @@ import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
 import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
 
 class FavoritesViewModel(
-    private val characterRepository: CharacterRepository,
-    private val coroutineContext: CoroutineContext
+    private val characterRepository: CharacterRepository
 ) : ViewModel() {
 
     private val _snackbarMessage = MutableLiveData<Event<Int>>()
@@ -25,11 +23,11 @@ class FavoritesViewModel(
 
     val list: LiveData<List<Character>> = characterRepository.getFavoriteCharacters()
 
-    fun deleteCharacter(character: Character) = viewModelScope.launch(coroutineContext) {
+    fun deleteCharacter(character: Character) = viewModelScope.launch {
         characterRepository.deleteFavoriteCharacter(character)
     }
 
-    fun onDeleteAllClick() = viewModelScope.launch(coroutineContext) {
+    fun onDeleteAllClick() = viewModelScope.launch {
         try {
             characterRepository.deleteAllFavoriteCharacters()
             _snackbarMessage.value = Event(R.string.character_deleted)

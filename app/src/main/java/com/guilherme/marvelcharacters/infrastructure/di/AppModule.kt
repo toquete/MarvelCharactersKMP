@@ -10,7 +10,6 @@ import com.guilherme.marvelcharacters.data.source.remote.RetrofitFactory
 import com.guilherme.marvelcharacters.ui.detail.DetailViewModel
 import com.guilherme.marvelcharacters.ui.favorites.FavoritesViewModel
 import com.guilherme.marvelcharacters.ui.home.HomeViewModel
-import kotlinx.coroutines.Dispatchers
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -24,7 +23,7 @@ val appModule = module {
     single { CharacterRepository(get(), get()) }
     single { get<Context>().getSharedPreferences(DEFAULT_PREFERENCES, Context.MODE_PRIVATE) }
     single { PreferenceRepository(get()) }
-    viewModel { HomeViewModel(get(), get(), Dispatchers.Main) }
-    viewModel { FavoritesViewModel(get(), Dispatchers.Main) }
-    viewModel { (character: Character) -> DetailViewModel(character, get(), Dispatchers.Main) }
+    viewModel { HomeViewModel(get(), get()) }
+    viewModel { FavoritesViewModel(get()) }
+    viewModel { (character: Character) -> DetailViewModel(character, get()) }
 }

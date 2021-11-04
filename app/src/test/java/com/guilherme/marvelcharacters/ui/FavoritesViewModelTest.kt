@@ -27,11 +27,11 @@ class FavoritesViewModelTest : BaseUnitTest() {
 
     override fun setUp() {
         super.setUp()
-        favoritesViewModel = FavoritesViewModel(characterRepository, testCoroutineRule.testCoroutineDispatcher)
+        favoritesViewModel = FavoritesViewModel(characterRepository)
     }
 
     @Test
-    fun `deleteCharacter - verifica se repositório foi chamado`() = testCoroutineRule.runBlockingTest {
+    fun `deleteCharacter - check if repository was called`() {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
 
         favoritesViewModel.deleteCharacter(character)
@@ -40,7 +40,7 @@ class FavoritesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onDeleteAllClick - envia mensagem de sucesso`() = testCoroutineRule.runBlockingTest {
+    fun `onDeleteAllClick - send success message`() {
         favoritesViewModel.snackbarMessage.observeForTesting {
             favoritesViewModel.onDeleteAllClick()
 
@@ -50,7 +50,7 @@ class FavoritesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onDeleteAllClick - envia mensagem de erro`() = testCoroutineRule.runBlockingTest {
+    fun `onDeleteAllClick - send error message`() {
         coEvery { characterRepository.deleteAllFavoriteCharacters() } throws SQLiteException()
 
         favoritesViewModel.snackbarMessage.observeForTesting {
@@ -62,7 +62,7 @@ class FavoritesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onFavoriteItemClick - envia personagem para tela de detalhe`() {
+    fun `onFavoriteItemClick - send character to details screen`() {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
 
         favoritesViewModel.navigateToDetail.observeForTesting {
@@ -73,13 +73,13 @@ class FavoritesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `init - envia lista de favoritos`() {
+    fun `init - send favorites list`() {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
         val characterList = listOf(character)
 
         coEvery { characterRepository.getFavoriteCharacters() } returns MutableLiveData(characterList)
 
-        val viewModel = FavoritesViewModel(characterRepository, testCoroutineRule.testCoroutineDispatcher)
+        val viewModel = FavoritesViewModel(characterRepository)
 
         viewModel.list.observeForTesting {
             assertThat(viewModel.list.getOrAwaitValue()).isEqualTo(characterList)

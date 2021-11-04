@@ -27,10 +27,10 @@ class DetailViewModelTest : BaseUnitTest() {
     private val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
 
     @Test
-    fun `onFabClick - envia evento de personagem removido`() = testCoroutineRule.runBlockingTest {
+    fun `onFabClick - send deleted character event`() {
         every { characterRepository.isCharacterFavorite(character.id) } returns MutableLiveData(true)
 
-        val detailViewModel = DetailViewModel(character, characterRepository, testCoroutineRule.testCoroutineDispatcher)
+        val detailViewModel = DetailViewModel(character, characterRepository)
 
         detailViewModel.snackbarMessage.observeForTesting {
             detailViewModel.onFabClick()
@@ -41,10 +41,10 @@ class DetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onFabClick - envia evento de personagem adicionado`() = testCoroutineRule.runBlockingTest {
+    fun `onFabClick - send added character event`() {
         every { characterRepository.isCharacterFavorite(character.id) } returns MutableLiveData(false)
 
-        val detailViewModel = DetailViewModel(character, characterRepository, testCoroutineRule.testCoroutineDispatcher)
+        val detailViewModel = DetailViewModel(character, characterRepository)
 
         detailViewModel.snackbarMessage.observeForTesting {
             detailViewModel.onFabClick()
@@ -55,10 +55,10 @@ class DetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onFabClick - envia evento de erro quando query falha`() = testCoroutineRule.runBlockingTest {
+    fun `onFabClick - send error event when query fails`() {
         every { characterRepository.isCharacterFavorite(character.id) } returns MutableLiveData(null)
 
-        val detailViewModel = DetailViewModel(character, characterRepository, testCoroutineRule.testCoroutineDispatcher)
+        val detailViewModel = DetailViewModel(character, characterRepository)
 
         detailViewModel.snackbarMessage.observeForTesting {
             detailViewModel.onFabClick()
@@ -67,12 +67,12 @@ class DetailViewModelTest : BaseUnitTest() {
         }
     }
 
-    @Test()
-    fun `onFabClick - envia evento de erro genérico`() = testCoroutineRule.runBlockingTest {
+    @Test
+    fun `onFabClick - send generic error event`() {
         every { characterRepository.isCharacterFavorite(character.id) } returns MutableLiveData(false)
         coEvery { characterRepository.insertFavoriteCharacter(character) } throws SQLiteException()
 
-        val detailViewModel = DetailViewModel(character, characterRepository, testCoroutineRule.testCoroutineDispatcher)
+        val detailViewModel = DetailViewModel(character, characterRepository)
 
         detailViewModel.snackbarMessage.observeForTesting {
             detailViewModel.onFabClick()
@@ -83,8 +83,8 @@ class DetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onUndoClick - desfaz alterações`() = testCoroutineRule.runBlockingTest {
-        val detailViewModel = DetailViewModel(character, characterRepository, testCoroutineRule.testCoroutineDispatcher)
+    fun `onUndoClick - undo changes`() {
+        val detailViewModel = DetailViewModel(character, characterRepository)
 
         detailViewModel.onUndoClick()
 
@@ -92,10 +92,10 @@ class DetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onUndoClick - envia mensagem de erro ao desfazer alterações`() = testCoroutineRule.runBlockingTest {
+    fun `onUndoClick - send error message on undo changes`() {
         coEvery { characterRepository.insertFavoriteCharacter(character) } throws SQLiteException()
 
-        val detailViewModel = DetailViewModel(character, characterRepository, testCoroutineRule.testCoroutineDispatcher)
+        val detailViewModel = DetailViewModel(character, characterRepository)
 
         detailViewModel.snackbarMessage.observeForTesting {
             detailViewModel.onUndoClick()

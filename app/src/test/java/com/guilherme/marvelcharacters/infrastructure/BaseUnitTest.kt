@@ -7,7 +7,7 @@ import org.junit.Before
 import org.junit.Rule
 
 @ExperimentalCoroutinesApi
-open class BaseUnitTest {
+abstract class BaseUnitTest {
 
     @get:Rule
     val rule = InstantTaskExecutorRule()

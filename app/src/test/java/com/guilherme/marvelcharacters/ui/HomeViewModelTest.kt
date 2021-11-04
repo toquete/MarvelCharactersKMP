@@ -37,11 +37,11 @@ class HomeViewModelTest : BaseUnitTest() {
 
     override fun setUp() {
         super.setUp()
-        homeViewModel = HomeViewModel(characterRepository, preferenceRepository, testCoroutineRule.testCoroutineDispatcher)
+        homeViewModel = HomeViewModel(characterRepository, preferenceRepository)
     }
 
     @Test
-    fun `onSearchCharacter - envia estado de sucesso ao carregar a lista`() = testCoroutineRule.runBlockingTest {
+    fun `onSearchCharacter - send success state when list is loaded`() {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
         val characterList = listOf(character)
 
@@ -58,7 +58,7 @@ class HomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onSearchCharacter - envia estado vazio ao carregar uma lista vazia`() = testCoroutineRule.runBlockingTest {
+    fun `onSearchCharacter - send empty state when list is empty`() {
         val characterList = emptyList<Character>()
 
         coEvery { characterRepository.getCharacters(any()) } returns characterList
@@ -74,7 +74,7 @@ class HomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onSearchCharacter - envia estado de erro de requisição`() = testCoroutineRule.runBlockingTest {
+    fun `onSearchCharacter - send error state on request error`() {
         coEvery { characterRepository.getCharacters(any()) } throws HttpException(
             Response.error<String>(
                 404,
@@ -93,7 +93,7 @@ class HomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onSearchCharacter - envia estado de erro de internet`() = testCoroutineRule.runBlockingTest {
+    fun `onSearchCharacter - send internet error state`() {
         coEvery { characterRepository.getCharacters(any()) } throws IOException()
 
         homeViewModel.states.observeForTesting(observer) {
@@ -107,7 +107,7 @@ class HomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onItemClick - envia personagem para tela de detalhe`() {
+    fun `onItemClick - send character to details screen`() {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
 
         homeViewModel.navigateToDetail.observeForTesting {
@@ -118,7 +118,7 @@ class HomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onActionItemClick - realiza a troca de tema`() {
+    fun `onActionItemClick - change theme`() {
         preferenceRepository.isDarkTheme = true
 
         homeViewModel.onActionItemClick()

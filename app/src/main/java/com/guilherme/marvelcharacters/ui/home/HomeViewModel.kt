@@ -13,12 +13,10 @@ import com.guilherme.marvelcharacters.data.repository.PreferenceRepository
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
-import kotlin.coroutines.CoroutineContext
 
 class HomeViewModel(
     private val characterRepository: CharacterRepository,
-    private val preferenceRepository: PreferenceRepository,
-    private val coroutineContext: CoroutineContext
+    private val preferenceRepository: PreferenceRepository
 ) : ViewModel() {
 
     private val _states = MutableLiveData<CharacterListState>()
@@ -32,7 +30,7 @@ class HomeViewModel(
     var query: String? = null
 
     fun onSearchCharacter(character: String) {
-        viewModelScope.launch(coroutineContext) {
+        viewModelScope.launch {
             _states.value = CharacterListState.Loading
             try {
                 val charactersList = characterRepository.getCharacters(character)

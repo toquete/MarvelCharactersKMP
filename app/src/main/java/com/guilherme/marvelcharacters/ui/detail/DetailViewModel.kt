@@ -10,12 +10,10 @@ import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
 import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
 
 class DetailViewModel(
     private val character: Character,
-    private val characterRepository: CharacterRepository,
-    private val coroutineContext: CoroutineContext
+    private val characterRepository: CharacterRepository
 ) : ViewModel() {
 
     private val _snackbarMessage = MutableLiveData<Event<Pair<Int, Boolean>>>()
@@ -23,7 +21,7 @@ class DetailViewModel(
 
     val isCharacterFavorite: LiveData<Boolean> = characterRepository.isCharacterFavorite(character.id)
 
-    fun onFabClick() = viewModelScope.launch(coroutineContext) {
+    fun onFabClick() = viewModelScope.launch {
         try {
             isCharacterFavorite.value?.let { isFavorite ->
                 if (isFavorite) {
@@ -41,7 +39,7 @@ class DetailViewModel(
         }
     }
 
-    fun onUndoClick() = viewModelScope.launch(coroutineContext) {
+    fun onUndoClick() = viewModelScope.launch {
         try {
             characterRepository.insertFavoriteCharacter(character)
         } catch (error: SQLiteException) {
