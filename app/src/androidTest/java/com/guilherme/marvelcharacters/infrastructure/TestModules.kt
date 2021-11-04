@@ -24,7 +24,7 @@ val testModule = module {
     single { CharacterRepository(get(), get()) }
     single { get<Context>().getSharedPreferences(DEFAULT_PREFERENCES, Context.MODE_PRIVATE) }
     single { PreferenceRepository(get()) }
-    viewModel { HomeViewModel(get(), get(), Dispatchers.Main) }
-    viewModel { FavoritesViewModel(get(), Dispatchers.Main) }
-    viewModel { (character: Character) -> DetailViewModel(character, get(), Dispatchers.Main) }
+    viewModel { HomeViewModel(get(), get()) }
+    viewModel { FavoritesViewModel(get()) }
+    viewModel { (character: Character) -> DetailViewModel(character, get()) }
 }
