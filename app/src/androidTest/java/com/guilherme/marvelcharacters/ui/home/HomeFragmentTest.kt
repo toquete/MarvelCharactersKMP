@@ -1,6 +1,7 @@
 package com.guilherme.marvelcharacters.ui.home
 
-import androidx.test.espresso.intent.rule.IntentsTestRule
+import androidx.test.espresso.intent.Intents
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.guilherme.marvelcharacters.BaseTest
 import com.guilherme.marvelcharacters.MainActivity
 import com.guilherme.marvelcharacters.data.model.Character
@@ -9,6 +10,7 @@ import com.guilherme.marvelcharacters.data.model.Image
 import com.guilherme.marvelcharacters.data.model.Result
 import io.mockk.coEvery
 import okhttp3.ResponseBody
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import retrofit2.HttpException
@@ -19,7 +21,17 @@ class HomeFragmentTest : BaseTest() {
     private val character = Character(id = 1, name = "Spider-Man", description = "xablau", thumbnail = Image("", ""))
 
     @get:Rule
-    val rule = IntentsTestRule(MainActivity::class.java, true, true)
+    val rule = ActivityScenarioRule(MainActivity::class.java)
+
+    @Before
+    fun setUp() {
+        Intents.init()
+    }
+
+    override fun tearDown() {
+        super.tearDown()
+        Intents.release()
+    }
 
     @Test
     fun checkScreenIsDisplayed() {

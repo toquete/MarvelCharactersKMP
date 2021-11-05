@@ -1,19 +1,23 @@
 package com.guilherme.marvelcharacters.ui.detail
 
 import android.content.Intent
-import androidx.test.espresso.intent.rule.IntentsTestRule
+import androidx.test.core.app.ActivityScenario
+import androidx.test.core.app.ApplicationProvider
 import com.guilherme.marvelcharacters.BaseTest
 import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.model.Image
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.junit.Rule
 import org.junit.Test
 
 class DetailActivityTest : BaseTest() {
 
-    @get:Rule
-    val rule = IntentsTestRule(DetailActivity::class.java, true, false)
+    private lateinit var scenario: ActivityScenario<DetailActivity>
+
+    override fun tearDown() {
+        super.tearDown()
+        scenario.close()
+    }
 
     @Test
     fun checkScreenIsDisplayed() {
@@ -68,9 +72,9 @@ class DetailActivityTest : BaseTest() {
             GlobalScope.launch { db.characterDao().insert(character) }
         }
 
-        Intent().apply {
+        Intent(ApplicationProvider.getApplicationContext(), DetailActivity::class.java).apply {
             putExtra("character", character)
-            rule.launchActivity(this)
+            scenario = ActivityScenario.launch(this)
         }
     }
 }

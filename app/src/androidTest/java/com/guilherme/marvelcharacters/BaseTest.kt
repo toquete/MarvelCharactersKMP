@@ -16,7 +16,7 @@ abstract class BaseTest : KoinTest {
     protected val db: CharacterDatabase by inject()
 
     @After
-    fun tearDown() {
+    open fun tearDown() {
         db.close()
         stopKoin()
     }
