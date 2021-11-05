@@ -1,7 +1,7 @@
 apply plugin: 'jacoco'
 
 jacoco {
-    toolVersion = "0.8.5"
+    toolVersion = "0.8.7"
 }
 
 final testBuildType = 'debug'
@@ -64,7 +64,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ["test${testBuildType.capit
         html.enabled = true
         html.destination = file("${buildDir}/reports/jacoco")
     }
-    onlyIf = { true }
+
     sourceDirectories.from = files([mainSrc])
     classDirectories.from = files([unitTree])
     executionData.from = fileTree(dir: "$buildDir", includes: ["jacoco/test${testBuildType.capitalize()}UnitTest.exec"])
