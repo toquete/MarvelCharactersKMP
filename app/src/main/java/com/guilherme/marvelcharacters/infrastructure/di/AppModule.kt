@@ -6,7 +6,9 @@ import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
 import com.guilherme.marvelcharacters.data.repository.PreferenceRepository
 import com.guilherme.marvelcharacters.data.source.local.CharacterDatabase
-import com.guilherme.marvelcharacters.data.source.remote.RetrofitFactory
+import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSource
+import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSourceImpl
+import com.guilherme.marvelcharacters.infrastructure.service.RetrofitFactory
 import com.guilherme.marvelcharacters.ui.detail.DetailViewModel
 import com.guilherme.marvelcharacters.ui.favorites.FavoritesViewModel
 import com.guilherme.marvelcharacters.ui.home.HomeViewModel
@@ -20,6 +22,7 @@ val appModule = module {
     single { Room.databaseBuilder(get(), CharacterDatabase::class.java, DATABASE).build() }
     single { get<CharacterDatabase>().characterDao() }
     single { RetrofitFactory.makeRetrofitService() }
+    factory<CharacterRemoteDataSource> { CharacterRemoteDataSourceImpl(get()) }
     single { CharacterRepository(get(), get()) }
     single { get<Context>().getSharedPreferences(DEFAULT_PREFERENCES, Context.MODE_PRIVATE) }
     single { PreferenceRepository(get()) }

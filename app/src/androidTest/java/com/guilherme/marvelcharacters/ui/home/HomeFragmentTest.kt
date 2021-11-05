@@ -4,10 +4,10 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.guilherme.marvelcharacters.BaseTest
 import com.guilherme.marvelcharacters.MainActivity
-import com.guilherme.marvelcharacters.data.model.Character
-import com.guilherme.marvelcharacters.data.model.Container
-import com.guilherme.marvelcharacters.data.model.Image
-import com.guilherme.marvelcharacters.data.model.Result
+import com.guilherme.marvelcharacters.data.model.CharacterResponse
+import com.guilherme.marvelcharacters.data.model.ContainerResponse
+import com.guilherme.marvelcharacters.data.model.ImageResponse
+import com.guilherme.marvelcharacters.data.model.Response as apiResponse
 import io.mockk.coEvery
 import okhttp3.ResponseBody
 import org.junit.Before
@@ -18,7 +18,15 @@ import retrofit2.Response
 
 class HomeFragmentTest : BaseTest() {
 
-    private val character = Character(id = 1, name = "Spider-Man", description = "xablau", thumbnail = Image("", ""))
+    private val character = CharacterResponse(
+        id = 1,
+        name = "Spider-Man",
+        description = "xablau",
+        thumbnail = ImageResponse(
+            path = "",
+            extension = ""
+        )
+    )
 
     @get:Rule
     val rule = ActivityScenarioRule(MainActivity::class.java)
@@ -99,7 +107,7 @@ class HomeFragmentTest : BaseTest() {
     }
 
     private fun mockApiSuccess(isEmpty: Boolean = false) {
-        val result = Result(Container(if (isEmpty) emptyList() else listOf(character)))
+        val result = apiResponse(ContainerResponse(if (isEmpty) emptyList() else listOf(character)))
         coEvery { api.getCharacters(any(), any(), any(), any()) } returns result
     }
 

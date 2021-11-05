@@ -3,11 +3,11 @@ package com.guilherme.marvelcharacters.data.repository
 import androidx.lifecycle.MutableLiveData
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.data.model.Character
-import com.guilherme.marvelcharacters.data.model.Container
+import com.guilherme.marvelcharacters.data.model.CharacterResponse
 import com.guilherme.marvelcharacters.data.model.Image
-import com.guilherme.marvelcharacters.data.model.Result
+import com.guilherme.marvelcharacters.data.model.ImageResponse
 import com.guilherme.marvelcharacters.data.source.local.dao.CharacterDao
-import com.guilherme.marvelcharacters.data.source.remote.Api
+import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSource
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import com.guilherme.marvelcharacters.util.getOrAwaitValue
 import io.mockk.coEvery
@@ -23,7 +23,7 @@ import org.junit.Test
 class CharacterRepositoryTest : BaseUnitTest() {
 
     @RelaxedMockK
-    private lateinit var api: Api
+    private lateinit var remoteDataSource: CharacterRemoteDataSource
 
     @RelaxedMockK
     private lateinit var characterDao: CharacterDao
@@ -32,20 +32,27 @@ class CharacterRepositoryTest : BaseUnitTest() {
     private lateinit var characterRepository: CharacterRepository
 
     @Test
-    fun `getCharacters - retorna lista de personagens`() = runBlockingTest {
-        val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
-        val characters = listOf(character)
-        val result = Result(Container(characters))
+    fun `getCharacters - returns character list`() = runBlockingTest {
+        val characterResponse = CharacterResponse(
+            id = 0,
+            name = "Spider-Man",
+            description = "The Amazing Spider-Man",
+            thumbnail = ImageResponse(
+                path = "",
+                extension = ""
+            )
+        )
+        val characterList = listOf(characterResponse.toCharacter())
 
-        coEvery { api.getCharacters(ts = any(), hash = any(), apiKey = any(), nameStartsWith = "spider") } returns result
+        coEvery { remoteDataSource.getCharacters(name = "spider") } returns listOf(characterResponse)
 
         val list = characterRepository.getCharacters("spider")
 
-        assertThat(list).isEqualTo(characters)
+        assertThat(list).isEqualTo(characterList)
     }
 
     @Test
-    fun `isCharacterFavorite - retorna se personagem é favorito`() {
+    fun `isCharacterFavorite - returns if character is favorite`() {
         every { characterDao.isCharacterFavorite(id = any()) } returns MutableLiveData(true)
 
         val result = characterRepository.isCharacterFavorite(id = 0)
@@ -54,7 +61,7 @@ class CharacterRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `isCharacterFavorite - retorna lista de personagens favoritos`() {
+    fun `isCharacterFavorite - returns favorite characters list`() {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
         val characters = listOf(character)
 
@@ -66,7 +73,7 @@ class CharacterRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `insertFavoriteCharacter - verifica chamada ao banco de dados`() = runBlockingTest {
+    fun `insertFavoriteCharacter - check database call`() = runBlockingTest {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
 
         characterRepository.insertFavoriteCharacter(character)
@@ -75,7 +82,7 @@ class CharacterRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `deleteFavoriteCharacter - verifica chamada ao banco de dados`() = runBlockingTest {
+    fun `deleteFavoriteCharacter - check database call`() = runBlockingTest {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
 
         characterRepository.deleteFavoriteCharacter(character)
@@ -84,7 +91,7 @@ class CharacterRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `deleteAllFavoriteCharacters - verifica chamada ao banco de dados`() = runBlockingTest {
+    fun `deleteAllFavoriteCharacters - check database call`() = runBlockingTest {
         characterRepository.deleteAllFavoriteCharacters()
 
         coVerify { characterDao.deleteAll() }
