@@ -1,7 +1,7 @@
 package com.guilherme.marvelcharacters.data.source.local.mapper
 
-import com.guilherme.marvelcharacters.data.model.CharacterEntity
-import com.guilherme.marvelcharacters.data.model.ImageEntity
+import com.guilherme.marvelcharacters.data.source.local.model.CharacterEntity
+import com.guilherme.marvelcharacters.data.source.local.model.ImageEntity
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.infrastructure.util.Mapper

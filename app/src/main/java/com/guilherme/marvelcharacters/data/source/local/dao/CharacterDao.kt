@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.guilherme.marvelcharacters.data.model.CharacterEntity
+import com.guilherme.marvelcharacters.data.source.local.model.CharacterEntity
 
 @Dao
 interface CharacterDao {

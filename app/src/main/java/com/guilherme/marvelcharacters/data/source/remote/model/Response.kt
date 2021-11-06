@@ -1,4 +1,4 @@
-package com.guilherme.marvelcharacters.data.model
+package com.guilherme.marvelcharacters.data.source.remote.model
 
 import com.google.gson.annotations.SerializedName
 

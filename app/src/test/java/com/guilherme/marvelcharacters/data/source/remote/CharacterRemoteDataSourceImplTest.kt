@@ -1,11 +1,11 @@
 package com.guilherme.marvelcharacters.data.source.remote
 
 import com.google.common.truth.Truth.assertThat
-import com.guilherme.marvelcharacters.data.model.CharacterResponse
-import com.guilherme.marvelcharacters.data.model.ContainerResponse
-import com.guilherme.marvelcharacters.data.model.ImageResponse
-import com.guilherme.marvelcharacters.data.model.Response
 import com.guilherme.marvelcharacters.data.service.Api
+import com.guilherme.marvelcharacters.data.source.remote.model.CharacterResponse
+import com.guilherme.marvelcharacters.data.source.remote.model.ContainerResponse
+import com.guilherme.marvelcharacters.data.source.remote.model.ImageResponse
+import com.guilherme.marvelcharacters.data.source.remote.model.Response
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest

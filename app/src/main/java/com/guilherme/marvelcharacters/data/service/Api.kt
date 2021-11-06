@@ -1,7 +1,7 @@
 package com.guilherme.marvelcharacters.data.service
 
-import com.guilherme.marvelcharacters.data.model.CharacterResponse
-import com.guilherme.marvelcharacters.data.model.Response
+import com.guilherme.marvelcharacters.data.source.remote.model.CharacterResponse
+import com.guilherme.marvelcharacters.data.source.remote.model.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 

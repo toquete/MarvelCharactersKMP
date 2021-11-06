@@ -1,6 +1,6 @@
 package com.guilherme.marvelcharacters.data.source.remote.mapper
 
-import com.guilherme.marvelcharacters.data.model.CharacterResponse
+import com.guilherme.marvelcharacters.data.source.remote.model.CharacterResponse
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.infrastructure.util.Mapper

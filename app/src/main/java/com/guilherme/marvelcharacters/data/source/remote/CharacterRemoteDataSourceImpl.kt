@@ -1,9 +1,9 @@
 package com.guilherme.marvelcharacters.data.source.remote
 
 import com.guilherme.marvelcharacters.BuildConfig
-import com.guilherme.marvelcharacters.data.model.CharacterResponse
 import com.guilherme.marvelcharacters.data.service.Api
 import com.guilherme.marvelcharacters.data.source.remote.mapper.CharacterResponseMapper
+import com.guilherme.marvelcharacters.data.source.remote.model.CharacterResponse
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.infrastructure.util.Mapper
 import org.apache.commons.codec.binary.Hex

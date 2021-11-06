@@ -1,8 +1,8 @@
 package com.guilherme.marvelcharacters.data.source.local
 
-import com.guilherme.marvelcharacters.data.model.CharacterEntity
 import com.guilherme.marvelcharacters.data.source.local.dao.CharacterDao
 import com.guilherme.marvelcharacters.data.source.local.mapper.CharacterEntityMapper
+import com.guilherme.marvelcharacters.data.source.local.model.CharacterEntity
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.infrastructure.util.Mapper
 

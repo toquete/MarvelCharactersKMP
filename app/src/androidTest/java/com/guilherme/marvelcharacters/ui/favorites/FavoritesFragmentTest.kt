@@ -5,8 +5,8 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.guilherme.marvelcharacters.BaseTest
 import com.guilherme.marvelcharacters.MainActivity
-import com.guilherme.marvelcharacters.data.model.Character
-import com.guilherme.marvelcharacters.data.model.Image
+import com.guilherme.marvelcharacters.data.source.local.model.CharacterEntity
+import com.guilherme.marvelcharacters.data.source.local.model.ImageEntity
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.junit.Before
@@ -75,7 +75,12 @@ class FavoritesFragmentTest : BaseTest() {
     }
 
     private fun mockFavoriteCharacter() {
-        val character = Character(id = 1, name = "Spider-Man", description = "xablau", thumbnail = Image("", ""))
+        val character = CharacterEntity(
+            id = 1,
+            name = "Spider-Man",
+            description = "xablau",
+            thumbnail = ImageEntity("", "")
+        )
         GlobalScope.launch { db.characterDao().insert(character) }
     }
 }

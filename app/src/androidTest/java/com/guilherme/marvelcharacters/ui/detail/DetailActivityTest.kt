@@ -4,8 +4,8 @@ import android.content.Intent
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import com.guilherme.marvelcharacters.BaseTest
-import com.guilherme.marvelcharacters.data.model.Character
-import com.guilherme.marvelcharacters.data.model.Image
+import com.guilherme.marvelcharacters.data.source.local.model.CharacterEntity
+import com.guilherme.marvelcharacters.data.source.local.model.ImageEntity
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.junit.Test
@@ -66,7 +66,12 @@ class DetailActivityTest : BaseTest() {
     }
 
     private fun mockCharacter(isFavorite: Boolean = false) {
-        val character = Character(id = 1, name = "Spider-Man", description = "xablau", thumbnail = Image("", ""))
+        val character = CharacterEntity(
+            id = 1,
+            name = "Spider-Man",
+            description = "xablau",
+            thumbnail = ImageEntity("", "")
+        )
 
         if (isFavorite) {
             GlobalScope.launch { db.characterDao().insert(character) }

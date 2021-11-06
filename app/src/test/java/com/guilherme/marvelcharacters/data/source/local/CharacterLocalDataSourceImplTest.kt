@@ -1,15 +1,14 @@
 package com.guilherme.marvelcharacters.data.source.local
 
 import com.google.common.truth.Truth.assertThat
-import com.guilherme.marvelcharacters.data.model.CharacterEntity
-import com.guilherme.marvelcharacters.data.model.ImageEntity
 import com.guilherme.marvelcharacters.data.source.local.dao.CharacterDao
+import com.guilherme.marvelcharacters.data.source.local.model.CharacterEntity
+import com.guilherme.marvelcharacters.data.source.local.model.ImageEntity
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
