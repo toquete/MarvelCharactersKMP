@@ -1,27 +1,25 @@
 package com.guilherme.marvelcharacters.data.repository
 
-import androidx.lifecycle.LiveData
-import com.guilherme.marvelcharacters.data.model.Character
-import com.guilherme.marvelcharacters.data.source.local.dao.CharacterDao
+import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSource
 import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSource
+import com.guilherme.marvelcharacters.domain.model.Character
 
 class CharacterRepository(
     private val remoteDataSource: CharacterRemoteDataSource,
-    private val characterDao: CharacterDao
+    private val localDataSource: CharacterLocalDataSource
 ) {
 
     suspend fun getCharacters(name: String): List<Character> {
         return remoteDataSource.getCharacters(name)
-            .map { it.toCharacter() }
     }
 
-    fun isCharacterFavorite(id: Int): LiveData<Boolean> = characterDao.isCharacterFavorite(id)
+    suspend fun isCharacterFavorite(id: Int): Boolean = localDataSource.isCharacterFavorite(id)
 
-    fun getFavoriteCharacters(): LiveData<List<Character>> = characterDao.getCharacterList()
+    suspend fun getFavoriteCharacters(): List<Character> = localDataSource.getFavoriteCharacters()
 
-    suspend fun insertFavoriteCharacter(character: Character) = characterDao.insert(character)
+    suspend fun insertFavoriteCharacter(character: Character) = localDataSource.insertFavoriteCharacter(character)
 
-    suspend fun deleteFavoriteCharacter(character: Character) = characterDao.delete(character)
+    suspend fun deleteFavoriteCharacter(character: Character) = localDataSource.deleteFavoriteCharacter(character)
 
-    suspend fun deleteAllFavoriteCharacters() = characterDao.deleteAll()
+    suspend fun deleteAllFavoriteCharacters() = localDataSource.deleteAllFavoriteCharacters()
 }

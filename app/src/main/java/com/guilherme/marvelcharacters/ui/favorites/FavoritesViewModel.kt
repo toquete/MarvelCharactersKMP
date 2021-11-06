@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.Event
 import com.guilherme.marvelcharacters.R
-import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
+import com.guilherme.marvelcharacters.domain.model.Character
 import kotlinx.coroutines.launch
 
 class FavoritesViewModel(
@@ -21,7 +21,14 @@ class FavoritesViewModel(
     private val _navigateToDetail = MutableLiveData<Event<Character>>()
     val navigateToDetail: LiveData<Event<Character>> = _navigateToDetail
 
-    val list: LiveData<List<Character>> = characterRepository.getFavoriteCharacters()
+    private val _list = MutableLiveData<List<Character>>()
+    val list: LiveData<List<Character>> = _list
+
+    init {
+        viewModelScope.launch {
+            _list.value = characterRepository.getFavoriteCharacters()
+        }
+    }
 
     fun deleteCharacter(character: Character) = viewModelScope.launch {
         characterRepository.deleteFavoriteCharacter(character)

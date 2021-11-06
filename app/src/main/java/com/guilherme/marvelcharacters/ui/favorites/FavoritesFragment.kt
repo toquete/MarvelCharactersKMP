@@ -12,8 +12,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.guilherme.marvelcharacters.EventObserver
 import com.guilherme.marvelcharacters.R
-import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.databinding.FragmentFavoritesBinding
+import com.guilherme.marvelcharacters.domain.model.Character
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
@@ -71,7 +71,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
     }
 
     private fun navigateToDetail(character: Character) {
-        FavoritesFragmentDirections.actionFavoritesToDetail(character).apply {
+        FavoritesFragmentDirections.actionFavoritesToDetail(character.toCharacterVO()).apply {
             findNavController().navigate(this)
         }
     }

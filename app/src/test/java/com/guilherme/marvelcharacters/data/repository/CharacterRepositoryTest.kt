@@ -1,18 +1,13 @@
 package com.guilherme.marvelcharacters.data.repository
 
-import androidx.lifecycle.MutableLiveData
 import com.google.common.truth.Truth.assertThat
-import com.guilherme.marvelcharacters.data.model.Character
-import com.guilherme.marvelcharacters.data.model.CharacterResponse
-import com.guilherme.marvelcharacters.data.model.Image
-import com.guilherme.marvelcharacters.data.model.ImageResponse
-import com.guilherme.marvelcharacters.data.source.local.dao.CharacterDao
+import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSource
 import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSource
+import com.guilherme.marvelcharacters.domain.model.Character
+import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
-import com.guilherme.marvelcharacters.util.getOrAwaitValue
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,25 +21,25 @@ class CharacterRepositoryTest : BaseUnitTest() {
     private lateinit var remoteDataSource: CharacterRemoteDataSource
 
     @RelaxedMockK
-    private lateinit var characterDao: CharacterDao
+    private lateinit var localDataSource: CharacterLocalDataSource
 
     @InjectMockKs
     private lateinit var characterRepository: CharacterRepository
 
     @Test
     fun `getCharacters - returns character list`() = runBlockingTest {
-        val characterResponse = CharacterResponse(
+        val character = Character(
             id = 0,
             name = "Spider-Man",
             description = "The Amazing Spider-Man",
-            thumbnail = ImageResponse(
+            thumbnail = Image(
                 path = "",
                 extension = ""
             )
         )
-        val characterList = listOf(characterResponse.toCharacter())
+        val characterList = listOf(character)
 
-        coEvery { remoteDataSource.getCharacters(name = "spider") } returns listOf(characterResponse)
+        coEvery { remoteDataSource.getCharacters(name = "spider") } returns listOf(character)
 
         val list = characterRepository.getCharacters("spider")
 
@@ -52,24 +47,24 @@ class CharacterRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `isCharacterFavorite - returns if character is favorite`() {
-        every { characterDao.isCharacterFavorite(id = any()) } returns MutableLiveData(true)
+    fun `isCharacterFavorite - returns if character is favorite`() = runBlockingTest {
+        coEvery { localDataSource.isCharacterFavorite(id = any()) } returns true
 
         val result = characterRepository.isCharacterFavorite(id = 0)
 
-        assertThat(result.getOrAwaitValue()).isEqualTo(true)
+        assertThat(result).isEqualTo(true)
     }
 
     @Test
-    fun `isCharacterFavorite - returns favorite characters list`() {
+    fun `isCharacterFavorite - returns favorite characters list`() = runBlockingTest {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
         val characters = listOf(character)
 
-        every { characterDao.getCharacterList() } returns MutableLiveData(characters)
+        coEvery { localDataSource.getFavoriteCharacters() } returns characters
 
         val result = characterRepository.getFavoriteCharacters()
 
-        assertThat(result.getOrAwaitValue()).isEqualTo(characters)
+        assertThat(result).isEqualTo(characters)
     }
 
     @Test
@@ -78,7 +73,7 @@ class CharacterRepositoryTest : BaseUnitTest() {
 
         characterRepository.insertFavoriteCharacter(character)
 
-        coVerify { characterDao.insert(character) }
+        coVerify { localDataSource.insertFavoriteCharacter(character) }
     }
 
     @Test
@@ -87,13 +82,13 @@ class CharacterRepositoryTest : BaseUnitTest() {
 
         characterRepository.deleteFavoriteCharacter(character)
 
-        coVerify { characterDao.delete(character) }
+        coVerify { localDataSource.deleteFavoriteCharacter(character) }
     }
 
     @Test
     fun `deleteAllFavoriteCharacters - check database call`() = runBlockingTest {
         characterRepository.deleteAllFavoriteCharacters()
 
-        coVerify { characterDao.deleteAll() }
+        coVerify { localDataSource.deleteAllFavoriteCharacters() }
     }
 }

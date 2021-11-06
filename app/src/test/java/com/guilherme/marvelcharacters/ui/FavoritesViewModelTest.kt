@@ -1,12 +1,11 @@
 package com.guilherme.marvelcharacters.ui
 
 import android.database.sqlite.SQLiteException
-import androidx.lifecycle.MutableLiveData
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.R
-import com.guilherme.marvelcharacters.data.model.Character
-import com.guilherme.marvelcharacters.data.model.Image
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
+import com.guilherme.marvelcharacters.domain.model.Character
+import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import com.guilherme.marvelcharacters.ui.favorites.FavoritesViewModel
 import com.guilherme.marvelcharacters.util.getOrAwaitValue
@@ -77,7 +76,7 @@ class FavoritesViewModelTest : BaseUnitTest() {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
         val characterList = listOf(character)
 
-        coEvery { characterRepository.getFavoriteCharacters() } returns MutableLiveData(characterList)
+        coEvery { characterRepository.getFavoriteCharacters() } returns characterList
 
         val viewModel = FavoritesViewModel(characterRepository)
 
