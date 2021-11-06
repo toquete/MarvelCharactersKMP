@@ -8,11 +8,15 @@ import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.Event
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.model.Character
-import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
+import com.guilherme.marvelcharacters.domain.usecase.DeleteAllFavoriteCharactersUseCase
+import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
+import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharactersUseCase
 import kotlinx.coroutines.launch
 
 class FavoritesViewModel(
-    private val characterRepository: CharacterRepository
+    private val getFavoriteCharactersUseCase: GetFavoriteCharactersUseCase,
+    private val deleteFavoriteCharacterUseCase: DeleteFavoriteCharacterUseCase,
+    private val deleteAllFavoriteCharactersUseCase: DeleteAllFavoriteCharactersUseCase
 ) : ViewModel() {
 
     private val _snackbarMessage = MutableLiveData<Event<Int>>()
@@ -26,17 +30,17 @@ class FavoritesViewModel(
 
     init {
         viewModelScope.launch {
-            _list.value = characterRepository.getFavoriteCharacters()
+            _list.value = getFavoriteCharactersUseCase()
         }
     }
 
     fun deleteCharacter(character: Character) = viewModelScope.launch {
-        characterRepository.deleteFavoriteCharacter(character)
+        deleteFavoriteCharacterUseCase(character)
     }
 
     fun onDeleteAllClick() = viewModelScope.launch {
         try {
-            characterRepository.deleteAllFavoriteCharacters()
+            deleteAllFavoriteCharactersUseCase()
             _snackbarMessage.value = Event(R.string.character_deleted)
         } catch (exception: SQLiteException) {
             _snackbarMessage.value = Event(R.string.error_message)

@@ -8,12 +8,16 @@ import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.Event
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.model.Character
-import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
+import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
+import com.guilherme.marvelcharacters.domain.usecase.InsertFavoriteCharacterUseCase
+import com.guilherme.marvelcharacters.domain.usecase.IsCharacterFavoriteUseCase
 import kotlinx.coroutines.launch
 
 class DetailViewModel(
     private val character: Character,
-    private val characterRepository: CharacterRepository
+    private val isCharacterFavoriteUseCase: IsCharacterFavoriteUseCase,
+    private val deleteFavoriteCharacterUseCase: DeleteFavoriteCharacterUseCase,
+    private val insertFavoriteCharacterUseCase: InsertFavoriteCharacterUseCase
 ) : ViewModel() {
 
     private val _snackbarMessage = MutableLiveData<Event<Pair<Int, Boolean>>>()
@@ -24,7 +28,7 @@ class DetailViewModel(
 
     init {
         viewModelScope.launch {
-            _isCharacterFavorite.value = characterRepository.isCharacterFavorite(character.id)
+            _isCharacterFavorite.value = isCharacterFavoriteUseCase(character.id)
         }
     }
 
@@ -32,10 +36,10 @@ class DetailViewModel(
         try {
             isCharacterFavorite.value?.let { isFavorite ->
                 if (isFavorite) {
-                    characterRepository.deleteFavoriteCharacter(character)
+                    deleteFavoriteCharacterUseCase(character)
                     _snackbarMessage.value = Event(R.string.character_deleted to true)
                 } else {
-                    characterRepository.insertFavoriteCharacter(character)
+                    insertFavoriteCharacterUseCase(character)
                     _snackbarMessage.value = Event(R.string.character_added to false)
                 }
             } ?: run {
@@ -48,7 +52,7 @@ class DetailViewModel(
 
     fun onUndoClick() = viewModelScope.launch {
         try {
-            characterRepository.insertFavoriteCharacter(character)
+            insertFavoriteCharacterUseCase(character)
         } catch (error: SQLiteException) {
             _snackbarMessage.value = Event(R.string.error_message to false)
         }

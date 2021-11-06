@@ -10,7 +10,12 @@ import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSour
 import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSourceImpl
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
+import com.guilherme.marvelcharacters.domain.usecase.DeleteAllFavoriteCharactersUseCase
+import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
+import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharactersUseCase
+import com.guilherme.marvelcharacters.domain.usecase.InsertFavoriteCharacterUseCase
+import com.guilherme.marvelcharacters.domain.usecase.IsCharacterFavoriteUseCase
 import com.guilherme.marvelcharacters.infrastructure.database.CharacterDatabase
 import com.guilherme.marvelcharacters.infrastructure.service.RetrofitFactory
 import com.guilherme.marvelcharacters.infrastructure.util.Mapper
@@ -34,9 +39,14 @@ val appModule = module {
     factory<CharacterLocalDataSource> { CharacterLocalDataSourceImpl(get()) }
     factory<CharacterRepository> { CharacterRepositoryImpl(get(), get()) }
     factory { GetCharactersUseCase(get()) }
+    factory { IsCharacterFavoriteUseCase(get()) }
+    factory { DeleteFavoriteCharacterUseCase(get()) }
+    factory { InsertFavoriteCharacterUseCase(get()) }
+    factory { DeleteAllFavoriteCharactersUseCase(get()) }
+    factory { GetFavoriteCharactersUseCase(get()) }
     single { get<Context>().getSharedPreferences(DEFAULT_PREFERENCES, Context.MODE_PRIVATE) }
     single { PreferenceRepository(get()) }
     viewModel { HomeViewModel(get(), get()) }
-    viewModel { FavoritesViewModel(get()) }
-    viewModel { (character: Character) -> DetailViewModel(character, get()) }
+    viewModel { FavoritesViewModel(get(), get(), get()) }
+    viewModel { (character: Character) -> DetailViewModel(character, get(), get(), get()) }
 }
