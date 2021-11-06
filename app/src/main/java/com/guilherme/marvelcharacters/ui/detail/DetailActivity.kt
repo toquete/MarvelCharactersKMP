@@ -9,6 +9,11 @@ import com.google.android.material.snackbar.Snackbar
 import com.guilherme.marvelcharacters.EventObserver
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.databinding.ActivityDetailBinding
+import com.guilherme.marvelcharacters.domain.model.Character
+import com.guilherme.marvelcharacters.infrastructure.util.Mapper
+import com.guilherme.marvelcharacters.ui.mapper.CharacterMapper
+import com.guilherme.marvelcharacters.ui.model.CharacterVO
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -16,9 +21,11 @@ class DetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailBinding
 
+    private val mapper: Mapper<Character, CharacterVO> by inject()
+
     private val args: DetailActivityArgs by navArgs()
 
-    private val detailViewModel: DetailViewModel by viewModel { parametersOf(args.character) }
+    private val detailViewModel: DetailViewModel by viewModel { parametersOf(mapper.mapFrom(args.character)) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

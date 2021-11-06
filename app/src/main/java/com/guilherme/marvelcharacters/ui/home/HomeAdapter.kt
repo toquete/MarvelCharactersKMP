@@ -5,8 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.guilherme.marvelcharacters.R
-import com.guilherme.marvelcharacters.data.model.Character
 import com.guilherme.marvelcharacters.databinding.ItemListBinding
+import com.guilherme.marvelcharacters.domain.model.Character
 
 class HomeAdapter(private val onClickListener: (Character) -> Unit) : RecyclerView.Adapter<HomeAdapter.BindingHolder>() {
 

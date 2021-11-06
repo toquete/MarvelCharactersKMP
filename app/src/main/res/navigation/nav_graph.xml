@@ -29,6 +29,6 @@
         android:label="DetailActivity" >
         <argument
             android:name="character"
-            app:argType="com.guilherme.marvelcharacters.data.model.Character" />
+            app:argType="com.guilherme.marvelcharacters.ui.model.CharacterVO" />
     </activity>
 </navigation>

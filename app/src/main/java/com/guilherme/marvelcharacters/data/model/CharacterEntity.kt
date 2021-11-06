@@ -1,14 +1,17 @@
 package com.guilherme.marvelcharacters.data.model
 
-import com.google.gson.annotations.SerializedName
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.model.Image
 
-data class CharacterResponse(
-    @SerializedName("id") val id: Int,
-    @SerializedName("name") val name: String,
-    @SerializedName("description") val description: String,
-    @SerializedName("thumbnail") val thumbnail: ImageResponse
+@Entity
+data class CharacterEntity(
+    @PrimaryKey val id: Int,
+    val name: String,
+    val description: String,
+    @Embedded val thumbnail: ImageEntity
 ) {
 
     fun toCharacter(): Character {
@@ -24,7 +27,4 @@ data class CharacterResponse(
     }
 }
 
-data class ImageResponse(
-    @SerializedName("path") val path: String,
-    @SerializedName("extension") val extension: String
-)
+data class ImageEntity(val path: String, val extension: String)

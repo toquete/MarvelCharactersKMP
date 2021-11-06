@@ -1,28 +1,27 @@
 package com.guilherme.marvelcharacters.data.source.local.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.guilherme.marvelcharacters.data.model.Character
+import com.guilherme.marvelcharacters.data.model.CharacterEntity
 
 @Dao
 interface CharacterDao {
 
-    @Query("SELECT * FROM character")
-    fun getCharacterList(): LiveData<List<Character>>
+    @Query("SELECT * FROM characterentity")
+    suspend fun getCharacterList(): List<CharacterEntity>
 
-    @Query("SELECT COUNT(*) FROM character WHERE id = :id")
-    fun isCharacterFavorite(id: Int): LiveData<Boolean>
+    @Query("SELECT COUNT(*) FROM characterentity WHERE id = :id")
+    suspend fun isCharacterFavorite(id: Int): Boolean
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(character: Character)
+    suspend fun insert(character: CharacterEntity)
 
-    @Query("DELETE FROM character")
+    @Query("DELETE FROM characterentity")
     suspend fun deleteAll()
 
     @Delete
-    suspend fun delete(character: Character)
+    suspend fun delete(character: CharacterEntity)
 }
