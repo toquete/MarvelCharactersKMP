@@ -1,25 +1,25 @@
 package com.guilherme.marvelcharacters.data.source.remote.mapper
 
+import com.guilherme.marvelcharacters.data.model.CharacterData
+import com.guilherme.marvelcharacters.data.model.ImageData
 import com.guilherme.marvelcharacters.data.source.remote.model.CharacterResponse
-import com.guilherme.marvelcharacters.domain.model.Character
-import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.infrastructure.util.Mapper
 
-class CharacterResponseMapper : Mapper<CharacterResponse, Character> {
+class CharacterResponseMapper : Mapper<CharacterResponse, CharacterData> {
 
-    override fun mapTo(source: CharacterResponse): Character {
-        return Character(
+    override fun mapTo(source: CharacterResponse): CharacterData {
+        return CharacterData(
             id = source.id,
             name = source.name,
             description = source.description,
-            thumbnail = Image(
+            thumbnail = ImageData(
                 path = source.thumbnail.path,
                 extension = source.thumbnail.extension
             )
         )
     }
 
-    override fun mapFrom(origin: Character): CharacterResponse {
+    override fun mapFrom(origin: CharacterData): CharacterResponse {
         throw UnsupportedOperationException()
     }
 }

@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.Event
 import com.guilherme.marvelcharacters.R
-import com.guilherme.marvelcharacters.data.repository.CharacterRepository
 import com.guilherme.marvelcharacters.data.repository.PreferenceRepository
 import com.guilherme.marvelcharacters.domain.model.Character
+import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException

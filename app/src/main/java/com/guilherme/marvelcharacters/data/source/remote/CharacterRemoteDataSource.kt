@@ -1,8 +1,8 @@
 package com.guilherme.marvelcharacters.data.source.remote
 
-import com.guilherme.marvelcharacters.domain.model.Character
+import com.guilherme.marvelcharacters.data.model.CharacterData
 
 interface CharacterRemoteDataSource {
 
-    suspend fun getCharacters(name: String): List<Character>
+    suspend fun getCharacters(name: String): List<CharacterData>
 }

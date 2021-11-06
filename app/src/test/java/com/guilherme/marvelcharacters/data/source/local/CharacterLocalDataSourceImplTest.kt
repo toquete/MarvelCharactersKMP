@@ -1,11 +1,11 @@
 package com.guilherme.marvelcharacters.data.source.local
 
 import com.google.common.truth.Truth.assertThat
+import com.guilherme.marvelcharacters.data.model.CharacterData
+import com.guilherme.marvelcharacters.data.model.ImageData
 import com.guilherme.marvelcharacters.data.source.local.dao.CharacterDao
 import com.guilherme.marvelcharacters.data.source.local.model.CharacterEntity
 import com.guilherme.marvelcharacters.data.source.local.model.ImageEntity
-import com.guilherme.marvelcharacters.domain.model.Character
-import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -32,11 +32,11 @@ class CharacterLocalDataSourceImplTest : BaseUnitTest() {
         )
     )
 
-    private val character = Character(
+    private val character = CharacterData(
         id = 0,
         name = "Spider-Man",
         description = "",
-        thumbnail = Image(
+        thumbnail = ImageData(
             path = "",
             extension = ""
         )

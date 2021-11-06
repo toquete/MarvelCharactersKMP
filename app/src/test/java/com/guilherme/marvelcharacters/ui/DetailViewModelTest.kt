@@ -3,9 +3,9 @@ package com.guilherme.marvelcharacters.ui
 import android.database.sqlite.SQLiteException
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.R
-import com.guilherme.marvelcharacters.data.repository.CharacterRepository
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.model.Image
+import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import com.guilherme.marvelcharacters.ui.detail.DetailViewModel
 import com.guilherme.marvelcharacters.util.getOrAwaitValue

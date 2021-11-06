@@ -2,13 +2,14 @@ package com.guilherme.marvelcharacters.infrastructure.di
 
 import android.content.Context
 import androidx.room.Room
-import com.guilherme.marvelcharacters.data.repository.CharacterRepository
+import com.guilherme.marvelcharacters.data.repository.CharacterRepositoryImpl
 import com.guilherme.marvelcharacters.data.repository.PreferenceRepository
 import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSource
 import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSourceImpl
 import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSource
 import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSourceImpl
 import com.guilherme.marvelcharacters.domain.model.Character
+import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
 import com.guilherme.marvelcharacters.infrastructure.database.CharacterDatabase
 import com.guilherme.marvelcharacters.infrastructure.service.RetrofitFactory
 import com.guilherme.marvelcharacters.infrastructure.util.Mapper
@@ -30,7 +31,7 @@ val appModule = module {
     factory<Mapper<Character, CharacterVO>> { CharacterMapper() }
     factory<CharacterRemoteDataSource> { CharacterRemoteDataSourceImpl(get()) }
     factory<CharacterLocalDataSource> { CharacterLocalDataSourceImpl(get()) }
-    single { CharacterRepository(get(), get()) }
+    factory<CharacterRepository> { CharacterRepositoryImpl(get(), get()) }
     single { get<Context>().getSharedPreferences(DEFAULT_PREFERENCES, Context.MODE_PRIVATE) }
     single { PreferenceRepository(get()) }
     viewModel { HomeViewModel(get(), get()) }
