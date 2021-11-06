@@ -6,9 +6,10 @@ import com.guilherme.marvelcharacters.data.model.ContainerResponse
 import com.guilherme.marvelcharacters.data.model.ImageResponse
 import com.guilherme.marvelcharacters.data.model.Response
 import com.guilherme.marvelcharacters.data.service.Api
+import com.guilherme.marvelcharacters.domain.model.Character
+import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import io.mockk.coEvery
-import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -20,8 +21,12 @@ class CharacterRemoteDataSourceImplTest : BaseUnitTest() {
     @MockK
     private lateinit var api: Api
 
-    @InjectMockKs
     private lateinit var remoteDataSource: CharacterRemoteDataSourceImpl
+
+    override fun setUp() {
+        super.setUp()
+        remoteDataSource = CharacterRemoteDataSourceImpl(api)
+    }
 
     @Test
     fun `getCharacters - returns character list on success`() = runBlockingTest {
@@ -34,13 +39,29 @@ class CharacterRemoteDataSourceImplTest : BaseUnitTest() {
                 extension = ""
             )
         )
+        val character = Character(
+            id = 0,
+            name = "Spider-Man",
+            description = "The Amazing Spider-Man",
+            thumbnail = Image(
+                path = "",
+                extension = ""
+            )
+        )
         val response = Response(ContainerResponse(listOf(characterResponse)))
         val characterName = "spider"
 
-        coEvery { api.getCharacters(ts = any(), hash = any(), apiKey = any(), nameStartsWith = characterName) } returns response
+        coEvery {
+            api.getCharacters(
+                ts = any(),
+                hash = any(),
+                apiKey = any(),
+                nameStartsWith = characterName
+            )
+        } returns response
 
         val result = remoteDataSource.getCharacters(name = characterName)
 
-        assertThat(result).isEqualTo(response.container.results)
+        assertThat(result).isEqualTo(listOf(character))
     }
 }
