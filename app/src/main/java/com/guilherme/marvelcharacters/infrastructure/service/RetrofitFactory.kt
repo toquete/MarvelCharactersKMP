@@ -1,6 +1,6 @@
 package com.guilherme.marvelcharacters.infrastructure.service
 
-import com.guilherme.marvelcharacters.data.service.Api
+import com.guilherme.marvelcharacters.data.source.remote.service.Api
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

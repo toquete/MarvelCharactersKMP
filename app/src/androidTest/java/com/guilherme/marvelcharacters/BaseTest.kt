@@ -2,7 +2,7 @@ package com.guilherme.marvelcharacters
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.guilherme.marvelcharacters.infrastructure.database.CharacterDatabase
-import com.guilherme.marvelcharacters.data.service.Api
+import com.guilherme.marvelcharacters.data.source.remote.service.Api
 import org.junit.After
 import org.junit.runner.RunWith
 import org.koin.core.context.stopKoin

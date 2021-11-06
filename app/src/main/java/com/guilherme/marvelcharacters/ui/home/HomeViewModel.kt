@@ -8,22 +8,24 @@ import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.Event
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.data.repository.PreferenceRepository
-import com.guilherme.marvelcharacters.domain.model.Character
-import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
+import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
+import com.guilherme.marvelcharacters.ui.mapper.CharacterMapper
+import com.guilherme.marvelcharacters.ui.model.CharacterVO
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
 class HomeViewModel(
-    private val characterRepository: CharacterRepository,
-    private val preferenceRepository: PreferenceRepository
+    private val preferenceRepository: PreferenceRepository,
+    private val getCharactersUseCase: GetCharactersUseCase,
+    private val mapper: CharacterMapper = CharacterMapper()
 ) : ViewModel() {
 
     private val _states = MutableLiveData<CharacterListState>()
     val states: LiveData<CharacterListState> = _states
 
-    private val _navigateToDetail = MutableLiveData<Event<Character>>()
-    val navigateToDetail: LiveData<Event<Character>> = _navigateToDetail
+    private val _navigateToDetail = MutableLiveData<Event<CharacterVO>>()
+    val navigateToDetail: LiveData<Event<CharacterVO>> = _navigateToDetail
 
     val nightMode: LiveData<Int> = preferenceRepository.nightModeLive
 
@@ -33,7 +35,8 @@ class HomeViewModel(
         viewModelScope.launch {
             _states.value = CharacterListState.Loading
             try {
-                val charactersList = characterRepository.getCharacters(character)
+                val charactersList = getCharactersUseCase(character)
+                    .map { mapper.mapTo(it) }
 
                 _states.value = if (charactersList.isEmpty()) {
                     CharacterListState.EmptyState
@@ -48,7 +51,7 @@ class HomeViewModel(
         }
     }
 
-    fun onItemClick(character: Character) {
+    fun onItemClick(character: CharacterVO) {
         _navigateToDetail.value = Event(character)
     }
 
@@ -57,7 +60,7 @@ class HomeViewModel(
     }
 
     sealed class CharacterListState {
-        data class Characters(val characters: List<Character>) : CharacterListState()
+        data class Characters(val characters: List<CharacterVO>) : CharacterListState()
         data class ErrorState(@StringRes val messageId: Int) : CharacterListState()
         object EmptyState : CharacterListState()
         object Loading : CharacterListState()

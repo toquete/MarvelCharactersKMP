@@ -3,7 +3,7 @@ package com.guilherme.marvelcharacters.data.source.remote
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.data.model.CharacterData
 import com.guilherme.marvelcharacters.data.model.ImageData
-import com.guilherme.marvelcharacters.data.service.Api
+import com.guilherme.marvelcharacters.data.source.remote.service.Api
 import com.guilherme.marvelcharacters.data.source.remote.model.CharacterResponse
 import com.guilherme.marvelcharacters.data.source.remote.model.ContainerResponse
 import com.guilherme.marvelcharacters.data.source.remote.model.ImageResponse

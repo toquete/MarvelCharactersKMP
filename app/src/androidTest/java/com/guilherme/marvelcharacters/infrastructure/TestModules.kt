@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.guilherme.marvelcharacters.data.repository.CharacterRepositoryImpl
 import com.guilherme.marvelcharacters.data.repository.PreferenceRepository
-import com.guilherme.marvelcharacters.data.service.Api
+import com.guilherme.marvelcharacters.data.source.remote.service.Api
 import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSource
 import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSourceImpl
 import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSource

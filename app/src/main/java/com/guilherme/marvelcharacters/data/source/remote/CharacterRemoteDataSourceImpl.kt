@@ -2,7 +2,7 @@ package com.guilherme.marvelcharacters.data.source.remote
 
 import com.guilherme.marvelcharacters.BuildConfig
 import com.guilherme.marvelcharacters.data.model.CharacterData
-import com.guilherme.marvelcharacters.data.service.Api
+import com.guilherme.marvelcharacters.data.source.remote.service.Api
 import com.guilherme.marvelcharacters.data.source.remote.mapper.CharacterResponseMapper
 import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.DigestUtils

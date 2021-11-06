@@ -1,4 +1,4 @@
-package com.guilherme.marvelcharacters.data.service
+package com.guilherme.marvelcharacters.data.source.remote.service
 
 import com.guilherme.marvelcharacters.data.source.remote.model.CharacterResponse
 import com.guilherme.marvelcharacters.data.source.remote.model.Response

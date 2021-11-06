@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.guilherme.marvelcharacters.EventObserver
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.databinding.FragmentHomeBinding
-import com.guilherme.marvelcharacters.domain.model.Character
+import com.guilherme.marvelcharacters.ui.model.CharacterVO
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -69,7 +69,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun setupAdapter() {
         homeAdapter = HomeAdapter { character -> homeViewModel.onItemClick(character) }
         homeBinding.recyclerviewCharacters.adapter = homeAdapter
-        homeBinding.recyclerviewCharacters.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        homeBinding.recyclerviewCharacters.addItemDecoration(
+            DividerItemDecoration(
+                context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
     }
 
     private fun setupScreenBindings() {
@@ -153,7 +158,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun showCharacters(list: List<Character>) {
+    private fun showCharacters(list: List<CharacterVO>) {
         handleLoading(mustShowLoading = false)
         homeAdapter.characters = list
         homeAdapter.notifyDataSetChanged()
@@ -162,8 +167,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         homeBinding.recyclerviewCharacters.visibility = View.VISIBLE
     }
 
-    private fun navigateToDetail(character: Character) {
-        HomeFragmentDirections.actionHomeToDetail(character.toCharacterVO()).run {
+    private fun navigateToDetail(character: CharacterVO) {
+        HomeFragmentDirections.actionHomeToDetail(character).run {
             findNavController().navigate(this)
         }
     }
