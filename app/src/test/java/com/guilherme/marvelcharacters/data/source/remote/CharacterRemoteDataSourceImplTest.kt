@@ -3,15 +3,16 @@ package com.guilherme.marvelcharacters.data.source.remote
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.data.model.CharacterData
 import com.guilherme.marvelcharacters.data.model.ImageData
-import com.guilherme.marvelcharacters.data.source.remote.service.Api
 import com.guilherme.marvelcharacters.data.source.remote.model.CharacterResponse
 import com.guilherme.marvelcharacters.data.source.remote.model.ContainerResponse
 import com.guilherme.marvelcharacters.data.source.remote.model.ImageResponse
 import com.guilherme.marvelcharacters.data.source.remote.model.Response
+import com.guilherme.marvelcharacters.data.source.remote.service.Api
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 
@@ -62,6 +63,6 @@ class CharacterRemoteDataSourceImplTest : BaseUnitTest() {
 
         val result = remoteDataSource.getCharacters(name = characterName)
 
-        assertThat(result).isEqualTo(listOf(character))
+        assertThat(result.first()).isEqualTo(listOf(character))
     }
 }

@@ -5,7 +5,9 @@ import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.model.Image
-import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
+import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
+import com.guilherme.marvelcharacters.domain.usecase.InsertFavoriteCharacterUseCase
+import com.guilherme.marvelcharacters.domain.usecase.IsCharacterFavoriteUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import com.guilherme.marvelcharacters.ui.detail.DetailViewModel
 import com.guilherme.marvelcharacters.util.getOrAwaitValue
@@ -20,20 +22,26 @@ import org.junit.Test
 class DetailViewModelTest : BaseUnitTest() {
 
     @RelaxedMockK
-    private lateinit var characterRepository: CharacterRepository
+    private lateinit var isCharacterFavoriteUseCase: IsCharacterFavoriteUseCase
+
+    @RelaxedMockK
+    private lateinit var deleteFavoriteCharacterUseCase: DeleteFavoriteCharacterUseCase
+
+    @RelaxedMockK
+    private lateinit var insertFavoriteCharacterUseCase: InsertFavoriteCharacterUseCase
 
     private val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
 
     @Test
     fun `onFabClick - send deleted character event`() {
-        coEvery { characterRepository.isCharacterFavorite(character.id) } returns true
+        coEvery { isCharacterFavoriteUseCase(character.id) } returns true
 
-        val detailViewModel = DetailViewModel(character, characterRepository)
+        val detailViewModel = getViewModel()
 
         detailViewModel.snackbarMessage.observeForTesting {
             detailViewModel.onFabClick()
 
-            coVerify { characterRepository.deleteFavoriteCharacter(character) }
+            coVerify { deleteFavoriteCharacterUseCase(character) }
             assertThat(
                 detailViewModel.snackbarMessage.getOrAwaitValue().peekContent()
             ).isEqualTo(R.string.character_deleted to true)
@@ -42,14 +50,14 @@ class DetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onFabClick - send added character event`() {
-        coEvery { characterRepository.isCharacterFavorite(character.id) } returns false
+        coEvery { isCharacterFavoriteUseCase(character.id) } returns false
 
-        val detailViewModel = DetailViewModel(character, characterRepository)
+        val detailViewModel = getViewModel()
 
         detailViewModel.snackbarMessage.observeForTesting {
             detailViewModel.onFabClick()
 
-            coVerify { characterRepository.insertFavoriteCharacter(character) }
+            coVerify { insertFavoriteCharacterUseCase(character) }
             assertThat(
                 detailViewModel.snackbarMessage.getOrAwaitValue().peekContent()
             ).isEqualTo(R.string.character_added to false)
@@ -58,15 +66,15 @@ class DetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onFabClick - send generic error event`() {
-        coEvery { characterRepository.isCharacterFavorite(character.id) } returns false
-        coEvery { characterRepository.insertFavoriteCharacter(character) } throws SQLiteException()
+        coEvery { isCharacterFavoriteUseCase(character.id) } returns false
+        coEvery { insertFavoriteCharacterUseCase(character) } throws SQLiteException()
 
-        val detailViewModel = DetailViewModel(character, characterRepository)
+        val detailViewModel = getViewModel()
 
         detailViewModel.snackbarMessage.observeForTesting {
             detailViewModel.onFabClick()
 
-            coVerify { characterRepository.insertFavoriteCharacter(character) }
+            coVerify { insertFavoriteCharacterUseCase(character) }
             assertThat(
                 detailViewModel.snackbarMessage.getOrAwaitValue().peekContent()
             ).isEqualTo(R.string.error_message to false)
@@ -75,18 +83,18 @@ class DetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onUndoClick - undo changes`() {
-        val detailViewModel = DetailViewModel(character, characterRepository)
+        val detailViewModel = getViewModel()
 
         detailViewModel.onUndoClick()
 
-        coVerify { characterRepository.insertFavoriteCharacter(character) }
+        coVerify { insertFavoriteCharacterUseCase(character) }
     }
 
     @Test
     fun `onUndoClick - send error message on undo changes`() {
-        coEvery { characterRepository.insertFavoriteCharacter(character) } throws SQLiteException()
+        coEvery { insertFavoriteCharacterUseCase(character) } throws SQLiteException()
 
-        val detailViewModel = DetailViewModel(character, characterRepository)
+        val detailViewModel = getViewModel()
 
         detailViewModel.snackbarMessage.observeForTesting {
             detailViewModel.onUndoClick()
@@ -94,5 +102,14 @@ class DetailViewModelTest : BaseUnitTest() {
                 detailViewModel.snackbarMessage.getOrAwaitValue().peekContent()
             ).isEqualTo(R.string.error_message to false)
         }
+    }
+
+    private fun getViewModel(): DetailViewModel {
+        return DetailViewModel(
+            character,
+            isCharacterFavoriteUseCase,
+            deleteFavoriteCharacterUseCase,
+            insertFavoriteCharacterUseCase
+        )
     }
 }

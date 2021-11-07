@@ -12,6 +12,8 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 
@@ -52,9 +54,11 @@ class CharacterRepositoryTest : BaseUnitTest() {
             )
         )
 
-        coEvery { remoteDataSource.getCharacters(name = "spider") } returns listOf(characterData)
+        coEvery {
+            remoteDataSource.getCharacters(name = "spider")
+        } returns flowOf(listOf(characterData))
 
-        val list = characterRepository.getCharacters("spider")
+        val list = characterRepository.getCharacters("spider").first()
 
         assertThat(list).isEqualTo(listOf(character))
     }

@@ -11,14 +11,20 @@ import com.guilherme.marvelcharacters.data.repository.PreferenceRepository
 import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
 import com.guilherme.marvelcharacters.ui.mapper.CharacterMapper
 import com.guilherme.marvelcharacters.ui.model.CharacterVO
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import java.io.IOException
 
 class HomeViewModel(
     private val preferenceRepository: PreferenceRepository,
     private val getCharactersUseCase: GetCharactersUseCase,
-    private val mapper: CharacterMapper = CharacterMapper()
+    private val mapper: CharacterMapper = CharacterMapper(),
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
     private val _states = MutableLiveData<CharacterListState>()
@@ -33,21 +39,25 @@ class HomeViewModel(
 
     fun onSearchCharacter(character: String) {
         viewModelScope.launch {
-            _states.value = CharacterListState.Loading
-            try {
-                val charactersList = getCharactersUseCase(character)
-                    .map { mapper.mapTo(it) }
-
-                _states.value = if (charactersList.isEmpty()) {
-                    CharacterListState.EmptyState
-                } else {
-                    CharacterListState.Characters(charactersList)
+            getCharactersUseCase(character)
+                .flowOn(dispatcher)
+                .onStart { _states.value = CharacterListState.Loading }
+                .catch { error ->
+                    // TODO: melhorar tratativa de erro
+                    _states.value = if (error is HttpException) {
+                        CharacterListState.ErrorState(R.string.request_error_message)
+                    } else {
+                        CharacterListState.ErrorState(R.string.network_error_message)
+                    }
                 }
-            } catch (error: HttpException) {
-                _states.value = CharacterListState.ErrorState(R.string.request_error_message)
-            } catch (error: IOException) {
-                _states.value = CharacterListState.ErrorState(R.string.network_error_message)
-            }
+                .collect { list ->
+                    _states.value = if (list.isEmpty()) {
+                        CharacterListState.EmptyState
+                    } else {
+                        val mappedList = list.map { mapper.mapTo(it) }
+                        CharacterListState.Characters(mappedList)
+                    }
+                }
         }
     }
 

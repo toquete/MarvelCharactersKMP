@@ -1,10 +1,11 @@
 package com.guilherme.marvelcharacters.domain.repository
 
 import com.guilherme.marvelcharacters.domain.model.Character
+import kotlinx.coroutines.flow.Flow
 
 interface CharacterRepository {
 
-    suspend fun getCharacters(name: String): List<Character>
+    fun getCharacters(name: String): Flow<List<Character>>
 
     suspend fun isCharacterFavorite(id: Int): Boolean
 

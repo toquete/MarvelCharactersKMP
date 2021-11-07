@@ -5,6 +5,8 @@ import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSource
 import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSource
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class CharacterRepositoryImpl(
     private val remoteDataSource: CharacterRemoteDataSource,
@@ -12,9 +14,11 @@ class CharacterRepositoryImpl(
     private val mapper: CharacterDataMapper = CharacterDataMapper()
 ) : CharacterRepository {
 
-    override suspend fun getCharacters(name: String): List<Character> {
+    override fun getCharacters(name: String): Flow<List<Character>> {
         return remoteDataSource.getCharacters(name)
-            .map { mapper.mapTo(it) }
+            .map { list ->
+                list.map { mapper.mapTo(it) }
+            }
     }
 
     override suspend fun isCharacterFavorite(id: Int): Boolean =
