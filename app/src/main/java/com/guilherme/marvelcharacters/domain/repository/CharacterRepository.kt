@@ -7,9 +7,9 @@ interface CharacterRepository {
 
     fun getCharacters(name: String): Flow<List<Character>>
 
-    suspend fun isCharacterFavorite(id: Int): Boolean
+    fun isCharacterFavorite(id: Int): Flow<Boolean>
 
-    suspend fun getFavoriteCharacters(): List<Character>
+    fun getFavoriteCharacters(): Flow<List<Character>>
 
     suspend fun insertFavoriteCharacter(character: Character)
 

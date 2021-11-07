@@ -21,12 +21,14 @@ class CharacterRepositoryImpl(
             }
     }
 
-    override suspend fun isCharacterFavorite(id: Int): Boolean =
+    override fun isCharacterFavorite(id: Int): Flow<Boolean> =
         localDataSource.isCharacterFavorite(id)
 
-    override suspend fun getFavoriteCharacters(): List<Character> {
+    override fun getFavoriteCharacters(): Flow<List<Character>> {
         return localDataSource.getFavoriteCharacters()
-            .map { mapper.mapTo(it) }
+            .map { list ->
+                list.map { mapper.mapTo(it) }
+            }
     }
 
     override suspend fun insertFavoriteCharacter(character: Character) =

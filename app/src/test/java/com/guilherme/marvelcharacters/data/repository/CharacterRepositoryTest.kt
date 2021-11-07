@@ -65,11 +65,11 @@ class CharacterRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `isCharacterFavorite - returns if character is favorite`() = runBlockingTest {
-        coEvery { localDataSource.isCharacterFavorite(id = any()) } returns true
+        coEvery { localDataSource.isCharacterFavorite(id = any()) } returns flowOf(true)
 
         val result = characterRepository.isCharacterFavorite(id = 0)
 
-        assertThat(result).isEqualTo(true)
+        assertThat(result.first()).isEqualTo(true)
     }
 
     @Test
@@ -79,11 +79,11 @@ class CharacterRepositoryTest : BaseUnitTest() {
             CharacterData(0, "Spider-Man", "The Amazing Spider-Man", ImageData("", ""))
         val characters = listOf(character)
 
-        coEvery { localDataSource.getFavoriteCharacters() } returns listOf(characterData)
+        coEvery { localDataSource.getFavoriteCharacters() } returns flowOf(listOf(characterData))
 
         val result = characterRepository.getFavoriteCharacters()
 
-        assertThat(result).isEqualTo(characters)
+        assertThat(result.first()).isEqualTo(characters)
     }
 
     @Test

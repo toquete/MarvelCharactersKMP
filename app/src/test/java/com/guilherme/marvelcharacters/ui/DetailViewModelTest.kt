@@ -16,6 +16,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -34,7 +35,7 @@ class DetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onFabClick - send deleted character event`() {
-        coEvery { isCharacterFavoriteUseCase(character.id) } returns true
+        coEvery { isCharacterFavoriteUseCase(character.id) } returns flowOf(true)
 
         val detailViewModel = getViewModel()
 
@@ -50,7 +51,7 @@ class DetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onFabClick - send added character event`() {
-        coEvery { isCharacterFavoriteUseCase(character.id) } returns false
+        coEvery { isCharacterFavoriteUseCase(character.id) } returns flowOf(false)
 
         val detailViewModel = getViewModel()
 
@@ -66,7 +67,7 @@ class DetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onFabClick - send generic error event`() {
-        coEvery { isCharacterFavoriteUseCase(character.id) } returns false
+        coEvery { isCharacterFavoriteUseCase(character.id) } returns flowOf(false)
         coEvery { insertFavoriteCharacterUseCase(character) } throws SQLiteException()
 
         val detailViewModel = getViewModel()

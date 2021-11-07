@@ -11,13 +11,18 @@ import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.InsertFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.IsCharacterFavoriteUseCase
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 class DetailViewModel(
     private val character: Character,
     private val isCharacterFavoriteUseCase: IsCharacterFavoriteUseCase,
     private val deleteFavoriteCharacterUseCase: DeleteFavoriteCharacterUseCase,
-    private val insertFavoriteCharacterUseCase: InsertFavoriteCharacterUseCase
+    private val insertFavoriteCharacterUseCase: InsertFavoriteCharacterUseCase,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
     private val _snackbarMessage = MutableLiveData<Event<Pair<Int, Boolean>>>()
@@ -28,7 +33,9 @@ class DetailViewModel(
 
     init {
         viewModelScope.launch {
-            _isCharacterFavorite.value = isCharacterFavoriteUseCase(character.id)
+            isCharacterFavoriteUseCase(character.id)
+                .flowOn(dispatcher)
+                .collect { _isCharacterFavorite.value = it }
         }
     }
 

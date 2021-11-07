@@ -16,6 +16,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -94,7 +95,7 @@ class FavoritesViewModelTest : BaseUnitTest() {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
         val characterList = listOf(character)
 
-        coEvery { getFavoriteCharactersUseCase() } returns characterList
+        coEvery { getFavoriteCharactersUseCase() } returns flowOf(characterList)
 
         val viewModel = FavoritesViewModel(
             getFavoriteCharactersUseCase,

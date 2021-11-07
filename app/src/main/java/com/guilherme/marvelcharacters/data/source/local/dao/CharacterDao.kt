@@ -6,15 +6,16 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.guilherme.marvelcharacters.data.source.local.model.CharacterEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CharacterDao {
 
     @Query("SELECT * FROM characterentity")
-    suspend fun getCharacterList(): List<CharacterEntity>
+    fun getCharacterList(): Flow<List<CharacterEntity>>
 
     @Query("SELECT COUNT(*) FROM characterentity WHERE id = :id")
-    suspend fun isCharacterFavorite(id: Int): Boolean
+    fun isCharacterFavorite(id: Int): Flow<Boolean>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(character: CharacterEntity)

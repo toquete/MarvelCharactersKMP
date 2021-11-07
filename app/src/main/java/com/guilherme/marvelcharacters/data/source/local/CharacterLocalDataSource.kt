@@ -1,12 +1,13 @@
 package com.guilherme.marvelcharacters.data.source.local
 
 import com.guilherme.marvelcharacters.data.model.CharacterData
+import kotlinx.coroutines.flow.Flow
 
 interface CharacterLocalDataSource {
 
-    suspend fun isCharacterFavorite(id: Int): Boolean
+    fun isCharacterFavorite(id: Int): Flow<Boolean>
 
-    suspend fun getFavoriteCharacters(): List<CharacterData>
+    fun getFavoriteCharacters(): Flow<List<CharacterData>>
 
     suspend fun insertFavoriteCharacter(character: CharacterData)
 

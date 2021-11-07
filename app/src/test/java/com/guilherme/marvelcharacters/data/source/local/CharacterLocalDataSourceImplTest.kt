@@ -11,6 +11,8 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 
@@ -49,22 +51,22 @@ class CharacterLocalDataSourceImplTest : BaseUnitTest() {
 
     @Test
     fun `isCharacterFavorite - returns true when character is favorite`() = runBlockingTest {
-        coEvery { dao.isCharacterFavorite(any()) } returns true
+        coEvery { dao.isCharacterFavorite(any()) } returns flowOf(true)
 
         val result = localDataSource.isCharacterFavorite(id = 0)
 
-        assertThat(result).isTrue()
+        assertThat(result.first()).isTrue()
     }
 
     @Test
     fun `getFavoriteCharacters - returns favorite characters list`() = runBlockingTest {
         val characterEntityList = listOf(characterEntity)
         val characterList = listOf(character)
-        coEvery { dao.getCharacterList() } returns characterEntityList
+        coEvery { dao.getCharacterList() } returns flowOf(characterEntityList)
 
         val result = localDataSource.getFavoriteCharacters()
 
-        assertThat(result).isEqualTo(characterList)
+        assertThat(result.first()).isEqualTo(characterList)
     }
 
     @Test
