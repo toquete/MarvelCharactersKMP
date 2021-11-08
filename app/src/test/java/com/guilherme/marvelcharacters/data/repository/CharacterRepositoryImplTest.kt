@@ -18,7 +18,7 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class CharacterRepositoryTest : BaseUnitTest() {
+class CharacterRepositoryImplTest : BaseUnitTest() {
 
     @RelaxedMockK
     private lateinit var remoteDataSource: CharacterRemoteDataSource
@@ -54,9 +54,7 @@ class CharacterRepositoryTest : BaseUnitTest() {
             )
         )
 
-        coEvery {
-            remoteDataSource.getCharacters(name = "spider")
-        } returns flowOf(listOf(characterData))
+        coEvery { remoteDataSource.getCharacters(name = "spider") } returns flowOf(listOf(characterData))
 
         val list = characterRepository.getCharacters("spider").first()
 
