@@ -3,10 +3,12 @@ package com.guilherme.marvelcharacters.ui
 import androidx.lifecycle.Observer
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.R
-import com.guilherme.marvelcharacters.data.repository.NightModeRepositoryImpl
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
+import com.guilherme.marvelcharacters.domain.usecase.GetDarkModeUseCase
+import com.guilherme.marvelcharacters.domain.usecase.IsDarkModeEnabledUseCase
+import com.guilherme.marvelcharacters.domain.usecase.ToggleDarkModeUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import com.guilherme.marvelcharacters.ui.home.HomeViewModel
 import com.guilherme.marvelcharacters.ui.model.CharacterVO
@@ -14,7 +16,9 @@ import com.guilherme.marvelcharacters.ui.model.ImageVO
 import com.guilherme.marvelcharacters.util.getOrAwaitValue
 import com.guilherme.marvelcharacters.util.observeForTesting
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.verifyOrder
 import io.mockk.verifySequence
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
@@ -34,16 +38,24 @@ class HomeViewModelTest : BaseUnitTest() {
     private lateinit var getCharactersUseCase: GetCharactersUseCase
 
     @RelaxedMockK
-    private lateinit var preferenceRepository: NightModeRepositoryImpl
+    private lateinit var getDarkModeUseCase: GetDarkModeUseCase
 
     @RelaxedMockK
-    private lateinit var observer: Observer<HomeViewModel.CharacterListState>
+    private lateinit var toggleDarkModeUseCase: ToggleDarkModeUseCase
+
+    @RelaxedMockK
+    private lateinit var isDarkModeEnabledUseCase: IsDarkModeEnabledUseCase
+
+    @RelaxedMockK
+    private lateinit var stateObserver: Observer<HomeViewModel.CharacterListState>
 
     override fun setUp() {
         super.setUp()
         homeViewModel = HomeViewModel(
-            preferenceRepository,
             getCharactersUseCase,
+            getDarkModeUseCase,
+            toggleDarkModeUseCase,
+            isDarkModeEnabledUseCase,
             dispatcher = testCoroutineRule.testCoroutineDispatcher
         )
     }
@@ -56,12 +68,12 @@ class HomeViewModelTest : BaseUnitTest() {
 
         coEvery { getCharactersUseCase(any()) } returns flowOf(characterList)
 
-        homeViewModel.states.observeForTesting(observer) {
+        homeViewModel.states.observeForTesting(stateObserver) {
             homeViewModel.onSearchCharacter("spider")
 
             verifySequence {
-                observer.onChanged(HomeViewModel.CharacterListState.Loading)
-                observer.onChanged(HomeViewModel.CharacterListState.Characters(listOf(characterVO)))
+                stateObserver.onChanged(HomeViewModel.CharacterListState.Loading)
+                stateObserver.onChanged(HomeViewModel.CharacterListState.Characters(listOf(characterVO)))
             }
         }
     }
@@ -72,12 +84,12 @@ class HomeViewModelTest : BaseUnitTest() {
 
         coEvery { getCharactersUseCase(any()) } returns flowOf(characterList)
 
-        homeViewModel.states.observeForTesting(observer) {
+        homeViewModel.states.observeForTesting(stateObserver) {
             homeViewModel.onSearchCharacter("spider")
 
             verifySequence {
-                observer.onChanged(HomeViewModel.CharacterListState.Loading)
-                observer.onChanged(HomeViewModel.CharacterListState.EmptyState)
+                stateObserver.onChanged(HomeViewModel.CharacterListState.Loading)
+                stateObserver.onChanged(HomeViewModel.CharacterListState.EmptyState)
             }
         }
     }
@@ -93,12 +105,12 @@ class HomeViewModelTest : BaseUnitTest() {
             )
         }
 
-        homeViewModel.states.observeForTesting(observer) {
+        homeViewModel.states.observeForTesting(stateObserver) {
             homeViewModel.onSearchCharacter("spider")
 
             verifySequence {
-                observer.onChanged(HomeViewModel.CharacterListState.Loading)
-                observer.onChanged(HomeViewModel.CharacterListState.ErrorState(R.string.request_error_message))
+                stateObserver.onChanged(HomeViewModel.CharacterListState.Loading)
+                stateObserver.onChanged(HomeViewModel.CharacterListState.ErrorState(R.string.request_error_message))
             }
         }
     }
@@ -107,12 +119,12 @@ class HomeViewModelTest : BaseUnitTest() {
     fun `onSearchCharacter - send internet error state`() {
         coEvery { getCharactersUseCase(any()) } returns flow { throw IOException() }
 
-        homeViewModel.states.observeForTesting(observer) {
+        homeViewModel.states.observeForTesting(stateObserver) {
             homeViewModel.onSearchCharacter("spider")
 
             verifySequence {
-                observer.onChanged(HomeViewModel.CharacterListState.Loading)
-                observer.onChanged(HomeViewModel.CharacterListState.ErrorState(R.string.network_error_message))
+                stateObserver.onChanged(HomeViewModel.CharacterListState.Loading)
+                stateObserver.onChanged(HomeViewModel.CharacterListState.ErrorState(R.string.network_error_message))
             }
         }
     }
@@ -132,10 +144,14 @@ class HomeViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onActionItemClick - change theme`() {
-        preferenceRepository.isDarkTheme = true
+        every { isDarkModeEnabledUseCase() } returns true
 
         homeViewModel.onActionItemClick()
 
-        assertThat(preferenceRepository.isDarkTheme).isFalse()
+        verifyOrder {
+            isDarkModeEnabledUseCase()
+            toggleDarkModeUseCase(isEnabled = false)
+            getDarkModeUseCase()
+        }
     }
 }
