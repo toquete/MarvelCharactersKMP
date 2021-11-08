@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.Event
 import com.guilherme.marvelcharacters.R
-import com.guilherme.marvelcharacters.data.repository.PreferenceRepository
 import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
+import com.guilherme.marvelcharacters.domain.usecase.GetDarkModeUseCase
+import com.guilherme.marvelcharacters.domain.usecase.IsDarkModeEnabledUseCase
+import com.guilherme.marvelcharacters.domain.usecase.ToggleDarkModeUseCase
 import com.guilherme.marvelcharacters.ui.mapper.CharacterMapper
 import com.guilherme.marvelcharacters.ui.model.CharacterVO
 import kotlinx.coroutines.CoroutineDispatcher
@@ -21,8 +23,10 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class HomeViewModel(
-    private val preferenceRepository: PreferenceRepository,
     private val getCharactersUseCase: GetCharactersUseCase,
+    private val getDarkModeUseCase: GetDarkModeUseCase,
+    private val toggleDarkModeUseCase: ToggleDarkModeUseCase,
+    private val isDarkModeEnabledUseCase: IsDarkModeEnabledUseCase,
     private val mapper: CharacterMapper = CharacterMapper(),
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
@@ -33,9 +37,14 @@ class HomeViewModel(
     private val _navigateToDetail = MutableLiveData<Event<CharacterVO>>()
     val navigateToDetail: LiveData<Event<CharacterVO>> = _navigateToDetail
 
-    val nightMode: LiveData<Int> = preferenceRepository.nightModeLive
+    private val _nightMode = MutableLiveData<Int>()
+    val nightMode: LiveData<Int> = _nightMode
 
     var query: String? = null
+
+    init {
+        _nightMode.value = getDarkModeUseCase()
+    }
 
     fun onSearchCharacter(character: String) {
         viewModelScope.launch {
@@ -66,7 +75,9 @@ class HomeViewModel(
     }
 
     fun onActionItemClick() {
-        preferenceRepository.isDarkTheme = !preferenceRepository.isDarkTheme
+        val isDarkModeEnabled = isDarkModeEnabledUseCase()
+        toggleDarkModeUseCase(!isDarkModeEnabled)
+        _nightMode.value = getDarkModeUseCase()
     }
 
     sealed class CharacterListState {

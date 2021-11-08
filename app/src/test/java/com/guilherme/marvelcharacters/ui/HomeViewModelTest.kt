@@ -3,7 +3,7 @@ package com.guilherme.marvelcharacters.ui
 import androidx.lifecycle.Observer
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.R
-import com.guilherme.marvelcharacters.data.repository.PreferenceRepository
+import com.guilherme.marvelcharacters.data.repository.NightModeRepositoryImpl
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
@@ -34,7 +34,7 @@ class HomeViewModelTest : BaseUnitTest() {
     private lateinit var getCharactersUseCase: GetCharactersUseCase
 
     @RelaxedMockK
-    private lateinit var preferenceRepository: PreferenceRepository
+    private lateinit var preferenceRepository: NightModeRepositoryImpl
 
     @RelaxedMockK
     private lateinit var observer: Observer<HomeViewModel.CharacterListState>
