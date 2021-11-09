@@ -11,18 +11,20 @@ import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.InsertFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.IsCharacterFavoriteUseCase
+import com.guilherme.marvelcharacters.infrastructure.di.annotation.IoDispatcher
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
-class DetailViewModel(
-    private val character: Character,
+class DetailViewModel @AssistedInject constructor(
+    @Assisted private val character: Character,
     private val isCharacterFavoriteUseCase: IsCharacterFavoriteUseCase,
     private val deleteFavoriteCharacterUseCase: DeleteFavoriteCharacterUseCase,
     private val insertFavoriteCharacterUseCase: InsertFavoriteCharacterUseCase,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _snackbarMessage = MutableLiveData<Event<Pair<Int, Boolean>>>()

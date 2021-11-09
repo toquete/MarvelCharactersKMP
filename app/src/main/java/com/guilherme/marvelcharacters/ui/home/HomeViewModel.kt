@@ -11,24 +11,27 @@ import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
 import com.guilherme.marvelcharacters.domain.usecase.GetDarkModeUseCase
 import com.guilherme.marvelcharacters.domain.usecase.IsDarkModeEnabledUseCase
 import com.guilherme.marvelcharacters.domain.usecase.ToggleDarkModeUseCase
+import com.guilherme.marvelcharacters.infrastructure.di.annotation.IoDispatcher
 import com.guilherme.marvelcharacters.ui.mapper.CharacterMapper
 import com.guilherme.marvelcharacters.ui.model.CharacterVO
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import javax.inject.Inject
 
-class HomeViewModel(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val getCharactersUseCase: GetCharactersUseCase,
     private val getDarkModeUseCase: GetDarkModeUseCase,
     private val toggleDarkModeUseCase: ToggleDarkModeUseCase,
     private val isDarkModeEnabledUseCase: IsDarkModeEnabledUseCase,
     private val mapper: CharacterMapper = CharacterMapper(),
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _states = MutableLiveData<CharacterListState>()

@@ -6,6 +6,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -14,20 +15,23 @@ import com.guilherme.marvelcharacters.EventObserver
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.databinding.FragmentFavoritesBinding
 import com.guilherme.marvelcharacters.domain.model.Character
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
 
     private var _favoritesBinding: FragmentFavoritesBinding? = null
-
     private val favoritesBinding get() = _favoritesBinding!!
 
-    private val favoritesViewModel: FavoritesViewModel by viewModel()
+    private val favoritesViewModel: FavoritesViewModel by viewModels()
+
+    private lateinit var favoritesAdapter: FavoritesAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _favoritesBinding = FragmentFavoritesBinding.bind(view)
 
+        setupView()
         setupObservers()
     }
 
@@ -50,12 +54,22 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
         }
     }
 
+    private fun setupView() = with(favoritesBinding) {
+        favoritesAdapter = FavoritesAdapter { character ->
+            favoritesViewModel.onFavoriteItemClick(character)
+        }
+        recyclerViewFavorites.adapter = favoritesAdapter
+        recyclerViewFavorites.addItemDecoration(
+            DividerItemDecoration(
+                context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
+    }
+
     private fun setupObservers() {
         favoritesViewModel.list.observe(viewLifecycleOwner) { list ->
-            favoritesBinding.recyclerViewFavorites.adapter = FavoritesAdapter(list) { character ->
-                favoritesViewModel.onFavoriteItemClick(character)
-            }
-            favoritesBinding.recyclerViewFavorites.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            favoritesAdapter.submitList(list)
             setHasOptionsMenu(list.isNotEmpty())
         }
 

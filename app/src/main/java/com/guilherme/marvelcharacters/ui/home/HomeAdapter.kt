@@ -3,14 +3,14 @@ package com.guilherme.marvelcharacters.ui.home
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.databinding.ItemListBinding
 import com.guilherme.marvelcharacters.ui.model.CharacterVO
 
-class HomeAdapter(private val onClickListener: (CharacterVO) -> Unit) : RecyclerView.Adapter<HomeAdapter.BindingHolder>() {
-
-    var characters: List<CharacterVO> = listOf()
+class HomeAdapter(private val onClickListener: (CharacterVO) -> Unit) : ListAdapter<CharacterVO, HomeAdapter.BindingHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false)
@@ -18,12 +18,8 @@ class HomeAdapter(private val onClickListener: (CharacterVO) -> Unit) : Recycler
         return BindingHolder(view)
     }
 
-    override fun getItemCount() = characters.size
-
-    override fun getItemId(position: Int) = position.toLong()
-
     override fun onBindViewHolder(holder: BindingHolder, position: Int) {
-        val character = characters[position]
+        val character = getItem(position)
         holder.bind(character)
     }
 
@@ -33,6 +29,19 @@ class HomeAdapter(private val onClickListener: (CharacterVO) -> Unit) : Recycler
         fun bind(character: CharacterVO) {
             binding.textviewCharacter.text = character.name
             itemView.setOnClickListener { onClickListener(character) }
+        }
+    }
+
+    companion object {
+        private val diffCallback = object : DiffUtil.ItemCallback<CharacterVO>() {
+            override fun areItemsTheSame(oldItem: CharacterVO, newItem: CharacterVO): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: CharacterVO, newItem: CharacterVO): Boolean {
+                return oldItem == newItem
+            }
+
         }
     }
 }

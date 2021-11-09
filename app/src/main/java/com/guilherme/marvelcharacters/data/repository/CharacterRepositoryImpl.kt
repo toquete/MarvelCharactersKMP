@@ -7,11 +7,12 @@ import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class CharacterRepositoryImpl(
+class CharacterRepositoryImpl @Inject constructor(
     private val remoteDataSource: CharacterRemoteDataSource,
     private val localDataSource: CharacterLocalDataSource,
-    private val mapper: CharacterDataMapper = CharacterDataMapper()
+    private val mapper: CharacterDataMapper
 ) : CharacterRepository {
 
     override fun getCharacters(name: String): Flow<List<Character>> {

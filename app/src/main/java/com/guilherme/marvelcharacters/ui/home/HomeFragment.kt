@@ -12,21 +12,22 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.guilherme.marvelcharacters.EventObserver
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.databinding.FragmentHomeBinding
 import com.guilherme.marvelcharacters.ui.model.CharacterVO
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private var _homeBinding: FragmentHomeBinding? = null
-
     private val homeBinding get() = _homeBinding!!
 
-    private val homeViewModel: HomeViewModel by viewModel()
+    private val homeViewModel: HomeViewModel by viewModels()
 
     private lateinit var homeAdapter: HomeAdapter
 
@@ -160,8 +161,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun showCharacters(list: List<CharacterVO>) {
         handleLoading(mustShowLoading = false)
-        homeAdapter.characters = list
-        homeAdapter.notifyDataSetChanged()
+        homeAdapter.submitList(list)
 
         homeBinding.textviewMessage.visibility = View.GONE
         homeBinding.recyclerviewCharacters.visibility = View.VISIBLE

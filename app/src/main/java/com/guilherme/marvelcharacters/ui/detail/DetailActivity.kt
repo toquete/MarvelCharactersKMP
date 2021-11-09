@@ -1,6 +1,7 @@
 package com.guilherme.marvelcharacters.ui.detail
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.navigation.navArgs
@@ -9,23 +10,26 @@ import com.google.android.material.snackbar.Snackbar
 import com.guilherme.marvelcharacters.EventObserver
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.databinding.ActivityDetailBinding
-import com.guilherme.marvelcharacters.domain.model.Character
-import com.guilherme.marvelcharacters.infrastructure.util.Mapper
 import com.guilherme.marvelcharacters.ui.mapper.CharacterMapper
-import com.guilherme.marvelcharacters.ui.model.CharacterVO
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class DetailActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var mapper: CharacterMapper
+
+    @Inject
+    lateinit var viewModelFactory: DetailViewModelFactory
 
     private lateinit var binding: ActivityDetailBinding
 
-    private val mapper: Mapper<Character, CharacterVO> by inject()
-
     private val args: DetailActivityArgs by navArgs()
 
-    private val detailViewModel: DetailViewModel by viewModel { parametersOf(mapper.mapFrom(args.character)) }
+    private val detailViewModel: DetailViewModel by viewModels {
+        provideFactory(viewModelFactory, mapper.mapFrom(args.character))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

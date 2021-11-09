@@ -5,10 +5,11 @@ import com.guilherme.marvelcharacters.data.source.local.dao.CharacterDao
 import com.guilherme.marvelcharacters.data.source.local.mapper.CharacterEntityMapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class CharacterLocalDataSourceImpl(
+class CharacterLocalDataSourceImpl @Inject constructor(
     private val dao: CharacterDao,
-    private val mapper: CharacterEntityMapper = CharacterEntityMapper()
+    private val mapper: CharacterEntityMapper
 ) : CharacterLocalDataSource {
 
     override fun isCharacterFavorite(id: Int): Flow<Boolean> = dao.isCharacterFavorite(id)

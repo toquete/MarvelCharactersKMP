@@ -8,10 +8,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.DigestUtils
+import javax.inject.Inject
 
-class CharacterRemoteDataSourceImpl(
+class CharacterRemoteDataSourceImpl @Inject constructor(
     private val api: Api,
-    private val mapper: CharacterResponseMapper = CharacterResponseMapper()
+    private val mapper: CharacterResponseMapper
 ) : CharacterRemoteDataSource {
 
     override fun getCharacters(name: String): Flow<List<CharacterData>> = flow {

@@ -4,8 +4,9 @@ import com.guilherme.marvelcharacters.data.model.CharacterData
 import com.guilherme.marvelcharacters.data.model.ImageData
 import com.guilherme.marvelcharacters.data.source.remote.model.CharacterResponse
 import com.guilherme.marvelcharacters.infrastructure.util.Mapper
+import javax.inject.Inject
 
-class CharacterResponseMapper : Mapper<CharacterResponse, CharacterData> {
+class CharacterResponseMapper @Inject constructor() : Mapper<CharacterResponse, CharacterData> {
 
     override fun mapTo(source: CharacterResponse): CharacterData {
         return CharacterData(

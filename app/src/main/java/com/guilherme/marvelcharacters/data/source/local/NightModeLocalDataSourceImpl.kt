@@ -3,11 +3,12 @@ package com.guilherme.marvelcharacters.data.source.local
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.edit
+import javax.inject.Inject
 
 private const val PREFERENCE_NIGHT_MODE = "PREFERENCE_NIGHT_MODE"
 private const val PREFERENCE_NIGHT_MODE_DEFAULT = AppCompatDelegate.MODE_NIGHT_NO
 
-class NightModeLocalDataSourceImpl(
+class NightModeLocalDataSourceImpl @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) : NightModeLocalDataSource {
 

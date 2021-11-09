@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.Event
 import com.guilherme.marvelcharacters.R
@@ -11,17 +12,15 @@ import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.usecase.DeleteAllFavoriteCharactersUseCase
 import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharactersUseCase
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOn
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FavoritesViewModel(
-    private val getFavoriteCharactersUseCase: GetFavoriteCharactersUseCase,
+@HiltViewModel
+class FavoritesViewModel @Inject constructor(
+    getFavoriteCharactersUseCase: GetFavoriteCharactersUseCase,
     private val deleteFavoriteCharacterUseCase: DeleteFavoriteCharacterUseCase,
-    private val deleteAllFavoriteCharactersUseCase: DeleteAllFavoriteCharactersUseCase,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val deleteAllFavoriteCharactersUseCase: DeleteAllFavoriteCharactersUseCase
 ) : ViewModel() {
 
     private val _snackbarMessage = MutableLiveData<Event<Int>>()
@@ -30,16 +29,7 @@ class FavoritesViewModel(
     private val _navigateToDetail = MutableLiveData<Event<Character>>()
     val navigateToDetail: LiveData<Event<Character>> = _navigateToDetail
 
-    private val _list = MutableLiveData<List<Character>>()
-    val list: LiveData<List<Character>> = _list
-
-    init {
-        viewModelScope.launch {
-            getFavoriteCharactersUseCase()
-                .flowOn(dispatcher)
-                .collect { _list.value = it }
-        }
-    }
+    val list: LiveData<List<Character>> = getFavoriteCharactersUseCase().asLiveData()
 
     fun deleteCharacter(character: Character) = viewModelScope.launch {
         deleteFavoriteCharacterUseCase(character)

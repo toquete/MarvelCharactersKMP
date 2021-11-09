@@ -3,8 +3,9 @@ package com.guilherme.marvelcharacters.domain.usecase
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class GetCharactersUseCase(
+class GetCharactersUseCase @Inject constructor(
     private val characterRepository: CharacterRepository
 ) {
 
