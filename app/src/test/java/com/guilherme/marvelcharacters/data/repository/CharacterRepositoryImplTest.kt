@@ -1,6 +1,7 @@
 package com.guilherme.marvelcharacters.data.repository
 
 import com.google.common.truth.Truth.assertThat
+import com.guilherme.marvelcharacters.data.mapper.CharacterDataMapper
 import com.guilherme.marvelcharacters.data.model.CharacterData
 import com.guilherme.marvelcharacters.data.model.ImageData
 import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSource
@@ -30,7 +31,7 @@ class CharacterRepositoryImplTest : BaseUnitTest() {
 
     override fun setUp() {
         super.setUp()
-        characterRepository = CharacterRepositoryImpl(remoteDataSource, localDataSource)
+        characterRepository = CharacterRepositoryImpl(remoteDataSource, localDataSource, CharacterDataMapper())
     }
 
     @Test

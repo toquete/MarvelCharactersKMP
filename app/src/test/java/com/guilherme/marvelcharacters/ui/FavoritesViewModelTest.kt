@@ -10,10 +10,14 @@ import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseC
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharactersUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import com.guilherme.marvelcharacters.ui.favorites.FavoritesViewModel
+import com.guilherme.marvelcharacters.ui.mapper.CharacterMapper
+import com.guilherme.marvelcharacters.ui.model.CharacterVO
+import com.guilherme.marvelcharacters.ui.model.ImageVO
 import com.guilherme.marvelcharacters.util.getOrAwaitValue
 import com.guilherme.marvelcharacters.util.observeForTesting
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -38,15 +42,18 @@ class FavoritesViewModelTest : BaseUnitTest() {
         favoritesViewModel = FavoritesViewModel(
             getFavoriteCharactersUseCase,
             deleteFavoriteCharacterUseCase,
-            deleteAllFavoriteCharactersUseCase
+            deleteAllFavoriteCharactersUseCase,
+            CharacterMapper(),
+            testCoroutineRule.testCoroutineDispatcher
         )
     }
 
     @Test
     fun `deleteCharacter - check if repository was called`() {
+        val characterVO = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
 
-        favoritesViewModel.deleteCharacter(character)
+        favoritesViewModel.deleteCharacter(characterVO)
 
         coVerify { deleteFavoriteCharacterUseCase(character) }
     }
@@ -79,7 +86,7 @@ class FavoritesViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onFavoriteItemClick - send character to details screen`() {
-        val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
+        val character = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
 
         favoritesViewModel.navigateToDetail.observeForTesting {
             favoritesViewModel.onFavoriteItemClick(character)
@@ -93,18 +100,20 @@ class FavoritesViewModelTest : BaseUnitTest() {
     @Test
     fun `init - send favorites list`() {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
-        val characterList = listOf(character)
+        val characterVO = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
 
-        coEvery { getFavoriteCharactersUseCase() } returns flowOf(characterList)
+        every { getFavoriteCharactersUseCase() } returns flowOf(listOf(character))
 
         val viewModel = FavoritesViewModel(
             getFavoriteCharactersUseCase,
             deleteFavoriteCharacterUseCase,
-            deleteAllFavoriteCharactersUseCase
+            deleteAllFavoriteCharactersUseCase,
+            CharacterMapper(),
+            testCoroutineRule.testCoroutineDispatcher
         )
 
         viewModel.list.observeForTesting {
-            assertThat(viewModel.list.getOrAwaitValue()).isEqualTo(characterList)
+            assertThat(viewModel.list.getOrAwaitValue()).isEqualTo(listOf(characterVO))
         }
     }
 }

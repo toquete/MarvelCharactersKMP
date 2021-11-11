@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 
 class DetailViewModel @AssistedInject constructor(
     @Assisted private val character: Character,
-    private val isCharacterFavoriteUseCase: IsCharacterFavoriteUseCase,
+    isCharacterFavoriteUseCase: IsCharacterFavoriteUseCase,
     private val deleteFavoriteCharacterUseCase: DeleteFavoriteCharacterUseCase,
     private val insertFavoriteCharacterUseCase: InsertFavoriteCharacterUseCase,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
@@ -42,20 +42,20 @@ class DetailViewModel @AssistedInject constructor(
     }
 
     fun onFabClick() = viewModelScope.launch {
-        try {
+        _snackbarMessage.value = try {
             isCharacterFavorite.value?.let { isFavorite ->
                 if (isFavorite) {
                     deleteFavoriteCharacterUseCase(character)
-                    _snackbarMessage.value = Event(R.string.character_deleted to true)
+                    Event(R.string.character_deleted to true)
                 } else {
                     insertFavoriteCharacterUseCase(character)
-                    _snackbarMessage.value = Event(R.string.character_added to false)
+                    Event(R.string.character_added to false)
                 }
             } ?: run {
-                _snackbarMessage.value = Event(R.string.unknown_character to false)
+                Event(R.string.unknown_character to false)
             }
         } catch (error: SQLiteException) {
-            _snackbarMessage.value = Event(R.string.error_message to false)
+            Event(R.string.error_message to false)
         }
     }
 

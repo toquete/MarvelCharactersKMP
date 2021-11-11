@@ -14,6 +14,7 @@ import com.guilherme.marvelcharacters.util.getOrAwaitValue
 import com.guilherme.marvelcharacters.util.observeForTesting
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -35,7 +36,7 @@ class DetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onFabClick - send deleted character event`() {
-        coEvery { isCharacterFavoriteUseCase(character.id) } returns flowOf(true)
+        every { isCharacterFavoriteUseCase(character.id) } returns flowOf(true)
 
         val detailViewModel = getViewModel()
 
@@ -51,7 +52,7 @@ class DetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onFabClick - send added character event`() {
-        coEvery { isCharacterFavoriteUseCase(character.id) } returns flowOf(false)
+        every { isCharacterFavoriteUseCase(character.id) } returns flowOf(false)
 
         val detailViewModel = getViewModel()
 
@@ -67,7 +68,7 @@ class DetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onFabClick - send generic error event`() {
-        coEvery { isCharacterFavoriteUseCase(character.id) } returns flowOf(false)
+        every { isCharacterFavoriteUseCase(character.id) } returns flowOf(false)
         coEvery { insertFavoriteCharacterUseCase(character) } throws SQLiteException()
 
         val detailViewModel = getViewModel()
@@ -110,7 +111,8 @@ class DetailViewModelTest : BaseUnitTest() {
             character,
             isCharacterFavoriteUseCase,
             deleteFavoriteCharacterUseCase,
-            insertFavoriteCharacterUseCase
+            insertFavoriteCharacterUseCase,
+            testCoroutineRule.testCoroutineDispatcher
         )
     }
 }

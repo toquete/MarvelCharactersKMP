@@ -3,6 +3,7 @@ package com.guilherme.marvelcharacters.data.source.remote
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.data.model.CharacterData
 import com.guilherme.marvelcharacters.data.model.ImageData
+import com.guilherme.marvelcharacters.data.source.remote.mapper.CharacterResponseMapper
 import com.guilherme.marvelcharacters.data.source.remote.model.CharacterResponse
 import com.guilherme.marvelcharacters.data.source.remote.model.ContainerResponse
 import com.guilherme.marvelcharacters.data.source.remote.model.ImageResponse
@@ -26,7 +27,7 @@ class CharacterRemoteDataSourceImplTest : BaseUnitTest() {
 
     override fun setUp() {
         super.setUp()
-        remoteDataSource = CharacterRemoteDataSourceImpl(api)
+        remoteDataSource = CharacterRemoteDataSourceImpl(api, CharacterResponseMapper())
     }
 
     @Test

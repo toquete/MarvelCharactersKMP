@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.data.model.CharacterData
 import com.guilherme.marvelcharacters.data.model.ImageData
 import com.guilherme.marvelcharacters.data.source.local.dao.CharacterDao
+import com.guilherme.marvelcharacters.data.source.local.mapper.CharacterEntityMapper
 import com.guilherme.marvelcharacters.data.source.local.model.CharacterEntity
 import com.guilherme.marvelcharacters.data.source.local.model.ImageEntity
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
@@ -46,7 +47,7 @@ class CharacterLocalDataSourceImplTest : BaseUnitTest() {
 
     override fun setUp() {
         super.setUp()
-        localDataSource = CharacterLocalDataSourceImpl(dao)
+        localDataSource = CharacterLocalDataSourceImpl(dao, CharacterEntityMapper())
     }
 
     @Test

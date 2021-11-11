@@ -8,11 +8,15 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.Event
 import com.guilherme.marvelcharacters.R
-import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.usecase.DeleteAllFavoriteCharactersUseCase
 import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharactersUseCase
+import com.guilherme.marvelcharacters.infrastructure.di.annotation.IoDispatcher
+import com.guilherme.marvelcharacters.ui.mapper.CharacterMapper
+import com.guilherme.marvelcharacters.ui.model.CharacterVO
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,19 +24,25 @@ import javax.inject.Inject
 class FavoritesViewModel @Inject constructor(
     getFavoriteCharactersUseCase: GetFavoriteCharactersUseCase,
     private val deleteFavoriteCharacterUseCase: DeleteFavoriteCharacterUseCase,
-    private val deleteAllFavoriteCharactersUseCase: DeleteAllFavoriteCharactersUseCase
+    private val deleteAllFavoriteCharactersUseCase: DeleteAllFavoriteCharactersUseCase,
+    private val mapper: CharacterMapper,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _snackbarMessage = MutableLiveData<Event<Int>>()
     val snackbarMessage: LiveData<Event<Int>> = _snackbarMessage
 
-    private val _navigateToDetail = MutableLiveData<Event<Character>>()
-    val navigateToDetail: LiveData<Event<Character>> = _navigateToDetail
+    private val _navigateToDetail = MutableLiveData<Event<CharacterVO>>()
+    val navigateToDetail: LiveData<Event<CharacterVO>> = _navigateToDetail
 
-    val list: LiveData<List<Character>> = getFavoriteCharactersUseCase().asLiveData()
+    val list: LiveData<List<CharacterVO>> = getFavoriteCharactersUseCase()
+        .map { list ->
+            list.map { mapper.mapTo(it) }
+        }
+        .asLiveData(dispatcher)
 
-    fun deleteCharacter(character: Character) = viewModelScope.launch {
-        deleteFavoriteCharacterUseCase(character)
+    fun deleteCharacter(character: CharacterVO) = viewModelScope.launch {
+        deleteFavoriteCharacterUseCase(mapper.mapFrom(character))
     }
 
     fun onDeleteAllClick() = viewModelScope.launch {
@@ -44,7 +54,7 @@ class FavoritesViewModel @Inject constructor(
         }
     }
 
-    fun onFavoriteItemClick(character: Character) {
+    fun onFavoriteItemClick(character: CharacterVO) {
         _navigateToDetail.value = Event(character)
     }
 }
