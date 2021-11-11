@@ -3,28 +3,44 @@ package com.guilherme.marvelcharacters.ui.favorites
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.intent.Intents
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import com.guilherme.marvelcharacters.BaseTest
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.guilherme.marvelcharacters.MainActivity
 import com.guilherme.marvelcharacters.data.source.local.model.CharacterEntity
 import com.guilherme.marvelcharacters.data.source.local.model.ImageEntity
+import com.guilherme.marvelcharacters.infrastructure.database.CharacterDatabase
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import javax.inject.Inject
 
-class FavoritesFragmentTest : BaseTest() {
+@HiltAndroidTest
+@RunWith(AndroidJUnit4::class)
+class FavoritesFragmentTest {
+
+    @get:Rule
+    var hiltRule = HiltAndroidRule(this)
 
     @get:Rule
     val rule = ActivityScenarioRule(MainActivity::class.java)
 
+    @Inject
+    lateinit var db: CharacterDatabase
+
     @Before
     fun setUp() {
+        hiltRule.inject()
         Intents.init()
     }
 
-    override fun tearDown() {
-        super.tearDown()
+    @After
+    fun tearDown() {
+        db.close()
         Intents.release()
     }
 

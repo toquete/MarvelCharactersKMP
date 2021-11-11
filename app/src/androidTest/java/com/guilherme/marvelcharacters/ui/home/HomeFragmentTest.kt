@@ -2,21 +2,38 @@ package com.guilherme.marvelcharacters.ui.home
 
 import androidx.test.espresso.intent.Intents
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import com.guilherme.marvelcharacters.BaseTest
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.guilherme.marvelcharacters.MainActivity
-import com.guilherme.marvelcharacters.data.model.CharacterResponse
-import com.guilherme.marvelcharacters.data.model.ContainerResponse
-import com.guilherme.marvelcharacters.data.model.ImageResponse
-import com.guilherme.marvelcharacters.data.model.Response as apiResponse
+import com.guilherme.marvelcharacters.data.source.remote.model.CharacterResponse
+import com.guilherme.marvelcharacters.data.source.remote.model.ContainerResponse
+import com.guilherme.marvelcharacters.data.source.remote.model.ImageResponse
+import com.guilherme.marvelcharacters.data.source.remote.service.Api
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.coEvery
 import okhttp3.ResponseBody
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import retrofit2.HttpException
 import retrofit2.Response
+import javax.inject.Inject
+import com.guilherme.marvelcharacters.data.source.remote.model.Response as apiResponse
 
-class HomeFragmentTest : BaseTest() {
+@HiltAndroidTest
+@RunWith(AndroidJUnit4::class)
+class HomeFragmentTest {
+
+    @get:Rule
+    val rule = ActivityScenarioRule(MainActivity::class.java)
+
+    @get:Rule
+    var hiltRule = HiltAndroidRule(this)
+
+    @Inject
+    lateinit var api: Api
 
     private val character = CharacterResponse(
         id = 1,
@@ -28,16 +45,14 @@ class HomeFragmentTest : BaseTest() {
         )
     )
 
-    @get:Rule
-    val rule = ActivityScenarioRule(MainActivity::class.java)
-
     @Before
     fun setUp() {
+        hiltRule.inject()
         Intents.init()
     }
 
-    override fun tearDown() {
-        super.tearDown()
+    @After
+    fun tearDown() {
         Intents.release()
     }
 
