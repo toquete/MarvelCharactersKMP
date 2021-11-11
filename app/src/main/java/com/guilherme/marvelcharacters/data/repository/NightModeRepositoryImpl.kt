@@ -15,5 +15,4 @@ class NightModeRepositoryImpl @Inject constructor(
     }
 
     override fun getDarkMode(): Int = nightModeLocalDataSource.getDarkMode()
-
 }

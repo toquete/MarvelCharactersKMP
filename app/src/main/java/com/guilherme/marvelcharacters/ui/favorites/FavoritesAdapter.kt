@@ -43,7 +43,6 @@ class FavoritesAdapter(
             override fun areContentsTheSame(oldItem: CharacterVO, newItem: CharacterVO): Boolean {
                 return oldItem == newItem
             }
-
         }
     }
 }

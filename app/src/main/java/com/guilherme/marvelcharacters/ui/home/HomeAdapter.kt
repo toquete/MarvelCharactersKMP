@@ -41,7 +41,6 @@ class HomeAdapter(private val onClickListener: (CharacterVO) -> Unit) : ListAdap
             override fun areContentsTheSame(oldItem: CharacterVO, newItem: CharacterVO): Boolean {
                 return oldItem == newItem
             }
-
         }
     }
 }

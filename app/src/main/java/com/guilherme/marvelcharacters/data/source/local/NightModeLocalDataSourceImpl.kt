@@ -34,5 +34,4 @@ class NightModeLocalDataSourceImpl @Inject constructor(
             PREFERENCE_NIGHT_MODE_DEFAULT
         )
     }
-
 }
