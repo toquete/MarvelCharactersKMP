@@ -13,6 +13,9 @@
 # Java class files
 *.class
 
+# Jacoco files
+*.exec
+
 # Generated files
 bin/
 gen/

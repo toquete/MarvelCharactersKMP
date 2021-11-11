@@ -49,7 +49,9 @@ final androidExclusion = [
         '**/*Module*.*',
         '**/*Database*.*',
         '**/RetrofitFactory*.*',
-        '**/CustomApplication*.*'
+        '**/CustomApplication*.*',
+        '**/*Factory*.*',
+        '**/*Creator*.*'
 ]
 
 final unitTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/${testBuildType}/com/guilherme/marvelcharacters", excludes: androidExclusion)

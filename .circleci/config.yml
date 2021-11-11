@@ -46,7 +46,6 @@ jobs:
           name: Build debug APK and test APK
           command: |
             ./gradlew :app:assembleDebug
-            ./gradlew :app:assembleDebugAndroidTest
       - store_artifacts:
           path: app/build/outputs/apk
           destination: apk
