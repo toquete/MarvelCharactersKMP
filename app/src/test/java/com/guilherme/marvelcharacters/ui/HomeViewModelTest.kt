@@ -66,7 +66,7 @@ class HomeViewModelTest : BaseUnitTest() {
         val characterVO = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
         val characterList = listOf(character)
 
-        coEvery { getCharactersUseCase(any()) } returns flowOf(characterList)
+        coEvery { getCharactersUseCase(any(), any(), any()) } returns flowOf(characterList)
 
         homeViewModel.states.observeForTesting(stateObserver) {
             homeViewModel.onSearchCharacter("spider")
@@ -82,7 +82,7 @@ class HomeViewModelTest : BaseUnitTest() {
     fun `onSearchCharacter - send empty state when list is empty`() {
         val characterList = emptyList<Character>()
 
-        coEvery { getCharactersUseCase(any()) } returns flowOf(characterList)
+        coEvery { getCharactersUseCase(any(), any(), any()) } returns flowOf(characterList)
 
         homeViewModel.states.observeForTesting(stateObserver) {
             homeViewModel.onSearchCharacter("spider")
@@ -96,7 +96,7 @@ class HomeViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onSearchCharacter - send error state on request error`() {
-        coEvery { getCharactersUseCase(any()) } returns flow {
+        coEvery { getCharactersUseCase(any(), any(), any()) } returns flow {
             throw HttpException(
                 Response.error<String>(
                     404,
@@ -117,7 +117,7 @@ class HomeViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onSearchCharacter - send internet error state`() {
-        coEvery { getCharactersUseCase(any()) } returns flow { throw IOException() }
+        coEvery { getCharactersUseCase(any(), any(), any()) } returns flow { throw IOException() }
 
         homeViewModel.states.observeForTesting(stateObserver) {
             homeViewModel.onSearchCharacter("spider")

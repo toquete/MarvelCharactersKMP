@@ -1,0 +1,23 @@
+plugins {
+    id 'java-library'
+    id 'kotlin'
+}
+
+apply from: "$rootDir/tools/jacoco/kotlin.gradle"
+
+java {
+    sourceCompatibility = sourceCompatibilityVersion
+    targetCompatibility = targetCompatibilityVersion
+}
+
+dependencies {
+    implementation project(':domain')
+
+    implementation "javax.inject:javax.inject:$javaxInjectVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "io.mockk:mockk:$mockkVersion"
+    testImplementation "com.google.truth:truth:$truthVersion"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+}

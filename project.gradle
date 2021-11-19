@@ -1,0 +1,49 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+final mainSrc = subprojects.collect { project ->
+    "${project.projectDir}/src/main/java"
+}
+
+task jacocoFullTestReport(type: JacocoReport) {
+    group = 'coverage'
+    description = "Generate Jacoco coverage reports after running tests."
+
+    def projects = subprojects.findAll {
+        it.getTasksByName("jacocoTestReport", false)
+    }
+
+    dependsOn(projects.jacocoTestReport)
+
+    final source = files(projects.jacocoTestReport.sourceDirectories)
+
+    additionalSourceDirs.from = source
+    sourceDirectories.from = source
+    classDirectories.from = files(projects.jacocoTestReport.classDirectories)
+    executionData.from = files(projects.jacocoTestReport.executionData)
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+        html.destination = file("${buildDir}/reports/jacoco")
+    }
+
+    doLast {
+        println "jacoco unit report has been generated to file://${reports.html.destination}/index.html"
+    }
+}
+
+task testReport(type: TestReport) {
+    dependsOn(jacocoFullTestReport)
+    destinationDir = file("$buildDir/reports/allTests")
+    // Include the results from the `test` task in all subprojects
+    reportOn subprojects*.test
+}
+
+coveralls {
+    sourceDirs = files([mainSrc]).flatten()
+    jacocoReportPath 'app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml'
+}

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.guilherme.marvelcharacters.BuildConfig
 import com.guilherme.marvelcharacters.Event
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
@@ -51,7 +52,7 @@ class HomeViewModel @Inject constructor(
 
     fun onSearchCharacter(character: String) {
         viewModelScope.launch {
-            getCharactersUseCase(character)
+            getCharactersUseCase(character, BuildConfig.MARVEL_KEY, BuildConfig.MARVEL_PRIVATE_KEY)
                 .flowOn(dispatcher)
                 .onStart { _states.value = CharacterListState.Loading }
                 .catch { error ->

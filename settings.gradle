@@ -1,1 +1,5 @@
 include ':app'
+include ':cache'
+include ':data'
+include ':remote'
+include ':domain'

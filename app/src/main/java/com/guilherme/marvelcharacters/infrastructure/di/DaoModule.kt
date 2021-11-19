@@ -1,7 +1,7 @@
 package com.guilherme.marvelcharacters.infrastructure.di
 
-import com.guilherme.marvelcharacters.data.source.local.dao.CharacterDao
-import com.guilherme.marvelcharacters.infrastructure.database.CharacterDatabase
+import com.guilherme.marvelcharacters.cache.dao.CharacterDao
+import com.guilherme.marvelcharacters.cache.dao.CharacterDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

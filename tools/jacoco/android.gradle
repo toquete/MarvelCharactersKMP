@@ -1,0 +1,115 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+final testBuildType = 'debug'
+
+final exclusion = [
+        '**/R.class',
+        '**/R$*.class',
+        '**/BuildConfig.*',
+        '**/Manifest*.*',
+        '**/*$ViewInjector*.*',
+        '**/*$ViewBinder*.*',
+        '**/*Builder.*',
+        '**/*Contract.*',
+        '**/*_MembersInjector.class',
+        '**/*_MembersInjector*.*',
+        '**/*_*Factory*.*',
+        '**/*Component*.*',
+        '**/*Module*.*',
+        '**/*Binding*.*',
+        '**/*_*Provide*.*',
+        '**/*Test*.*',
+        'android/**/*.*',
+        '**/*Args*.*',
+        '**/RetrofitFactory*.*',
+        '**/CustomApplication*.*'
+]
+
+final androidExclusion = [
+        '**/databinding/**/*.*',
+        '**/android/databinding/*Binding.*',
+        '**/BR.*',
+        '**/R.*',
+        '**/R$*.*',
+        '**/BuildConfig.*',
+        '**/Manifest*.*',
+        '**/*_MembersInjector.*',
+        '**/Dagger*Component.*',
+        '**/Dagger*Component$Builder.*',
+        '**/*Module_*Factory.*',
+        '**/*Fragment*.*',
+        '**/*Activity*.*',
+        '**/*Adapter*.*',
+        '**/*ViewPager*.*',
+        '**/*ViewHolder*.*',
+        '**/*Module*.*',
+        '**/*Database*.*',
+        '**/RetrofitFactory*.*',
+        '**/CustomApplication*.*',
+        '**/*Factory*.*',
+        '**/*Creator*.*'
+]
+
+final unitTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/${testBuildType}", excludes: androidExclusion)
+final uiTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/${testBuildType}", excludes: exclusion)
+final mainSrc = "${project.projectDir}/src/main/java"
+
+project.afterEvaluate {
+    tasks.create(name: "jacocoTestReport", type: JacocoReport, dependsOn: "test${testBuildType.capitalize()}UnitTest") {
+        group = 'coverage'
+        description = "Generate Jacoco coverage reports after running tests."
+        reports {
+            xml.enabled = true
+            html.enabled = true
+            html.destination = file("${buildDir}/reports/jacoco")
+        }
+
+        sourceDirectories.from = files([mainSrc])
+        classDirectories.from = files([unitTree])
+        executionData.from = fileTree(dir: "$buildDir", includes: ["jacoco/test${testBuildType.capitalize()}UnitTest.exec"])
+
+        doLast {
+            println "jacoco unit report has been generated to file://${reports.html.destination}/index.html"
+        }
+    }
+
+    tasks.create(name: "jacocoAndroidTestReport", type: JacocoReport, dependsOn: "create${testBuildType.capitalize()}CoverageReport") {
+        group = 'coverage'
+        reports {
+            xml.enabled = true
+            html.enabled = true
+            html.setDestination(file("${buildDir}/reports/jacoco/androidTest"))
+            xml.setDestination(file("${buildDir}/reports/jacoco/androidTest/androidTest.xml"))
+        }
+
+        sourceDirectories.from = files([mainSrc])
+        classDirectories.from = files([uiTree])
+        executionData.from = fileTree(dir: "$buildDir", includes: ['**/*.ec'])
+
+        doLast {
+            println "jacoco android report has been generated to file://${reports.html.destination}/index.html"
+        }
+    }
+
+    tasks.create(name: "jacocoMergedTestReport", type: JacocoReport, dependsOn: ["jacocoTestReport", "jacocoAndroidTestReport"]) {
+        group = 'coverage'
+        reports {
+            xml.enabled = true
+            html.enabled = true
+            html.setDestination(file("${buildDir}/reports/jacoco/mergedTest"))
+            xml.setDestination(file("${buildDir}/reports/jacoco/mergedTest/mergedTest.xml"))
+        }
+
+        sourceDirectories.from = files([mainSrc])
+        classDirectories.from = files([uiTree])
+        executionData.from = fileTree(dir: "$buildDir", includes: ["jacoco/test${testBuildType.capitalize()}UnitTest.exec", '**/*.ec'])
+
+        doLast {
+            println "jacoco full report has been generated to file://${reports.html.destination}/index.html"
+        }
+    }
+}
