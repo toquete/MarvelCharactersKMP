@@ -36,14 +36,7 @@ task jacocoFullTestReport(type: JacocoReport) {
     }
 }
 
-task testReport(type: TestReport) {
-    dependsOn(jacocoFullTestReport)
-    destinationDir = file("$buildDir/reports/allTests")
-    // Include the results from the `test` task in all subprojects
-    reportOn subprojects*.test
-}
-
 coveralls {
     sourceDirs = files([mainSrc]).flatten()
-    jacocoReportPath 'app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml'
+    jacocoReportPath 'build/reports/jacoco/jacocoFullTestReport/jacocoFullTestReport.xml'
 }
