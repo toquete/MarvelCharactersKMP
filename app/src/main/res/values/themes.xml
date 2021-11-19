@@ -30,6 +30,7 @@
         <item name="colorSecondaryVariant">@color/grey_800</item>
         <item name="colorAccent">@color/red_500</item>
         <item name="android:statusBarColor" tools:ignore="NewApi">?attr/colorPrimaryVariant</item>
+        <item name="android:navigationBarColor">@color/red_500</item>
         <item name="contentScrim">?attr/colorPrimary</item>
         <item name="colorOnPrimary">@android:color/white</item>
 
