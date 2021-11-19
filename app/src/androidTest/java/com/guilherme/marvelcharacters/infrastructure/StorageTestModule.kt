@@ -3,7 +3,7 @@ package com.guilherme.marvelcharacters.infrastructure
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
-import com.guilherme.marvelcharacters.infrastructure.database.CharacterDatabase
+import com.guilherme.marvelcharacters.cache.dao.CharacterDatabase
 import com.guilherme.marvelcharacters.infrastructure.di.StorageModule
 import dagger.Module
 import dagger.Provides

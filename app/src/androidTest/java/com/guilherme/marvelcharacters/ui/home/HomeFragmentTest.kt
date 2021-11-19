@@ -4,10 +4,10 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.guilherme.marvelcharacters.MainActivity
-import com.guilherme.marvelcharacters.data.source.remote.model.CharacterResponse
-import com.guilherme.marvelcharacters.data.source.remote.model.ContainerResponse
-import com.guilherme.marvelcharacters.data.source.remote.model.ImageResponse
-import com.guilherme.marvelcharacters.data.source.remote.service.Api
+import com.guilherme.marvelcharacters.remote.model.CharacterResponse
+import com.guilherme.marvelcharacters.remote.model.ContainerResponse
+import com.guilherme.marvelcharacters.remote.model.ImageResponse
+import com.guilherme.marvelcharacters.remote.service.Api
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.coEvery
@@ -20,7 +20,7 @@ import org.junit.runner.RunWith
 import retrofit2.HttpException
 import retrofit2.Response
 import javax.inject.Inject
-import com.guilherme.marvelcharacters.data.source.remote.model.Response as apiResponse
+import com.guilherme.marvelcharacters.remote.model.Response as apiResponse
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)

@@ -4,9 +4,9 @@ import android.content.Intent
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.guilherme.marvelcharacters.data.source.local.model.CharacterEntity
-import com.guilherme.marvelcharacters.data.source.local.model.ImageEntity
-import com.guilherme.marvelcharacters.infrastructure.database.CharacterDatabase
+import com.guilherme.marvelcharacters.cache.dao.CharacterDatabase
+import com.guilherme.marvelcharacters.cache.model.CharacterEntity
+import com.guilherme.marvelcharacters.cache.model.ImageEntity
 import com.guilherme.marvelcharacters.ui.model.CharacterVO
 import com.guilherme.marvelcharacters.ui.model.ImageVO
 import dagger.hilt.android.testing.HiltAndroidRule

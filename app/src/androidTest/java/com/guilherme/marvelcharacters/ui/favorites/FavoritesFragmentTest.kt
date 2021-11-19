@@ -5,9 +5,9 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.guilherme.marvelcharacters.MainActivity
-import com.guilherme.marvelcharacters.data.source.local.model.CharacterEntity
-import com.guilherme.marvelcharacters.data.source.local.model.ImageEntity
-import com.guilherme.marvelcharacters.infrastructure.database.CharacterDatabase
+import com.guilherme.marvelcharacters.cache.dao.CharacterDatabase
+import com.guilherme.marvelcharacters.cache.model.CharacterEntity
+import com.guilherme.marvelcharacters.cache.model.ImageEntity
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.GlobalScope
