@@ -15,8 +15,10 @@ import com.guilherme.marvelcharacters.infrastructure.di.annotation.IoDispatcher
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class DetailViewModel @AssistedInject constructor(
@@ -30,29 +32,22 @@ class DetailViewModel @AssistedInject constructor(
     private val _snackbarMessage = MutableLiveData<Event<Pair<Int, Boolean>>>()
     val snackbarMessage: LiveData<Event<Pair<Int, Boolean>>> = _snackbarMessage
 
-    private val _isCharacterFavorite = MutableLiveData<Boolean>()
-    val isCharacterFavorite: LiveData<Boolean> = _isCharacterFavorite
-
-    init {
-        viewModelScope.launch {
-            isCharacterFavoriteUseCase(character.id)
-                .flowOn(dispatcher)
-                .collect { _isCharacterFavorite.value = it }
-        }
-    }
+    val isCharacterFavorite: StateFlow<Boolean> = isCharacterFavoriteUseCase(character.id)
+        .flowOn(dispatcher)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = false
+        )
 
     fun onFabClick() = viewModelScope.launch {
         _snackbarMessage.value = try {
-            isCharacterFavorite.value?.let { isFavorite ->
-                if (isFavorite) {
-                    deleteFavoriteCharacterUseCase(character)
-                    Event(R.string.character_deleted to true)
-                } else {
-                    insertFavoriteCharacterUseCase(character)
-                    Event(R.string.character_added to false)
-                }
-            } ?: run {
-                Event(R.string.unknown_character to false)
+            if (isCharacterFavorite.value) {
+                deleteFavoriteCharacterUseCase(character)
+                Event(R.string.character_deleted to true)
+            } else {
+                insertFavoriteCharacterUseCase(character)
+                Event(R.string.character_added to false)
             }
         } catch (error: SQLiteException) {
             Event(R.string.error_message to false)

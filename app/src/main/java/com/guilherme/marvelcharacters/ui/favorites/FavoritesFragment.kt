@@ -6,7 +6,9 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -16,6 +18,8 @@ import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.databinding.FragmentFavoritesBinding
 import com.guilherme.marvelcharacters.ui.model.CharacterVO
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
@@ -23,7 +27,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
     private var _favoritesBinding: FragmentFavoritesBinding? = null
     private val favoritesBinding get() = _favoritesBinding!!
 
-    private val favoritesViewModel: FavoritesViewModel by viewModels()
+    private val favoritesViewModel: FavoritesViewModel by activityViewModels()
 
     private lateinit var favoritesAdapter: FavoritesAdapter
 
@@ -68,9 +72,13 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
     }
 
     private fun setupObservers() {
-        favoritesViewModel.list.observe(viewLifecycleOwner) { list ->
-            favoritesAdapter.submitList(list)
-            setHasOptionsMenu(list.isNotEmpty())
+        viewLifecycleOwner.lifecycleScope.launch {
+            favoritesViewModel.list
+                .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collect { list ->
+                    favoritesAdapter.submitList(list)
+                    setHasOptionsMenu(list.isNotEmpty())
+                }
         }
 
         favoritesViewModel.snackbarMessage.observe(viewLifecycleOwner, EventObserver { id -> showSnackbar(id) })
