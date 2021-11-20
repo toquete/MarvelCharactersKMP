@@ -36,7 +36,7 @@ class DetailViewModel @AssistedInject constructor(
         .flowOn(dispatcher)
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Lazily,
+            started = SharingStarted.Eagerly,
             initialValue = false
         )
 

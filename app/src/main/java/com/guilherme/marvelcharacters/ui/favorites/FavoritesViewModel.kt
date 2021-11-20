@@ -10,11 +10,14 @@ import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.usecase.DeleteAllFavoriteCharactersUseCase
 import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharactersUseCase
+import com.guilherme.marvelcharacters.infrastructure.di.annotation.IoDispatcher
 import com.guilherme.marvelcharacters.ui.mapper.CharacterMapper
 import com.guilherme.marvelcharacters.ui.model.CharacterVO
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -25,7 +28,8 @@ class FavoritesViewModel @Inject constructor(
     getFavoriteCharactersUseCase: GetFavoriteCharactersUseCase,
     private val deleteFavoriteCharacterUseCase: DeleteFavoriteCharacterUseCase,
     private val deleteAllFavoriteCharactersUseCase: DeleteAllFavoriteCharactersUseCase,
-    private val mapper: CharacterMapper
+    private val mapper: CharacterMapper,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _snackbarMessage = MutableLiveData<Event<Int>>()
@@ -35,6 +39,7 @@ class FavoritesViewModel @Inject constructor(
     val navigateToDetail: LiveData<Event<CharacterVO>> = _navigateToDetail
 
     val list: StateFlow<List<CharacterVO>> = getFavoriteCharactersUseCase()
+        .flowOn(dispatcher)
         .map { list ->
             list.map { mapper.mapTo(it) }
         }
