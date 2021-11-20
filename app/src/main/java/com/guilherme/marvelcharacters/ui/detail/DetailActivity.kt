@@ -3,7 +3,8 @@ package com.guilherme.marvelcharacters.ui.detail
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
@@ -12,6 +13,8 @@ import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.databinding.ActivityDetailBinding
 import com.guilherme.marvelcharacters.ui.mapper.CharacterMapper
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -45,9 +48,13 @@ class DetailActivity : AppCompatActivity() {
             showSnackbar(result.first, result.second)
         })
 
-        detailViewModel.isCharacterFavorite.observe(this, Observer { isFavorite ->
-            binding.fab.isActivated = isFavorite
-        })
+        lifecycleScope.launch {
+            detailViewModel.isCharacterFavorite
+                .flowWithLifecycle(lifecycle)
+                .collect { isFavorite ->
+                    binding.fab.isActivated = isFavorite
+                }
+        }
     }
 
     private fun showSnackbar(stringId: Int, showAction: Boolean) {

@@ -1,6 +1,5 @@
 package com.guilherme.marvelcharacters.ui
 
-import androidx.lifecycle.Observer
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.model.Character
@@ -19,8 +18,8 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.verifyOrder
-import io.mockk.verifySequence
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import okhttp3.ResponseBody
@@ -46,9 +45,6 @@ class HomeViewModelTest : BaseUnitTest() {
     @RelaxedMockK
     private lateinit var isDarkModeEnabledUseCase: IsDarkModeEnabledUseCase
 
-    @RelaxedMockK
-    private lateinit var stateObserver: Observer<HomeViewModel.CharacterListState>
-
     override fun setUp() {
         super.setUp()
         homeViewModel = HomeViewModel(
@@ -61,41 +57,46 @@ class HomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onSearchCharacter - send success state when list is loaded`() {
+    fun `onSearchCharacter - send success state when list is loaded`() = testCoroutineRule.runBlockingTest {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
         val characterVO = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
         val characterList = listOf(character)
+        val successState = HomeViewModel.State(
+            isLoading = false,
+            characters = listOf(characterVO),
+            errorMessageId = null
+        )
 
         coEvery { getCharactersUseCase(any(), any(), any()) } returns flowOf(characterList)
 
-        homeViewModel.states.observeForTesting(stateObserver) {
-            homeViewModel.onSearchCharacter("spider")
+        homeViewModel.onSearchCharacter("spider")
 
-            verifySequence {
-                stateObserver.onChanged(HomeViewModel.CharacterListState.Loading)
-                stateObserver.onChanged(HomeViewModel.CharacterListState.Characters(listOf(characterVO)))
-            }
-        }
+        assertThat(homeViewModel.states.first()).isEqualTo(successState)
     }
 
     @Test
-    fun `onSearchCharacter - send empty state when list is empty`() {
+    fun `onSearchCharacter - send empty state when list is empty`() = testCoroutineRule.runBlockingTest {
         val characterList = emptyList<Character>()
+        val emptyState = HomeViewModel.State(
+            isLoading = false,
+            characters = emptyList(),
+            errorMessageId = R.string.empty_state_message
+        )
 
         coEvery { getCharactersUseCase(any(), any(), any()) } returns flowOf(characterList)
 
-        homeViewModel.states.observeForTesting(stateObserver) {
-            homeViewModel.onSearchCharacter("spider")
+        homeViewModel.onSearchCharacter("spider")
 
-            verifySequence {
-                stateObserver.onChanged(HomeViewModel.CharacterListState.Loading)
-                stateObserver.onChanged(HomeViewModel.CharacterListState.EmptyState)
-            }
-        }
+        assertThat(homeViewModel.states.first()).isEqualTo(emptyState)
     }
 
     @Test
-    fun `onSearchCharacter - send error state on request error`() {
+    fun `onSearchCharacter - send error state on request error`() = testCoroutineRule.runBlockingTest {
+        val errorState = HomeViewModel.State(
+            isLoading = false,
+            characters = emptyList(),
+            errorMessageId = R.string.request_error_message
+        )
         coEvery { getCharactersUseCase(any(), any(), any()) } returns flow {
             throw HttpException(
                 Response.error<String>(
@@ -105,28 +106,23 @@ class HomeViewModelTest : BaseUnitTest() {
             )
         }
 
-        homeViewModel.states.observeForTesting(stateObserver) {
-            homeViewModel.onSearchCharacter("spider")
+        homeViewModel.onSearchCharacter("spider")
 
-            verifySequence {
-                stateObserver.onChanged(HomeViewModel.CharacterListState.Loading)
-                stateObserver.onChanged(HomeViewModel.CharacterListState.ErrorState(R.string.request_error_message))
-            }
-        }
+        assertThat(homeViewModel.states.first()).isEqualTo(errorState)
     }
 
     @Test
-    fun `onSearchCharacter - send internet error state`() {
+    fun `onSearchCharacter - send internet error state`() = testCoroutineRule.runBlockingTest {
+        val errorState = HomeViewModel.State(
+            isLoading = false,
+            characters = emptyList(),
+            errorMessageId = R.string.network_error_message
+        )
         coEvery { getCharactersUseCase(any(), any(), any()) } returns flow { throw IOException() }
 
-        homeViewModel.states.observeForTesting(stateObserver) {
-            homeViewModel.onSearchCharacter("spider")
+        homeViewModel.onSearchCharacter("spider")
 
-            verifySequence {
-                stateObserver.onChanged(HomeViewModel.CharacterListState.Loading)
-                stateObserver.onChanged(HomeViewModel.CharacterListState.ErrorState(R.string.network_error_message))
-            }
-        }
+        assertThat(homeViewModel.states.first()).isEqualTo(errorState)
     }
 
     @Test

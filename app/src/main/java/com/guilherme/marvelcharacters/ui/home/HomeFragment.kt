@@ -8,11 +8,13 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.guilherme.marvelcharacters.EventObserver
@@ -20,6 +22,8 @@ import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.databinding.FragmentHomeBinding
 import com.guilherme.marvelcharacters.ui.model.CharacterVO
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -27,7 +31,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private var _homeBinding: FragmentHomeBinding? = null
     private val homeBinding get() = _homeBinding!!
 
-    private val homeViewModel: HomeViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by activityViewModels()
 
     private lateinit var homeAdapter: HomeAdapter
 
@@ -103,15 +107,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun setupObservers() {
-        homeViewModel.states.observe(viewLifecycleOwner) { state ->
-            state?.let {
-                when (state) {
-                    is HomeViewModel.CharacterListState.Characters -> showCharacters(state.characters)
-                    is HomeViewModel.CharacterListState.EmptyState -> showEmptyState()
-                    is HomeViewModel.CharacterListState.ErrorState -> showError(state.messageId)
-                    is HomeViewModel.CharacterListState.Loading -> handleLoading(mustShowLoading = true)
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.states
+                .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collect { state ->
+                    setupState(state)
                 }
-            }
         }
 
         homeViewModel.navigateToDetail.observe(viewLifecycleOwner, EventObserver { character ->
@@ -129,42 +130,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun showError(@StringRes messageId: Int) {
-        handleLoading(mustShowLoading = false)
-        homeBinding.run {
-            recyclerviewCharacters.visibility = View.GONE
-            textviewMessage.setText(messageId)
-            textviewMessage.visibility = View.VISIBLE
+    private fun setupState(state: HomeViewModel.State) = with(homeBinding) {
+        progressBar.isVisible = state.isLoading
+        recyclerviewCharacters.isVisible = !state.isLoading && state.errorMessageId == null
+        textviewMessage.isVisible = !state.isLoading && state.errorMessageId != null
+
+        homeAdapter.submitList(state.characters)
+
+        state.errorMessageId?.let {
+            textviewMessage.setText(it)
         }
-    }
-
-    private fun handleLoading(mustShowLoading: Boolean) {
-        homeBinding.run {
-            if (mustShowLoading) {
-                recyclerviewCharacters.visibility = View.GONE
-                textviewMessage.visibility = View.GONE
-                progressBar.visibility = View.VISIBLE
-            } else {
-                progressBar.visibility = View.GONE
-            }
-        }
-    }
-
-    private fun showEmptyState() {
-        handleLoading(mustShowLoading = false)
-        homeBinding.run {
-            recyclerviewCharacters.visibility = View.GONE
-            textviewMessage.setText(R.string.empty_state_message)
-            textviewMessage.visibility = View.VISIBLE
-        }
-    }
-
-    private fun showCharacters(list: List<CharacterVO>) {
-        handleLoading(mustShowLoading = false)
-        homeAdapter.submitList(list)
-
-        homeBinding.textviewMessage.visibility = View.GONE
-        homeBinding.recyclerviewCharacters.visibility = View.VISIBLE
     }
 
     private fun navigateToDetail(character: CharacterVO) {

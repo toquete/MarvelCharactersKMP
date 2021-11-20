@@ -20,6 +20,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import org.junit.Test
 
@@ -98,7 +99,7 @@ class FavoritesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `init - send favorites list`() {
+    fun `init - send favorites list`() = testCoroutineRule.runBlockingTest {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
         val characterVO = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
 
@@ -112,8 +113,6 @@ class FavoritesViewModelTest : BaseUnitTest() {
             testCoroutineRule.testCoroutineDispatcher
         )
 
-        viewModel.list.observeForTesting {
-            assertThat(viewModel.list.getOrAwaitValue()).isEqualTo(listOf(characterVO))
-        }
+        assertThat(viewModel.list.first()).isEqualTo(listOf(characterVO))
     }
 }
