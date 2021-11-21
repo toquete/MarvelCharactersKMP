@@ -8,14 +8,11 @@ import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.InsertFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.IsCharacterFavoriteUseCase
-import com.guilherme.marvelcharacters.infrastructure.di.annotation.IoDispatcher
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -24,15 +21,13 @@ class DetailViewModel @AssistedInject constructor(
     @Assisted private val character: Character,
     isCharacterFavoriteUseCase: IsCharacterFavoriteUseCase,
     private val deleteFavoriteCharacterUseCase: DeleteFavoriteCharacterUseCase,
-    private val insertFavoriteCharacterUseCase: InsertFavoriteCharacterUseCase,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher
+    private val insertFavoriteCharacterUseCase: InsertFavoriteCharacterUseCase
 ) : ViewModel() {
 
     private val _events = Channel<Event>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
     val isCharacterFavorite: StateFlow<Boolean> = isCharacterFavoriteUseCase(character.id)
-        .flowOn(dispatcher)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,

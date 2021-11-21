@@ -109,6 +109,7 @@ dependencies {
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     testImplementation "androidx.room:room-testing:$roomVersion"
     testImplementation "com.google.truth:truth:$truthVersion"
+    testImplementation "app.cash.turbine:turbine:$turbineVersion"
 
     androidTestImplementation "androidx.test.ext:junit:$junitExtVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
