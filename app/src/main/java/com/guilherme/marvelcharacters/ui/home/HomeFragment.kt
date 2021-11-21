@@ -13,11 +13,11 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.guilherme.marvelcharacters.EventObserver
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.databinding.FragmentHomeBinding
 import com.guilherme.marvelcharacters.ui.model.CharacterVO
@@ -32,6 +32,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val homeBinding get() = _homeBinding!!
 
     private val homeViewModel: HomeViewModel by activityViewModels()
+    private val nightModeViewModel: NightModeViewModel by activityViewModels()
 
     private lateinit var homeAdapter: HomeAdapter
 
@@ -64,7 +65,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (item.itemId == R.id.actionToggleTheme) {
-            homeViewModel.onActionItemClick()
+            nightModeViewModel.toggleDarkMode()
             true
         } else {
             super.onOptionsItemSelected(item)
@@ -108,19 +109,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
-            homeViewModel.states
-                .flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collect { state ->
-                    setupState(state)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    homeViewModel.states.collect { setupState(it) }
                 }
-        }
-
-        homeViewModel.navigateToDetail.observe(viewLifecycleOwner, EventObserver { character ->
-            navigateToDetail(character)
-        })
-
-        homeViewModel.nightMode.observe(viewLifecycleOwner) { mode ->
-            AppCompatDelegate.setDefaultNightMode(mode)
+                launch {
+                    homeViewModel.events.collect { setupEvent(it) }
+                }
+                launch {
+                    nightModeViewModel.nightMode.collect { AppCompatDelegate.setDefaultNightMode(it) }
+                }
+            }
         }
     }
 
@@ -139,6 +138,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         state.errorMessageId?.let {
             textviewMessage.setText(it)
+        }
+    }
+
+    private fun setupEvent(event: HomeViewModel.Event) {
+        when (event) {
+            is HomeViewModel.Event.NavigateToDetails -> navigateToDetail(event.character)
         }
     }
 

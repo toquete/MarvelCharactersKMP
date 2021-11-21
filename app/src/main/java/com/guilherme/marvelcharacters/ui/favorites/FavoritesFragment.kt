@@ -7,13 +7,13 @@ import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.guilherme.marvelcharacters.EventObserver
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.databinding.FragmentFavoritesBinding
 import com.guilherme.marvelcharacters.ui.model.CharacterVO
@@ -73,17 +73,23 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
 
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
-            favoritesViewModel.list
-                .flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collect { list ->
-                    favoritesAdapter.submitList(list)
-                    setHasOptionsMenu(list.isNotEmpty())
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    favoritesViewModel.list.collect { list ->
+                        favoritesAdapter.submitList(list)
+                        setHasOptionsMenu(list.isNotEmpty())
+                    }
                 }
+                launch {
+                    favoritesViewModel.events.collect { event ->
+                        when (event) {
+                            is FavoritesViewModel.Event.ShowSnackbarMessage -> showSnackbar(event.messageId)
+                            is FavoritesViewModel.Event.NavigateToDetail -> navigateToDetail(event.character)
+                        }
+                    }
+                }
+            }
         }
-
-        favoritesViewModel.snackbarMessage.observe(viewLifecycleOwner, EventObserver { id -> showSnackbar(id) })
-
-        favoritesViewModel.navigateToDetail.observe(viewLifecycleOwner, EventObserver { character -> navigateToDetail(character) })
     }
 
     private fun showSnackbar(stringId: Int) {

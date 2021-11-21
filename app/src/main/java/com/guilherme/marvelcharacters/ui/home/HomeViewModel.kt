@@ -1,22 +1,17 @@
 package com.guilherme.marvelcharacters.ui.home
 
 import androidx.annotation.StringRes
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.BuildConfig
-import com.guilherme.marvelcharacters.Event
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
-import com.guilherme.marvelcharacters.domain.usecase.GetDarkModeUseCase
-import com.guilherme.marvelcharacters.domain.usecase.IsDarkModeEnabledUseCase
-import com.guilherme.marvelcharacters.domain.usecase.ToggleDarkModeUseCase
 import com.guilherme.marvelcharacters.infrastructure.di.annotation.IoDispatcher
 import com.guilherme.marvelcharacters.ui.mapper.CharacterMapper
 import com.guilherme.marvelcharacters.ui.model.CharacterVO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -24,6 +19,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -32,9 +28,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getCharactersUseCase: GetCharactersUseCase,
-    private val getDarkModeUseCase: GetDarkModeUseCase,
-    private val toggleDarkModeUseCase: ToggleDarkModeUseCase,
-    private val isDarkModeEnabledUseCase: IsDarkModeEnabledUseCase,
     private val mapper: CharacterMapper = CharacterMapper(),
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
@@ -42,17 +35,10 @@ class HomeViewModel @Inject constructor(
     private val _states = MutableStateFlow(State.initialState())
     val states: StateFlow<State> = _states
 
-    private val _navigateToDetail = MutableLiveData<Event<CharacterVO>>()
-    val navigateToDetail: LiveData<Event<CharacterVO>> = _navigateToDetail
-
-    private val _nightMode = MutableLiveData<Int>()
-    val nightMode: LiveData<Int> = _nightMode
+    private val _events = Channel<Event>(Channel.BUFFERED)
+    val events = _events.receiveAsFlow()
 
     var query: String? = null
-
-    init {
-        _nightMode.value = getDarkModeUseCase()
-    }
 
     fun onSearchCharacter(character: String) {
         viewModelScope.launch {
@@ -84,13 +70,9 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onItemClick(character: CharacterVO) {
-        _navigateToDetail.value = Event(character)
-    }
-
-    fun onActionItemClick() {
-        val isDarkModeEnabled = isDarkModeEnabledUseCase()
-        toggleDarkModeUseCase(!isDarkModeEnabled)
-        _nightMode.value = getDarkModeUseCase()
+        viewModelScope.launch {
+            _events.send(Event.NavigateToDetails(character))
+        }
     }
 
     data class State(
@@ -106,5 +88,9 @@ class HomeViewModel @Inject constructor(
                 errorMessageId = null
             )
         }
+    }
+
+    sealed class Event {
+        data class NavigateToDetails(val character: CharacterVO) : Event()
     }
 }

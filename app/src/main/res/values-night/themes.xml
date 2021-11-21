@@ -20,6 +20,7 @@
         <item name="contentScrim">?attr/colorSurface</item>
 
         <item name="android:statusBarColor" tools:ignore="NewApi">?attr/colorSurface</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
         <item name="android:colorBackground">@android:color/black</item>
     </style>
 </resources>

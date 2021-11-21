@@ -1,11 +1,9 @@
 package com.guilherme.marvelcharacters.ui.favorites
 
 import android.database.sqlite.SQLiteException
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.guilherme.marvelcharacters.Event
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.usecase.DeleteAllFavoriteCharactersUseCase
 import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
@@ -15,10 +13,12 @@ import com.guilherme.marvelcharacters.ui.mapper.CharacterMapper
 import com.guilherme.marvelcharacters.ui.model.CharacterVO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,11 +32,8 @@ class FavoritesViewModel @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
-    private val _snackbarMessage = MutableLiveData<Event<Int>>()
-    val snackbarMessage: LiveData<Event<Int>> = _snackbarMessage
-
-    private val _navigateToDetail = MutableLiveData<Event<CharacterVO>>()
-    val navigateToDetail: LiveData<Event<CharacterVO>> = _navigateToDetail
+    private val _events = Channel<Event>(Channel.BUFFERED)
+    val events = _events.receiveAsFlow()
 
     val list: StateFlow<List<CharacterVO>> = getFavoriteCharactersUseCase()
         .flowOn(dispatcher)
@@ -56,13 +53,20 @@ class FavoritesViewModel @Inject constructor(
     fun onDeleteAllClick() = viewModelScope.launch {
         try {
             deleteAllFavoriteCharactersUseCase()
-            _snackbarMessage.value = Event(R.string.character_deleted)
+            _events.send(Event.ShowSnackbarMessage(R.string.character_deleted))
         } catch (exception: SQLiteException) {
-            _snackbarMessage.value = Event(R.string.error_message)
+            _events.send(Event.ShowSnackbarMessage(R.string.error_message))
         }
     }
 
     fun onFavoriteItemClick(character: CharacterVO) {
-        _navigateToDetail.value = Event(character)
+        viewModelScope.launch {
+            _events.send(Event.NavigateToDetail(character))
+        }
+    }
+
+    sealed class Event {
+        data class ShowSnackbarMessage(@StringRes val messageId: Int) : Event()
+        data class NavigateToDetail(val character: CharacterVO) : Event()
     }
 }
