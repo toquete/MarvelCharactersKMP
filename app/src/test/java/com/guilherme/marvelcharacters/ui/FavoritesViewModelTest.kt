@@ -1,6 +1,7 @@
 package com.guilherme.marvelcharacters.ui
 
 import android.database.sqlite.SQLiteException
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.model.Character
@@ -13,14 +14,11 @@ import com.guilherme.marvelcharacters.ui.favorites.FavoritesViewModel
 import com.guilherme.marvelcharacters.ui.mapper.CharacterMapper
 import com.guilherme.marvelcharacters.ui.model.CharacterVO
 import com.guilherme.marvelcharacters.ui.model.ImageVO
-import com.guilherme.marvelcharacters.util.getOrAwaitValue
-import com.guilherme.marvelcharacters.util.observeForTesting
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import org.junit.Test
 
@@ -50,7 +48,7 @@ class FavoritesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `deleteCharacter - check if repository was called`() {
+    fun `deleteCharacter - check if repository was called`() = testCoroutineRule.runBlockingTest {
         val characterVO = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
 
@@ -60,41 +58,37 @@ class FavoritesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onDeleteAllClick - send success message`() {
-        favoritesViewModel.snackbarMessage.observeForTesting {
-            favoritesViewModel.onDeleteAllClick()
+    fun `onDeleteAllClick - send success message`() = testCoroutineRule.runBlockingTest {
+        favoritesViewModel.onDeleteAllClick()
 
-            coVerify { deleteAllFavoriteCharactersUseCase() }
-            assertThat(
-                favoritesViewModel.snackbarMessage.getOrAwaitValue().peekContent()
-            ).isEqualTo(R.string.character_deleted)
+        coVerify { deleteAllFavoriteCharactersUseCase() }
+
+        favoritesViewModel.events.test {
+            assertThat(awaitItem()).isEqualTo(FavoritesViewModel.Event.ShowSnackbarMessage(R.string.character_deleted))
         }
     }
 
     @Test
-    fun `onDeleteAllClick - send error message`() {
+    fun `onDeleteAllClick - send error message`() = testCoroutineRule.runBlockingTest {
         coEvery { deleteAllFavoriteCharactersUseCase() } throws SQLiteException()
 
-        favoritesViewModel.snackbarMessage.observeForTesting {
-            favoritesViewModel.onDeleteAllClick()
+        favoritesViewModel.onDeleteAllClick()
 
-            coVerify { deleteAllFavoriteCharactersUseCase() }
-            assertThat(
-                favoritesViewModel.snackbarMessage.getOrAwaitValue().peekContent()
-            ).isEqualTo(R.string.error_message)
+        coVerify { deleteAllFavoriteCharactersUseCase() }
+
+        favoritesViewModel.events.test {
+            assertThat(awaitItem()).isEqualTo(FavoritesViewModel.Event.ShowSnackbarMessage(R.string.error_message))
         }
     }
 
     @Test
-    fun `onFavoriteItemClick - send character to details screen`() {
+    fun `onFavoriteItemClick - send character to details screen`() = testCoroutineRule.runBlockingTest {
         val character = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
 
-        favoritesViewModel.navigateToDetail.observeForTesting {
-            favoritesViewModel.onFavoriteItemClick(character)
+        favoritesViewModel.onFavoriteItemClick(character)
 
-            assertThat(
-                favoritesViewModel.navigateToDetail.getOrAwaitValue().peekContent()
-            ).isEqualTo(character)
+        favoritesViewModel.events.test {
+            assertThat(awaitItem()).isEqualTo(FavoritesViewModel.Event.NavigateToDetail(character))
         }
     }
 
@@ -113,6 +107,8 @@ class FavoritesViewModelTest : BaseUnitTest() {
             testCoroutineRule.testCoroutineDispatcher
         )
 
-        assertThat(viewModel.list.first()).isEqualTo(listOf(characterVO))
+        viewModel.list.test {
+            assertThat(awaitItem()).isEqualTo(listOf(characterVO))
+        }
     }
 }

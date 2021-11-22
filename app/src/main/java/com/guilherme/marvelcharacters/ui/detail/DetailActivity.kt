@@ -3,12 +3,12 @@ package com.guilherme.marvelcharacters.ui.detail
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
-import com.guilherme.marvelcharacters.EventObserver
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.databinding.ActivityDetailBinding
 import com.guilherme.marvelcharacters.ui.mapper.CharacterMapper
@@ -44,16 +44,21 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun setupObservers() {
-        detailViewModel.snackbarMessage.observe(this, EventObserver { result ->
-            showSnackbar(result.first, result.second)
-        })
-
         lifecycleScope.launch {
-            detailViewModel.isCharacterFavorite
-                .flowWithLifecycle(lifecycle)
-                .collect { isFavorite ->
-                    binding.fab.isActivated = isFavorite
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    detailViewModel.isCharacterFavorite.collect { isFavorite ->
+                        binding.fab.isActivated = isFavorite
+                    }
                 }
+                launch {
+                    detailViewModel.events.collect { event ->
+                        when (event) {
+                            is DetailViewModel.Event.ShowSnackbarMessage -> showSnackbar(event.message.first, event.message.second)
+                        }
+                    }
+                }
+            }
         }
     }
 

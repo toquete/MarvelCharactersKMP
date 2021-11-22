@@ -1,6 +1,7 @@
 package com.guilherme.marvelcharacters.ui
 
 import android.database.sqlite.SQLiteException
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.model.Character
@@ -10,14 +11,13 @@ import com.guilherme.marvelcharacters.domain.usecase.InsertFavoriteCharacterUseC
 import com.guilherme.marvelcharacters.domain.usecase.IsCharacterFavoriteUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import com.guilherme.marvelcharacters.ui.detail.DetailViewModel
-import com.guilherme.marvelcharacters.util.getOrAwaitValue
-import com.guilherme.marvelcharacters.util.observeForTesting
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -35,56 +35,72 @@ class DetailViewModelTest : BaseUnitTest() {
     private val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
 
     @Test
-    fun `onFabClick - send deleted character event`() {
+    fun `init - send character state`() = testCoroutineRule.runBlockingTest {
         every { isCharacterFavoriteUseCase(character.id) } returns flowOf(true)
 
         val detailViewModel = getViewModel()
 
-        detailViewModel.snackbarMessage.observeForTesting {
-            detailViewModel.onFabClick()
-
-            coVerify { deleteFavoriteCharacterUseCase(character) }
-            assertThat(
-                detailViewModel.snackbarMessage.getOrAwaitValue().peekContent()
-            ).isEqualTo(R.string.character_deleted to true)
+        detailViewModel.isCharacterFavorite.test {
+            assertThat(awaitItem()).isTrue()
         }
     }
 
     @Test
-    fun `onFabClick - send added character event`() {
+    fun `onFabClick - send deleted character event`() = testCoroutineRule.runBlockingTest {
+        every { isCharacterFavoriteUseCase(character.id) } returns flowOf(true)
+
+        val detailViewModel = getViewModel()
+
+        // simulate first collection
+        val job = detailViewModel.isCharacterFavorite.launchIn(this)
+
+        detailViewModel.onFabClick()
+
+        coVerify { deleteFavoriteCharacterUseCase(character) }
+
+        detailViewModel.events.test {
+            assertThat(awaitItem()).isEqualTo(DetailViewModel.Event.ShowSnackbarMessage(R.string.character_deleted to true))
+            job.cancel()
+        }
+    }
+
+    @Test
+    fun `onFabClick - send added character event`() = testCoroutineRule.runBlockingTest {
         every { isCharacterFavoriteUseCase(character.id) } returns flowOf(false)
 
         val detailViewModel = getViewModel()
 
-        detailViewModel.snackbarMessage.observeForTesting {
-            detailViewModel.onFabClick()
+        // simulate first collection
+        val job = detailViewModel.isCharacterFavorite.launchIn(this)
 
-            coVerify { insertFavoriteCharacterUseCase(character) }
-            assertThat(
-                detailViewModel.snackbarMessage.getOrAwaitValue().peekContent()
-            ).isEqualTo(R.string.character_added to false)
+        detailViewModel.onFabClick()
+
+        coVerify { insertFavoriteCharacterUseCase(character) }
+
+        detailViewModel.events.test {
+            assertThat(awaitItem()).isEqualTo(DetailViewModel.Event.ShowSnackbarMessage(R.string.character_added to false))
+            job.cancel()
         }
     }
 
     @Test
-    fun `onFabClick - send generic error event`() {
+    fun `onFabClick - send generic error event`() = testCoroutineRule.runBlockingTest {
         every { isCharacterFavoriteUseCase(character.id) } returns flowOf(false)
         coEvery { insertFavoriteCharacterUseCase(character) } throws SQLiteException()
 
         val detailViewModel = getViewModel()
 
-        detailViewModel.snackbarMessage.observeForTesting {
-            detailViewModel.onFabClick()
+        detailViewModel.onFabClick()
 
-            coVerify { insertFavoriteCharacterUseCase(character) }
-            assertThat(
-                detailViewModel.snackbarMessage.getOrAwaitValue().peekContent()
-            ).isEqualTo(R.string.error_message to false)
+        coVerify { insertFavoriteCharacterUseCase(character) }
+
+        detailViewModel.events.test {
+            assertThat(awaitItem()).isEqualTo(DetailViewModel.Event.ShowSnackbarMessage(R.string.error_message to false))
         }
     }
 
     @Test
-    fun `onUndoClick - undo changes`() {
+    fun `onUndoClick - undo changes`() = testCoroutineRule.runBlockingTest {
         val detailViewModel = getViewModel()
 
         detailViewModel.onUndoClick()
@@ -93,16 +109,15 @@ class DetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onUndoClick - send error message on undo changes`() {
+    fun `onUndoClick - send error message on undo changes`() = testCoroutineRule.runBlockingTest {
         coEvery { insertFavoriteCharacterUseCase(character) } throws SQLiteException()
 
         val detailViewModel = getViewModel()
 
-        detailViewModel.snackbarMessage.observeForTesting {
-            detailViewModel.onUndoClick()
-            assertThat(
-                detailViewModel.snackbarMessage.getOrAwaitValue().peekContent()
-            ).isEqualTo(R.string.error_message to false)
+        detailViewModel.onUndoClick()
+
+        detailViewModel.events.test {
+            assertThat(awaitItem()).isEqualTo(DetailViewModel.Event.ShowSnackbarMessage(R.string.error_message to false))
         }
     }
 
@@ -111,8 +126,7 @@ class DetailViewModelTest : BaseUnitTest() {
             character,
             isCharacterFavoriteUseCase,
             deleteFavoriteCharacterUseCase,
-            insertFavoriteCharacterUseCase,
-            testCoroutineRule.testCoroutineDispatcher
+            insertFavoriteCharacterUseCase
         )
     }
 }

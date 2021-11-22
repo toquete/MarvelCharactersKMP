@@ -32,4 +32,5 @@ ext {
     mockkAndroidVersion = "1.10.6"
     testRunnerVersion = "1.4.0"
     orchestratorVersion = "1.4.0"
+    turbineVersion = "0.7.0"
 }

@@ -1,27 +1,21 @@
 package com.guilherme.marvelcharacters.ui
 
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
-import com.guilherme.marvelcharacters.domain.usecase.GetDarkModeUseCase
-import com.guilherme.marvelcharacters.domain.usecase.IsDarkModeEnabledUseCase
-import com.guilherme.marvelcharacters.domain.usecase.ToggleDarkModeUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import com.guilherme.marvelcharacters.ui.home.HomeViewModel
 import com.guilherme.marvelcharacters.ui.model.CharacterVO
 import com.guilherme.marvelcharacters.ui.model.ImageVO
-import com.guilherme.marvelcharacters.util.getOrAwaitValue
-import com.guilherme.marvelcharacters.util.observeForTesting
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
-import io.mockk.verifyOrder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.ResponseBody
 import org.junit.Test
 import retrofit2.HttpException
@@ -36,22 +30,10 @@ class HomeViewModelTest : BaseUnitTest() {
     @RelaxedMockK
     private lateinit var getCharactersUseCase: GetCharactersUseCase
 
-    @RelaxedMockK
-    private lateinit var getDarkModeUseCase: GetDarkModeUseCase
-
-    @RelaxedMockK
-    private lateinit var toggleDarkModeUseCase: ToggleDarkModeUseCase
-
-    @RelaxedMockK
-    private lateinit var isDarkModeEnabledUseCase: IsDarkModeEnabledUseCase
-
     override fun setUp() {
         super.setUp()
         homeViewModel = HomeViewModel(
             getCharactersUseCase,
-            getDarkModeUseCase,
-            toggleDarkModeUseCase,
-            isDarkModeEnabledUseCase,
             dispatcher = testCoroutineRule.testCoroutineDispatcher
         )
     }
@@ -62,32 +44,44 @@ class HomeViewModelTest : BaseUnitTest() {
         val characterVO = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
         val characterList = listOf(character)
         val successState = HomeViewModel.State(
-            isLoading = false,
+            isLoading = true,
             characters = listOf(characterVO),
             errorMessageId = null
         )
 
         coEvery { getCharactersUseCase(any(), any(), any()) } returns flowOf(characterList)
 
-        homeViewModel.onSearchCharacter("spider")
+        homeViewModel.states.test {
+            homeViewModel.onSearchCharacter("spider")
 
-        assertThat(homeViewModel.states.first()).isEqualTo(successState)
+            assertThat(awaitItem()).isEqualTo(HomeViewModel.State.initialState())
+            assertThat(awaitItem()).isEqualTo(successState.copy(characters = listOf()))
+            assertThat(awaitItem()).isEqualTo(successState)
+            assertThat(awaitItem()).isEqualTo(successState.copy(isLoading = false))
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
     fun `onSearchCharacter - send empty state when list is empty`() = testCoroutineRule.runBlockingTest {
         val characterList = emptyList<Character>()
         val emptyState = HomeViewModel.State(
-            isLoading = false,
+            isLoading = true,
             characters = emptyList(),
             errorMessageId = R.string.empty_state_message
         )
 
         coEvery { getCharactersUseCase(any(), any(), any()) } returns flowOf(characterList)
 
-        homeViewModel.onSearchCharacter("spider")
+        homeViewModel.states.test {
+            homeViewModel.onSearchCharacter("spider")
 
-        assertThat(homeViewModel.states.first()).isEqualTo(emptyState)
+            assertThat(awaitItem()).isEqualTo(HomeViewModel.State.initialState())
+            assertThat(awaitItem()).isEqualTo(emptyState.copy(errorMessageId = null))
+            assertThat(awaitItem()).isEqualTo(emptyState)
+            assertThat(awaitItem()).isEqualTo(emptyState.copy(isLoading = false))
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
@@ -106,9 +100,15 @@ class HomeViewModelTest : BaseUnitTest() {
             )
         }
 
-        homeViewModel.onSearchCharacter("spider")
+        homeViewModel.states.test {
+            homeViewModel.onSearchCharacter("spider")
 
-        assertThat(homeViewModel.states.first()).isEqualTo(errorState)
+            assertThat(awaitItem()).isEqualTo(HomeViewModel.State.initialState())
+            assertThat(awaitItem()).isEqualTo(errorState.copy(isLoading = true, errorMessageId = null))
+            assertThat(awaitItem()).isEqualTo(errorState.copy(isLoading = false, errorMessageId = null))
+            assertThat(awaitItem()).isEqualTo(errorState)
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
@@ -120,34 +120,25 @@ class HomeViewModelTest : BaseUnitTest() {
         )
         coEvery { getCharactersUseCase(any(), any(), any()) } returns flow { throw IOException() }
 
-        homeViewModel.onSearchCharacter("spider")
+        homeViewModel.states.test {
+            homeViewModel.onSearchCharacter("spider")
 
-        assertThat(homeViewModel.states.first()).isEqualTo(errorState)
-    }
-
-    @Test
-    fun `onItemClick - send character to details screen`() {
-        val character = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
-
-        homeViewModel.navigateToDetail.observeForTesting {
-            homeViewModel.onItemClick(character)
-
-            assertThat(
-                homeViewModel.navigateToDetail.getOrAwaitValue().peekContent()
-            ).isEqualTo(character)
+            assertThat(awaitItem()).isEqualTo(HomeViewModel.State.initialState())
+            assertThat(awaitItem()).isEqualTo(errorState.copy(isLoading = true, errorMessageId = null))
+            assertThat(awaitItem()).isEqualTo(errorState.copy(isLoading = false, errorMessageId = null))
+            assertThat(awaitItem()).isEqualTo(errorState)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun `onActionItemClick - change theme`() {
-        every { isDarkModeEnabledUseCase() } returns true
+    fun `onItemClick - send character to details screen`() = runBlockingTest {
+        val character = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
 
-        homeViewModel.onActionItemClick()
+        homeViewModel.onItemClick(character)
 
-        verifyOrder {
-            isDarkModeEnabledUseCase()
-            toggleDarkModeUseCase(isEnabled = false)
-            getDarkModeUseCase()
+        homeViewModel.events.test {
+            assertThat(awaitItem()).isEqualTo(HomeViewModel.Event.NavigateToDetails(character))
         }
     }
 }
