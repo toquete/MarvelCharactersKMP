@@ -20,7 +20,6 @@ import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -49,7 +48,7 @@ class FavoritesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `deleteCharacter - check if repository was called`() {
+    fun `deleteCharacter - check if repository was called`() = testCoroutineRule.runBlockingTest {
         val characterVO = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
 
@@ -59,7 +58,7 @@ class FavoritesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onDeleteAllClick - send success message`() = runBlockingTest {
+    fun `onDeleteAllClick - send success message`() = testCoroutineRule.runBlockingTest {
         favoritesViewModel.onDeleteAllClick()
 
         coVerify { deleteAllFavoriteCharactersUseCase() }
@@ -70,7 +69,7 @@ class FavoritesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onDeleteAllClick - send error message`() = runBlockingTest {
+    fun `onDeleteAllClick - send error message`() = testCoroutineRule.runBlockingTest {
         coEvery { deleteAllFavoriteCharactersUseCase() } throws SQLiteException()
 
         favoritesViewModel.onDeleteAllClick()
@@ -83,7 +82,7 @@ class FavoritesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onFavoriteItemClick - send character to details screen`() = runBlockingTest {
+    fun `onFavoriteItemClick - send character to details screen`() = testCoroutineRule.runBlockingTest {
         val character = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
 
         favoritesViewModel.onFavoriteItemClick(character)

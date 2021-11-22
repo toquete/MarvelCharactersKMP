@@ -30,31 +30,35 @@ class DetailViewModel @AssistedInject constructor(
     val isCharacterFavorite: StateFlow<Boolean> = isCharacterFavoriteUseCase(character.id)
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Eagerly,
+            started = SharingStarted.WhileSubscribed(5000),
             initialValue = false
         )
 
-    fun onFabClick() = viewModelScope.launch {
-        _events.send(
-            try {
-                if (isCharacterFavorite.value) {
-                    deleteFavoriteCharacterUseCase(character)
-                    Event.ShowSnackbarMessage(R.string.character_deleted to true)
-                } else {
-                    insertFavoriteCharacterUseCase(character)
-                    Event.ShowSnackbarMessage(R.string.character_added to false)
+    fun onFabClick() {
+        viewModelScope.launch {
+            _events.send(
+                try {
+                    if (isCharacterFavorite.value) {
+                        deleteFavoriteCharacterUseCase(character)
+                        Event.ShowSnackbarMessage(R.string.character_deleted to true)
+                    } else {
+                        insertFavoriteCharacterUseCase(character)
+                        Event.ShowSnackbarMessage(R.string.character_added to false)
+                    }
+                } catch (error: SQLiteException) {
+                    Event.ShowSnackbarMessage(R.string.error_message to false)
                 }
-            } catch (error: SQLiteException) {
-                Event.ShowSnackbarMessage(R.string.error_message to false)
-            }
-        )
+            )
+        }
     }
 
-    fun onUndoClick() = viewModelScope.launch {
-        try {
-            insertFavoriteCharacterUseCase(character)
-        } catch (error: SQLiteException) {
-            _events.send(Event.ShowSnackbarMessage(R.string.error_message to false))
+    fun onUndoClick() {
+        viewModelScope.launch {
+            try {
+                insertFavoriteCharacterUseCase(character)
+            } catch (error: SQLiteException) {
+                _events.send(Event.ShowSnackbarMessage(R.string.error_message to false))
+            }
         }
     }
 

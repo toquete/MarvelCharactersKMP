@@ -42,20 +42,24 @@ class FavoritesViewModel @Inject constructor(
         }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Lazily,
+            started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
 
-    fun deleteCharacter(character: CharacterVO) = viewModelScope.launch {
-        deleteFavoriteCharacterUseCase(mapper.mapFrom(character))
+    fun deleteCharacter(character: CharacterVO) {
+        viewModelScope.launch {
+            deleteFavoriteCharacterUseCase(mapper.mapFrom(character))
+        }
     }
 
-    fun onDeleteAllClick() = viewModelScope.launch {
-        try {
-            deleteAllFavoriteCharactersUseCase()
-            _events.send(Event.ShowSnackbarMessage(R.string.character_deleted))
-        } catch (exception: SQLiteException) {
-            _events.send(Event.ShowSnackbarMessage(R.string.error_message))
+    fun onDeleteAllClick() {
+        viewModelScope.launch {
+            try {
+                deleteAllFavoriteCharactersUseCase()
+                _events.send(Event.ShowSnackbarMessage(R.string.character_deleted))
+            } catch (exception: SQLiteException) {
+                _events.send(Event.ShowSnackbarMessage(R.string.error_message))
+            }
         }
     }
 
