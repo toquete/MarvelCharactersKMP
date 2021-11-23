@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.databinding.ItemListBinding
-import com.guilherme.marvelcharacters.ui.model.CharacterVO
+import com.guilherme.marvelcharacters.model.CharacterVO
 
 class HomeAdapter(private val onClickListener: (CharacterVO) -> Unit) : ListAdapter<CharacterVO, HomeAdapter.BindingHolder>(diffCallback) {
 

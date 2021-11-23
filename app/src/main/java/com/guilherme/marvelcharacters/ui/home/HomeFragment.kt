@@ -13,17 +13,13 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.databinding.FragmentHomeBinding
-import com.guilherme.marvelcharacters.ui.model.CharacterVO
+import com.guilherme.marvelcharacters.extension.observe
+import com.guilherme.marvelcharacters.model.CharacterVO
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -108,18 +104,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun setupObservers() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    homeViewModel.states.collect { setupState(it) }
-                }
-                launch {
-                    homeViewModel.events.collect { setupEvent(it) }
-                }
-                launch {
-                    nightModeViewModel.nightMode.collect { AppCompatDelegate.setDefaultNightMode(it) }
-                }
-            }
+        homeViewModel.states.observe(viewLifecycleOwner) { state ->
+            setupState(state)
+        }
+        homeViewModel.events.observe(viewLifecycleOwner) { event ->
+            setupEvent(event)
+        }
+        nightModeViewModel.nightMode.observe(viewLifecycleOwner) { mode ->
+            AppCompatDelegate.setDefaultNightMode(mode)
         }
     }
 

@@ -1,4 +1,4 @@
-package com.guilherme.marvelcharacters.ui.mapper
+package com.guilherme.marvelcharacters.mapper
 
 interface Mapper<S, T> {
 

@@ -7,9 +7,9 @@ import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
+import com.guilherme.marvelcharacters.model.CharacterVO
+import com.guilherme.marvelcharacters.model.ImageVO
 import com.guilherme.marvelcharacters.ui.home.HomeViewModel
-import com.guilherme.marvelcharacters.ui.model.CharacterVO
-import com.guilherme.marvelcharacters.ui.model.ImageVO
 import io.mockk.coEvery
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi

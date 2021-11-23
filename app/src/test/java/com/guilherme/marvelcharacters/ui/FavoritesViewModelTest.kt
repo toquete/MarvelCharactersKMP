@@ -10,10 +10,10 @@ import com.guilherme.marvelcharacters.domain.usecase.DeleteAllFavoriteCharacters
 import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharactersUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
+import com.guilherme.marvelcharacters.mapper.CharacterMapper
+import com.guilherme.marvelcharacters.model.CharacterVO
+import com.guilherme.marvelcharacters.model.ImageVO
 import com.guilherme.marvelcharacters.ui.favorites.FavoritesViewModel
-import com.guilherme.marvelcharacters.ui.mapper.CharacterMapper
-import com.guilherme.marvelcharacters.ui.model.CharacterVO
-import com.guilherme.marvelcharacters.ui.model.ImageVO
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every

@@ -7,8 +7,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.guilherme.marvelcharacters.cache.dao.CharacterDatabase
 import com.guilherme.marvelcharacters.cache.model.CharacterEntity
 import com.guilherme.marvelcharacters.cache.model.ImageEntity
-import com.guilherme.marvelcharacters.ui.model.CharacterVO
-import com.guilherme.marvelcharacters.ui.model.ImageVO
+import com.guilherme.marvelcharacters.model.CharacterVO
+import com.guilherme.marvelcharacters.model.ImageVO
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.GlobalScope

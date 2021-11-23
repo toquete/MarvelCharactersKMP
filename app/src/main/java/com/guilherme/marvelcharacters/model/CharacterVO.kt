@@ -1,4 +1,4 @@
-package com.guilherme.marvelcharacters.ui.model
+package com.guilherme.marvelcharacters.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
