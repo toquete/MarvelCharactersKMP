@@ -7,8 +7,11 @@ import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
+import com.guilherme.marvelcharacters.mapper.CharacterMapper
 import com.guilherme.marvelcharacters.model.CharacterVO
 import com.guilherme.marvelcharacters.model.ImageVO
+import com.guilherme.marvelcharacters.ui.home.HomeEvent
+import com.guilherme.marvelcharacters.ui.home.HomeState
 import com.guilherme.marvelcharacters.ui.home.HomeViewModel
 import io.mockk.coEvery
 import io.mockk.impl.annotations.RelaxedMockK
@@ -34,6 +37,7 @@ class HomeViewModelTest : BaseUnitTest() {
         super.setUp()
         homeViewModel = HomeViewModel(
             getCharactersUseCase,
+            mapper = CharacterMapper(),
             dispatcher = testCoroutineRule.testCoroutineDispatcher
         )
     }
@@ -43,7 +47,7 @@ class HomeViewModelTest : BaseUnitTest() {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
         val characterVO = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
         val characterList = listOf(character)
-        val successState = HomeViewModel.State(
+        val successState = HomeState(
             isLoading = true,
             characters = listOf(characterVO),
             errorMessageId = null
@@ -51,10 +55,10 @@ class HomeViewModelTest : BaseUnitTest() {
 
         coEvery { getCharactersUseCase(any(), any(), any()) } returns flowOf(characterList)
 
-        homeViewModel.states.test {
+        homeViewModel.state.test {
             homeViewModel.onSearchCharacter("spider")
 
-            assertThat(awaitItem()).isEqualTo(HomeViewModel.State.initialState())
+            assertThat(awaitItem()).isEqualTo(HomeState.initialState())
             assertThat(awaitItem()).isEqualTo(successState.copy(characters = listOf()))
             assertThat(awaitItem()).isEqualTo(successState)
             assertThat(awaitItem()).isEqualTo(successState.copy(isLoading = false))
@@ -65,7 +69,7 @@ class HomeViewModelTest : BaseUnitTest() {
     @Test
     fun `onSearchCharacter - send empty state when list is empty`() = testCoroutineRule.runBlockingTest {
         val characterList = emptyList<Character>()
-        val emptyState = HomeViewModel.State(
+        val emptyState = HomeState(
             isLoading = true,
             characters = emptyList(),
             errorMessageId = R.string.empty_state_message
@@ -73,10 +77,10 @@ class HomeViewModelTest : BaseUnitTest() {
 
         coEvery { getCharactersUseCase(any(), any(), any()) } returns flowOf(characterList)
 
-        homeViewModel.states.test {
+        homeViewModel.state.test {
             homeViewModel.onSearchCharacter("spider")
 
-            assertThat(awaitItem()).isEqualTo(HomeViewModel.State.initialState())
+            assertThat(awaitItem()).isEqualTo(HomeState.initialState())
             assertThat(awaitItem()).isEqualTo(emptyState.copy(errorMessageId = null))
             assertThat(awaitItem()).isEqualTo(emptyState)
             assertThat(awaitItem()).isEqualTo(emptyState.copy(isLoading = false))
@@ -86,7 +90,7 @@ class HomeViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onSearchCharacter - send error state on request error`() = testCoroutineRule.runBlockingTest {
-        val errorState = HomeViewModel.State(
+        val errorState = HomeState(
             isLoading = false,
             characters = emptyList(),
             errorMessageId = R.string.request_error_message
@@ -100,10 +104,10 @@ class HomeViewModelTest : BaseUnitTest() {
             )
         }
 
-        homeViewModel.states.test {
+        homeViewModel.state.test {
             homeViewModel.onSearchCharacter("spider")
 
-            assertThat(awaitItem()).isEqualTo(HomeViewModel.State.initialState())
+            assertThat(awaitItem()).isEqualTo(HomeState.initialState())
             assertThat(awaitItem()).isEqualTo(errorState.copy(isLoading = true, errorMessageId = null))
             assertThat(awaitItem()).isEqualTo(errorState.copy(isLoading = false, errorMessageId = null))
             assertThat(awaitItem()).isEqualTo(errorState)
@@ -113,17 +117,17 @@ class HomeViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onSearchCharacter - send internet error state`() = testCoroutineRule.runBlockingTest {
-        val errorState = HomeViewModel.State(
+        val errorState = HomeState(
             isLoading = false,
             characters = emptyList(),
             errorMessageId = R.string.network_error_message
         )
         coEvery { getCharactersUseCase(any(), any(), any()) } returns flow { throw IOException() }
 
-        homeViewModel.states.test {
+        homeViewModel.state.test {
             homeViewModel.onSearchCharacter("spider")
 
-            assertThat(awaitItem()).isEqualTo(HomeViewModel.State.initialState())
+            assertThat(awaitItem()).isEqualTo(HomeState.initialState())
             assertThat(awaitItem()).isEqualTo(errorState.copy(isLoading = true, errorMessageId = null))
             assertThat(awaitItem()).isEqualTo(errorState.copy(isLoading = false, errorMessageId = null))
             assertThat(awaitItem()).isEqualTo(errorState)
@@ -137,8 +141,8 @@ class HomeViewModelTest : BaseUnitTest() {
 
         homeViewModel.onItemClick(character)
 
-        homeViewModel.events.test {
-            assertThat(awaitItem()).isEqualTo(HomeViewModel.Event.NavigateToDetails(character))
+        homeViewModel.event.test {
+            assertThat(awaitItem()).isEqualTo(HomeEvent.NavigateToDetails(character))
         }
     }
 }

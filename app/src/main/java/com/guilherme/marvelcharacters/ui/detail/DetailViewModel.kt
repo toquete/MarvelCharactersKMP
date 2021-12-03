@@ -1,20 +1,16 @@
 package com.guilherme.marvelcharacters.ui.detail
 
 import android.database.sqlite.SQLiteException
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.InsertFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.IsCharacterFavoriteUseCase
+import com.guilherme.marvelcharacters.infrastructure.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class DetailViewModel @AssistedInject constructor(
@@ -22,31 +18,30 @@ class DetailViewModel @AssistedInject constructor(
     isCharacterFavoriteUseCase: IsCharacterFavoriteUseCase,
     private val deleteFavoriteCharacterUseCase: DeleteFavoriteCharacterUseCase,
     private val insertFavoriteCharacterUseCase: InsertFavoriteCharacterUseCase
-) : ViewModel() {
+) : BaseViewModel<DetailState, DetailEvent>(DetailState.initialState()) {
 
-    private val _events = Channel<Event>(Channel.BUFFERED)
-    val events = _events.receiveAsFlow()
-
-    val isCharacterFavorite: StateFlow<Boolean> = isCharacterFavoriteUseCase(character.id)
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = false
-        )
+    init {
+        viewModelScope.launch {
+            isCharacterFavoriteUseCase(character.id)
+                .collect { isFavorite ->
+                    setState { it.copy(isFavorite = isFavorite) }
+                }
+        }
+    }
 
     fun onFabClick() {
         viewModelScope.launch {
-            _events.send(
+            sendEvent(
                 try {
-                    if (isCharacterFavorite.value) {
+                    if (state.value.isFavorite) {
                         deleteFavoriteCharacterUseCase(character)
-                        Event.ShowSnackbarMessage(R.string.character_deleted to true)
+                        DetailEvent.ShowSnackbarMessage(R.string.character_deleted, showAction = true)
                     } else {
                         insertFavoriteCharacterUseCase(character)
-                        Event.ShowSnackbarMessage(R.string.character_added to false)
+                        DetailEvent.ShowSnackbarMessage(R.string.character_added, showAction = false)
                     }
                 } catch (error: SQLiteException) {
-                    Event.ShowSnackbarMessage(R.string.error_message to false)
+                    DetailEvent.ShowSnackbarMessage(R.string.error_message, showAction = false)
                 }
             )
         }
@@ -57,12 +52,8 @@ class DetailViewModel @AssistedInject constructor(
             try {
                 insertFavoriteCharacterUseCase(character)
             } catch (error: SQLiteException) {
-                _events.send(Event.ShowSnackbarMessage(R.string.error_message to false))
+                sendEvent(DetailEvent.ShowSnackbarMessage(R.string.error_message, showAction = false))
             }
         }
-    }
-
-    sealed class Event {
-        data class ShowSnackbarMessage(val message: Pair<Int, Boolean>) : Event()
     }
 }

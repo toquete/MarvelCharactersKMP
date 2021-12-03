@@ -1,0 +1,3 @@
+package com.guilherme.marvelcharacters.infrastructure
+
+interface State

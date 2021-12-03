@@ -104,10 +104,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun setupObservers() {
-        homeViewModel.states.observe(viewLifecycleOwner) { state ->
+        homeViewModel.state.observe(viewLifecycleOwner) { state ->
             setupState(state)
         }
-        homeViewModel.events.observe(viewLifecycleOwner) { event ->
+        homeViewModel.event.observe(viewLifecycleOwner) { event ->
             setupEvent(event)
         }
         nightModeViewModel.nightMode.observe(viewLifecycleOwner) { mode ->
@@ -121,7 +121,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun setupState(state: HomeViewModel.State) = with(homeBinding) {
+    private fun setupState(state: HomeState) = with(homeBinding) {
         progressBar.isVisible = state.isLoading
         recyclerviewCharacters.isVisible = !state.isLoading && state.errorMessageId == null
         textviewMessage.isVisible = !state.isLoading && state.errorMessageId != null
@@ -133,9 +133,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun setupEvent(event: HomeViewModel.Event) {
+    private fun setupEvent(event: HomeEvent) {
         when (event) {
-            is HomeViewModel.Event.NavigateToDetails -> navigateToDetail(event.character)
+            is HomeEvent.NavigateToDetails -> navigateToDetail(event.character)
         }
     }
 

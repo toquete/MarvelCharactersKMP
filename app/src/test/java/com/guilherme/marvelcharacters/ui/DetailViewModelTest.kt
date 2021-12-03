@@ -10,6 +10,8 @@ import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseC
 import com.guilherme.marvelcharacters.domain.usecase.InsertFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.IsCharacterFavoriteUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
+import com.guilherme.marvelcharacters.ui.detail.DetailEvent
+import com.guilherme.marvelcharacters.ui.detail.DetailState
 import com.guilherme.marvelcharacters.ui.detail.DetailViewModel
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -40,8 +42,8 @@ class DetailViewModelTest : BaseUnitTest() {
 
         val detailViewModel = getViewModel()
 
-        detailViewModel.isCharacterFavorite.test {
-            assertThat(awaitItem()).isTrue()
+        detailViewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(DetailState(isFavorite = true))
         }
     }
 
@@ -52,14 +54,14 @@ class DetailViewModelTest : BaseUnitTest() {
         val detailViewModel = getViewModel()
 
         // simulate first collection
-        val job = detailViewModel.isCharacterFavorite.launchIn(this)
+        val job = detailViewModel.state.launchIn(this)
 
         detailViewModel.onFabClick()
 
         coVerify { deleteFavoriteCharacterUseCase(character) }
 
-        detailViewModel.events.test {
-            assertThat(awaitItem()).isEqualTo(DetailViewModel.Event.ShowSnackbarMessage(R.string.character_deleted to true))
+        detailViewModel.event.test {
+            assertThat(awaitItem()).isEqualTo(DetailEvent.ShowSnackbarMessage(R.string.character_deleted, showAction = true))
             job.cancel()
         }
     }
@@ -71,14 +73,14 @@ class DetailViewModelTest : BaseUnitTest() {
         val detailViewModel = getViewModel()
 
         // simulate first collection
-        val job = detailViewModel.isCharacterFavorite.launchIn(this)
+        val job = detailViewModel.state.launchIn(this)
 
         detailViewModel.onFabClick()
 
         coVerify { insertFavoriteCharacterUseCase(character) }
 
-        detailViewModel.events.test {
-            assertThat(awaitItem()).isEqualTo(DetailViewModel.Event.ShowSnackbarMessage(R.string.character_added to false))
+        detailViewModel.event.test {
+            assertThat(awaitItem()).isEqualTo(DetailEvent.ShowSnackbarMessage(R.string.character_added, showAction = false))
             job.cancel()
         }
     }
@@ -94,8 +96,8 @@ class DetailViewModelTest : BaseUnitTest() {
 
         coVerify { insertFavoriteCharacterUseCase(character) }
 
-        detailViewModel.events.test {
-            assertThat(awaitItem()).isEqualTo(DetailViewModel.Event.ShowSnackbarMessage(R.string.error_message to false))
+        detailViewModel.event.test {
+            assertThat(awaitItem()).isEqualTo(DetailEvent.ShowSnackbarMessage(R.string.error_message, showAction = false))
         }
     }
 
@@ -116,8 +118,8 @@ class DetailViewModelTest : BaseUnitTest() {
 
         detailViewModel.onUndoClick()
 
-        detailViewModel.events.test {
-            assertThat(awaitItem()).isEqualTo(DetailViewModel.Event.ShowSnackbarMessage(R.string.error_message to false))
+        detailViewModel.event.test {
+            assertThat(awaitItem()).isEqualTo(DetailEvent.ShowSnackbarMessage(R.string.error_message, showAction = false))
         }
     }
 

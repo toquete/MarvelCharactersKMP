@@ -40,13 +40,13 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun setupObservers() {
-        detailViewModel.isCharacterFavorite.observe(this) { isFavorite ->
-            binding.fab.isActivated = isFavorite
+        detailViewModel.state.observe(this) { state ->
+            binding.fab.isActivated = state.isFavorite
         }
 
-        detailViewModel.events.observe(this) { event ->
+        detailViewModel.event.observe(this) { event ->
             when (event) {
-                is DetailViewModel.Event.ShowSnackbarMessage -> showSnackbar(event.message.first, event.message.second)
+                is DetailEvent.ShowSnackbarMessage -> showSnackbar(event.message, event.showAction)
             }
         }
     }

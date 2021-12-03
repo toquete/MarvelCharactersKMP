@@ -13,6 +13,8 @@ import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import com.guilherme.marvelcharacters.mapper.CharacterMapper
 import com.guilherme.marvelcharacters.model.CharacterVO
 import com.guilherme.marvelcharacters.model.ImageVO
+import com.guilherme.marvelcharacters.ui.favorites.FavoritesEvent
+import com.guilherme.marvelcharacters.ui.favorites.FavoritesState
 import com.guilherme.marvelcharacters.ui.favorites.FavoritesViewModel
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -42,8 +44,7 @@ class FavoritesViewModelTest : BaseUnitTest() {
             getFavoriteCharactersUseCase,
             deleteFavoriteCharacterUseCase,
             deleteAllFavoriteCharactersUseCase,
-            CharacterMapper(),
-            testCoroutineRule.testCoroutineDispatcher
+            CharacterMapper()
         )
     }
 
@@ -63,8 +64,8 @@ class FavoritesViewModelTest : BaseUnitTest() {
 
         coVerify { deleteAllFavoriteCharactersUseCase() }
 
-        favoritesViewModel.events.test {
-            assertThat(awaitItem()).isEqualTo(FavoritesViewModel.Event.ShowSnackbarMessage(R.string.character_deleted))
+        favoritesViewModel.event.test {
+            assertThat(awaitItem()).isEqualTo(FavoritesEvent.ShowSnackbarMessage(R.string.character_deleted))
         }
     }
 
@@ -76,8 +77,8 @@ class FavoritesViewModelTest : BaseUnitTest() {
 
         coVerify { deleteAllFavoriteCharactersUseCase() }
 
-        favoritesViewModel.events.test {
-            assertThat(awaitItem()).isEqualTo(FavoritesViewModel.Event.ShowSnackbarMessage(R.string.error_message))
+        favoritesViewModel.event.test {
+            assertThat(awaitItem()).isEqualTo(FavoritesEvent.ShowSnackbarMessage(R.string.error_message))
         }
     }
 
@@ -87,8 +88,8 @@ class FavoritesViewModelTest : BaseUnitTest() {
 
         favoritesViewModel.onFavoriteItemClick(character)
 
-        favoritesViewModel.events.test {
-            assertThat(awaitItem()).isEqualTo(FavoritesViewModel.Event.NavigateToDetail(character))
+        favoritesViewModel.event.test {
+            assertThat(awaitItem()).isEqualTo(FavoritesEvent.NavigateToDetail(character))
         }
     }
 
@@ -103,12 +104,11 @@ class FavoritesViewModelTest : BaseUnitTest() {
             getFavoriteCharactersUseCase,
             deleteFavoriteCharacterUseCase,
             deleteAllFavoriteCharactersUseCase,
-            CharacterMapper(),
-            testCoroutineRule.testCoroutineDispatcher
+            CharacterMapper()
         )
 
-        viewModel.list.test {
-            assertThat(awaitItem()).isEqualTo(listOf(characterVO))
+        viewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(FavoritesState(list = listOf(characterVO)))
         }
     }
 }

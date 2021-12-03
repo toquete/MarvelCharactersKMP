@@ -68,15 +68,15 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
     }
 
     private fun setupObservers() {
-        favoritesViewModel.list.observe(viewLifecycleOwner) { list ->
-            favoritesAdapter.submitList(list)
-            setHasOptionsMenu(list.isNotEmpty())
+        favoritesViewModel.state.observe(viewLifecycleOwner) { state ->
+            favoritesAdapter.submitList(state.list)
+            setHasOptionsMenu(state.list.isNotEmpty())
         }
 
-        favoritesViewModel.events.observe(viewLifecycleOwner) { event ->
+        favoritesViewModel.event.observe(viewLifecycleOwner) { event ->
             when (event) {
-                is FavoritesViewModel.Event.ShowSnackbarMessage -> showSnackbar(event.messageId)
-                is FavoritesViewModel.Event.NavigateToDetail -> navigateToDetail(event.character)
+                is FavoritesEvent.ShowSnackbarMessage -> showSnackbar(event.messageId)
+                is FavoritesEvent.NavigateToDetail -> navigateToDetail(event.character)
             }
         }
     }
