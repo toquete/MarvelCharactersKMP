@@ -37,8 +37,7 @@ class HomeViewModelTest : BaseUnitTest() {
         super.setUp()
         homeViewModel = HomeViewModel(
             getCharactersUseCase,
-            mapper = CharacterMapper(),
-            dispatcher = testCoroutineRule.testCoroutineDispatcher
+            mapper = CharacterMapper()
         )
     }
 
