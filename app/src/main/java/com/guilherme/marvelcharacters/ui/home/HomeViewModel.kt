@@ -3,9 +3,9 @@ package com.guilherme.marvelcharacters.ui.home
 import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.BuildConfig
 import com.guilherme.marvelcharacters.R
+import com.guilherme.marvelcharacters.data.annotation.IoDispatcher
 import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseViewModel
-import com.guilherme.marvelcharacters.infrastructure.di.annotation.IoDispatcher
 import com.guilherme.marvelcharacters.mapper.CharacterMapper
 import com.guilherme.marvelcharacters.model.CharacterVO
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -1,4 +1,4 @@
-package com.guilherme.marvelcharacters.infrastructure.di.annotation
+package com.guilherme.marvelcharacters.data.annotation
 
 import javax.inject.Qualifier
 

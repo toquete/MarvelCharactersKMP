@@ -1,7 +1,7 @@
 package com.guilherme.marvelcharacters.infrastructure.di
 
-import com.guilherme.marvelcharacters.infrastructure.di.annotation.IoDispatcher
-import com.guilherme.marvelcharacters.infrastructure.di.annotation.MainDispatcher
+import com.guilherme.marvelcharacters.data.annotation.IoDispatcher
+import com.guilherme.marvelcharacters.data.annotation.MainDispatcher
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,7 +1,6 @@
-package com.guilherme.marvelcharacters.data
+package com.guilherme.marvelcharacters.data.repository
 
 import com.google.common.truth.Truth.assertThat
-import com.guilherme.marvelcharacters.data.repository.NightModeRepositoryImpl
 import com.guilherme.marvelcharacters.data.source.local.NightModeLocalDataSource
 import io.mockk.MockKAnnotations
 import io.mockk.every
