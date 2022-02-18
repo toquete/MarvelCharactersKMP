@@ -2,7 +2,6 @@ package com.guilherme.marvelcharacters.cache
 
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.cache.dao.CharacterDao
-import com.guilherme.marvelcharacters.cache.mapper.CharacterEntityMapper
 import com.guilherme.marvelcharacters.cache.model.CharacterEntity
 import com.guilherme.marvelcharacters.cache.model.ImageEntity
 import com.guilherme.marvelcharacters.data.model.CharacterData
@@ -50,7 +49,7 @@ class CharacterLocalDataSourceImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        localDataSource = CharacterLocalDataSourceImpl(dao, CharacterEntityMapper())
+        localDataSource = CharacterLocalDataSourceImpl(dao)
     }
 
     @Test
