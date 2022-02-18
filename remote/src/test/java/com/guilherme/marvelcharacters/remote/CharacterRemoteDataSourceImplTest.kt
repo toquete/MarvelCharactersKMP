@@ -3,7 +3,6 @@ package com.guilherme.marvelcharacters.remote
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.data.model.CharacterData
 import com.guilherme.marvelcharacters.data.model.ImageData
-import com.guilherme.marvelcharacters.remote.mapper.CharacterResponseMapper
 import com.guilherme.marvelcharacters.remote.model.CharacterResponse
 import com.guilherme.marvelcharacters.remote.model.ContainerResponse
 import com.guilherme.marvelcharacters.remote.model.ImageResponse
@@ -29,7 +28,7 @@ class CharacterRemoteDataSourceImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        remoteDataSource = CharacterRemoteDataSourceImpl(api, CharacterResponseMapper())
+        remoteDataSource = CharacterRemoteDataSourceImpl(api)
     }
 
     @Test
