@@ -1,7 +1,6 @@
 package com.guilherme.marvelcharacters.data
 
 import com.google.common.truth.Truth.assertThat
-import com.guilherme.marvelcharacters.data.mapper.CharacterDataMapper
 import com.guilherme.marvelcharacters.data.model.CharacterData
 import com.guilherme.marvelcharacters.data.model.ImageData
 import com.guilherme.marvelcharacters.data.repository.CharacterRepositoryImpl
@@ -34,7 +33,7 @@ class CharacterRepositoryImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        characterRepository = CharacterRepositoryImpl(remoteDataSource, localDataSource, CharacterDataMapper())
+        characterRepository = CharacterRepositoryImpl(remoteDataSource, localDataSource)
     }
 
     @Test
