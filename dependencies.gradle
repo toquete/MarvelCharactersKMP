@@ -33,4 +33,5 @@ ext {
     testRunnerVersion = "1.4.0"
     orchestratorVersion = "1.4.0"
     turbineVersion = "0.7.0"
+    mockWebServerVersion = "4.9.3"
 }
