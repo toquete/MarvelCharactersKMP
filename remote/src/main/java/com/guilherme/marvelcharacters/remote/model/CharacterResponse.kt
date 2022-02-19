@@ -1,15 +1,18 @@
 package com.guilherme.marvelcharacters.remote.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class CharacterResponse(
-    @SerializedName("id") val id: Int,
-    @SerializedName("name") val name: String,
-    @SerializedName("description") val description: String,
-    @SerializedName("thumbnail") val thumbnail: ImageResponse
+    @SerialName("id") val id: Int,
+    @SerialName("name") val name: String,
+    @SerialName("description") val description: String,
+    @SerialName("thumbnail") val thumbnail: ImageResponse
 )
 
+@Serializable
 data class ImageResponse(
-    @SerializedName("path") val path: String,
-    @SerializedName("extension") val extension: String
+    @SerialName("path") val path: String,
+    @SerialName("extension") val extension: String
 )

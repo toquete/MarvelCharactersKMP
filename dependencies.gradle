@@ -12,8 +12,6 @@ ext {
     roomVersion = "2.3.0"
     junitVersion = "4.13.2"
     retrofitVersion = "2.9.0"
-    gsonVersion = "2.8.6"
-    converterGsonVersion = "2.8.1"
     commonsCodecVersion = "1.11"
     coroutinesVersion = "1.5.2"
     constraintLayoutVersion = "2.1.1"
@@ -34,4 +32,7 @@ ext {
     orchestratorVersion = "1.4.0"
     turbineVersion = "0.7.0"
     mockWebServerVersion = "4.9.3"
+    okHttpVersion = "4.9.3"
+    kotlinSerializationVersion = "1.2.2"
+    kotlinSerializationConverterVersion = "0.8.0"
 }

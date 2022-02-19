@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'kotlin'
+    id 'kotlinx-serialization'
 }
 
 apply from: "$rootDir/tools/jacoco/kotlin.gradle"
@@ -15,10 +16,11 @@ dependencies {
 
     implementation "javax.inject:javax.inject:$javaxInjectVersion"
     api "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation "com.google.code.gson:gson:$gsonVersion"
-    api "com.squareup.retrofit2:converter-gson:$converterGsonVersion"
+    api "com.squareup.okhttp3:okhttp:$okHttpVersion"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$kotlinSerializationConverterVersion"
     implementation "commons-codec:commons-codec:$commonsCodecVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion"
 
     testImplementation "junit:junit:$junitVersion"
     testImplementation "io.mockk:mockk:$mockkVersion"

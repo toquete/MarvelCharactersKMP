@@ -1,7 +1,10 @@
 package com.guilherme.marvelcharacters.remote.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-data class Response<T>(@SerializedName("data") val container: ContainerResponse<T>)
+@Serializable
+data class Response<T>(@SerialName("data") val container: ContainerResponse<T>)
 
-data class ContainerResponse<T>(@SerializedName("results") val results: List<T>)
+@Serializable
+data class ContainerResponse<T>(@SerialName("results") val results: List<T>)

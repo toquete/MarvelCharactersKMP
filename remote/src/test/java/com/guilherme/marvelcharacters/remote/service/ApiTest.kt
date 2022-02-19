@@ -7,11 +7,13 @@ import com.guilherme.marvelcharacters.remote.model.ImageResponse
 import com.guilherme.marvelcharacters.remote.model.Response
 import com.guilherme.marvelcharacters.remote.util.readFile
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.ExperimentalSerializationApi
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Test
 
+@ExperimentalSerializationApi
 class ApiTest {
 
     private val mockWebServer = MockWebServer()
