@@ -1,7 +1,6 @@
 package com.guilherme.marvelcharacters.data.repository
 
 import com.google.common.truth.Truth.assertThat
-import com.guilherme.marvelcharacters.data.infrastructure.TestCoroutineRule
 import com.guilherme.marvelcharacters.data.model.CharacterData
 import com.guilherme.marvelcharacters.data.model.ImageData
 import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSource
@@ -15,15 +14,12 @@ import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class CharacterRepositoryImplTest {
-
-    @get:Rule
-    val testCoroutineRule = TestCoroutineRule()
 
     @RelaxedMockK
     private lateinit var remoteDataSource: CharacterRemoteDataSource
@@ -36,11 +32,11 @@ class CharacterRepositoryImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        characterRepository = CharacterRepositoryImpl(remoteDataSource, localDataSource, testCoroutineRule.testCoroutineDispatcher)
+        characterRepository = CharacterRepositoryImpl(remoteDataSource, localDataSource)
     }
 
     @Test
-    fun `getCharacters - returns character list`() = testCoroutineRule.runBlockingTest {
+    fun `getCharacters - returns character list`() = runBlockingTest {
         val characterData = CharacterData(
             id = 0,
             name = "Spider-Man",
@@ -68,7 +64,7 @@ class CharacterRepositoryImplTest {
     }
 
     @Test
-    fun `isCharacterFavorite - returns if character is favorite`() = testCoroutineRule.runBlockingTest {
+    fun `isCharacterFavorite - returns if character is favorite`() = runBlockingTest {
         coEvery { localDataSource.isCharacterFavorite(id = any()) } returns flowOf(true)
 
         val result = characterRepository.isCharacterFavorite(id = 0)
@@ -77,7 +73,7 @@ class CharacterRepositoryImplTest {
     }
 
     @Test
-    fun `getFavoriteCharacters - returns favorite characters list`() = testCoroutineRule.runBlockingTest {
+    fun `getFavoriteCharacters - returns favorite characters list`() = runBlockingTest {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
         val characterData =
             CharacterData(0, "Spider-Man", "The Amazing Spider-Man", ImageData("", ""))
@@ -91,7 +87,7 @@ class CharacterRepositoryImplTest {
     }
 
     @Test
-    fun `insertFavoriteCharacter - check database call`() = testCoroutineRule.runBlockingTest {
+    fun `insertFavoriteCharacter - check database call`() = runBlockingTest {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
         val characterData =
             CharacterData(0, "Spider-Man", "The Amazing Spider-Man", ImageData("", ""))
@@ -102,7 +98,7 @@ class CharacterRepositoryImplTest {
     }
 
     @Test
-    fun `deleteFavoriteCharacter - check database call`() = testCoroutineRule.runBlockingTest {
+    fun `deleteFavoriteCharacter - check database call`() = runBlockingTest {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
         val characterData =
             CharacterData(0, "Spider-Man", "The Amazing Spider-Man", ImageData("", ""))
@@ -113,7 +109,7 @@ class CharacterRepositoryImplTest {
     }
 
     @Test
-    fun `deleteAllFavoriteCharacters - check database call`() = testCoroutineRule.runBlockingTest {
+    fun `deleteAllFavoriteCharacters - check database call`() = runBlockingTest {
         characterRepository.deleteAllFavoriteCharacters()
 
         coVerify { localDataSource.deleteAllFavoriteCharacters() }
