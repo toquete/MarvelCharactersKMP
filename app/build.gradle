@@ -93,7 +93,7 @@ dependencies {
     implementation "androidx.compose.material:material:$composeVersion"
     implementation "androidx.compose.material:material-icons-core:$composeVersion"
     implementation "androidx.compose.material:material-icons-extended:$composeVersion"
-    implementation "com.google.android.material:compose-theme-adapter:$composeVersion"
+    implementation "com.google.android.material:compose-theme-adapter:$composeThemeAdapterVersion"
     implementation "androidx.activity:activity-compose:$activityComposeVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$viewModelComposeVersion"
 

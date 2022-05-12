@@ -9,6 +9,7 @@ ext {
     coreVersion = "1.7.0"
     appCompatVersion = "1.4.1"
     composeVersion = "1.1.1"
+    composeThemeAdapterVersion = "1.1.9"
     activityComposeVersion = "1.4.0"
     viewModelComposeVersion = "2.4.1"
     javaxInjectVersion = "1"
