@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
@@ -43,7 +44,6 @@ import com.guilherme.marvelcharacters.model.ImageVO
 fun HomeScreen(
     state: HomeState,
     onSearchButtonClick: (String) -> Unit,
-    onClearButtonClick: () -> Unit,
     onItemClick: (CharacterVO) -> Unit
 ) {
     var query by rememberSaveable { mutableStateOf("") }
@@ -61,7 +61,7 @@ fun HomeScreen(
                 onValueChange = { query = it },
                 trailingIcon = {
                     if (query.isNotEmpty()) {
-                        IconButton(onClick = onClearButtonClick) {
+                        IconButton(onClick = { query = "" }) {
                             Icon(imageVector = Icons.Default.Cancel, contentDescription = null)
                         }
                     }
@@ -116,14 +116,17 @@ fun CharacterItem(
     character: CharacterVO,
     onItemClick: (CharacterVO) -> Unit
 ) {
-    Text(
-        modifier = Modifier
-            .fillMaxWidth()
+    Row(
+        modifier = Modifier.fillMaxWidth()
             .height(48.dp)
-            .padding(horizontal = 16.dp, vertical = 12.dp)
-            .clickable { onItemClick(character) },
-        text = character.name
-    )
+            .clickable { onItemClick(character) }
+    ) {
+        Text(
+            modifier = Modifier.wrapContentSize()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            text = character.name
+        )
+    }
 }
 
 @Preview(showBackground = true)
@@ -147,7 +150,6 @@ fun HomePreview() {
                     )
                 )
             ),
-            onClearButtonClick = { },
             onSearchButtonClick = { },
             onItemClick = { }
         )
@@ -160,7 +162,6 @@ fun HomeLoadingPreview() {
     MdcTheme {
         HomeScreen(
             state = HomeState.initialState().showLoading(),
-            onClearButtonClick = { },
             onSearchButtonClick = { },
             onItemClick = { }
         )
@@ -173,7 +174,6 @@ fun HomeErrorPreview() {
     MdcTheme {
         HomeScreen(
             state = HomeState.initialState().copy(errorMessageId = R.string.error_message),
-            onClearButtonClick = { },
             onSearchButtonClick = { },
             onItemClick = { }
         )
