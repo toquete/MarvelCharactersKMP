@@ -10,7 +10,6 @@ import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import com.guilherme.marvelcharacters.mapper.CharacterMapper
 import com.guilherme.marvelcharacters.model.CharacterVO
 import com.guilherme.marvelcharacters.model.ImageVO
-import com.guilherme.marvelcharacters.ui.home.HomeEvent
 import com.guilherme.marvelcharacters.ui.home.HomeState
 import com.guilherme.marvelcharacters.ui.home.HomeViewModel
 import io.mockk.coEvery
@@ -18,7 +17,6 @@ import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.ResponseBody
 import org.junit.Test
 import retrofit2.HttpException
@@ -131,17 +129,6 @@ class HomeViewModelTest : BaseUnitTest() {
             assertThat(awaitItem()).isEqualTo(errorState.copy(isLoading = false, errorMessageId = null))
             assertThat(awaitItem()).isEqualTo(errorState)
             cancelAndIgnoreRemainingEvents()
-        }
-    }
-
-    @Test
-    fun `onItemClick - send character to details screen`() = runBlockingTest {
-        val character = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
-
-        homeViewModel.onItemClick(character)
-
-        homeViewModel.event.test {
-            assertThat(awaitItem()).isEqualTo(HomeEvent.NavigateToDetails(character))
         }
     }
 }
