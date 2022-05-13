@@ -18,13 +18,13 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getCharactersUseCase: GetCharactersUseCase,
     private val mapper: CharacterMapper
-) : BaseViewModel<HomeState, HomeEvent>(HomeState.initialState()) {
+) : BaseViewModel<HomeState, HomeEvent>(HomeState()) {
 
     fun onSearchCharacter(character: String) {
         viewModelScope.launch {
             getCharactersUseCase(character, BuildConfig.MARVEL_KEY, BuildConfig.MARVEL_PRIVATE_KEY)
-                .onStart { setState { it.showLoading() } }
-                .onCompletion { setState { it.hideLoading() } }
+                .onStart { setState { it.copy(isLoading = true) } }
+                .onCompletion { setState { it.copy(isLoading = false) } }
                 .catch { error ->
                     // TODO: melhorar tratativa de erro
                     setState {

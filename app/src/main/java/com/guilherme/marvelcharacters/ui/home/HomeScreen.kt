@@ -130,7 +130,7 @@ fun CharacterItem(
 fun HomePreview() {
     MdcTheme {
         HomeScreen(
-            state = HomeState.initialState().copy(
+            state = HomeState(
                 characters = listOf(
                     CharacterVO(
                         id = 0,
@@ -157,7 +157,7 @@ fun HomePreview() {
 fun HomeLoadingPreview() {
     MdcTheme {
         HomeScreen(
-            state = HomeState.initialState().showLoading(),
+            state = HomeState(isLoading = true),
             onSearchButtonClick = { },
             onItemClick = { }
         )
@@ -169,7 +169,7 @@ fun HomeLoadingPreview() {
 fun HomeErrorPreview() {
     MdcTheme {
         HomeScreen(
-            state = HomeState.initialState().copy(errorMessageId = R.string.error_message),
+            state = HomeState(errorMessageId = R.string.error_message),
             onSearchButtonClick = { },
             onItemClick = { }
         )

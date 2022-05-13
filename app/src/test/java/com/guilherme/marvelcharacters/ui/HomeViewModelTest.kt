@@ -55,7 +55,7 @@ class HomeViewModelTest : BaseUnitTest() {
         homeViewModel.state.test {
             homeViewModel.onSearchCharacter("spider")
 
-            assertThat(awaitItem()).isEqualTo(HomeState.initialState())
+            assertThat(awaitItem()).isEqualTo(HomeState())
             assertThat(awaitItem()).isEqualTo(successState.copy(characters = listOf()))
             assertThat(awaitItem()).isEqualTo(successState)
             assertThat(awaitItem()).isEqualTo(successState.copy(isLoading = false))
@@ -77,7 +77,7 @@ class HomeViewModelTest : BaseUnitTest() {
         homeViewModel.state.test {
             homeViewModel.onSearchCharacter("spider")
 
-            assertThat(awaitItem()).isEqualTo(HomeState.initialState())
+            assertThat(awaitItem()).isEqualTo(HomeState())
             assertThat(awaitItem()).isEqualTo(emptyState.copy(errorMessageId = null))
             assertThat(awaitItem()).isEqualTo(emptyState)
             assertThat(awaitItem()).isEqualTo(emptyState.copy(isLoading = false))
@@ -104,7 +104,7 @@ class HomeViewModelTest : BaseUnitTest() {
         homeViewModel.state.test {
             homeViewModel.onSearchCharacter("spider")
 
-            assertThat(awaitItem()).isEqualTo(HomeState.initialState())
+            assertThat(awaitItem()).isEqualTo(HomeState())
             assertThat(awaitItem()).isEqualTo(errorState.copy(isLoading = true, errorMessageId = null))
             assertThat(awaitItem()).isEqualTo(errorState.copy(isLoading = false, errorMessageId = null))
             assertThat(awaitItem()).isEqualTo(errorState)
@@ -124,7 +124,7 @@ class HomeViewModelTest : BaseUnitTest() {
         homeViewModel.state.test {
             homeViewModel.onSearchCharacter("spider")
 
-            assertThat(awaitItem()).isEqualTo(HomeState.initialState())
+            assertThat(awaitItem()).isEqualTo(HomeState())
             assertThat(awaitItem()).isEqualTo(errorState.copy(isLoading = true, errorMessageId = null))
             assertThat(awaitItem()).isEqualTo(errorState.copy(isLoading = false, errorMessageId = null))
             assertThat(awaitItem()).isEqualTo(errorState)
