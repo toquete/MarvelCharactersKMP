@@ -10,7 +10,6 @@ import com.guilherme.marvelcharacters.infrastructure.BaseViewModel
 import com.guilherme.marvelcharacters.mapper.CharacterMapper
 import com.guilherme.marvelcharacters.model.CharacterVO
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,7 +20,7 @@ class FavoritesViewModel @Inject constructor(
     private val deleteFavoriteCharacterUseCase: DeleteFavoriteCharacterUseCase,
     private val deleteAllFavoriteCharactersUseCase: DeleteAllFavoriteCharactersUseCase,
     private val mapper: CharacterMapper
-) : BaseViewModel<FavoritesState, FavoritesEvent>(FavoritesState.initialState()) {
+) : BaseViewModel<FavoritesState, FavoritesEvent>(FavoritesState()) {
 
     init {
         viewModelScope.launch {
@@ -45,16 +44,14 @@ class FavoritesViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 deleteAllFavoriteCharactersUseCase()
-                sendEvent(FavoritesEvent.ShowSnackbarMessage(R.string.character_deleted))
+                setState { it.copy(messageId = R.string.character_deleted) }
             } catch (exception: SQLiteException) {
-                sendEvent(FavoritesEvent.ShowSnackbarMessage(R.string.error_message))
+                setState { it.copy(messageId = R.string.error_message) }
             }
         }
     }
 
-    fun onFavoriteItemClick(character: CharacterVO) {
-        viewModelScope.launch {
-            sendEvent(FavoritesEvent.NavigateToDetail(character))
-        }
+    fun onErrorMessageShown() {
+        setState { it.copy(messageId = null) }
     }
 }

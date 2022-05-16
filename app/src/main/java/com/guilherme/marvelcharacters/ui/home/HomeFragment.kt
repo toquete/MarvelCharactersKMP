@@ -35,8 +35,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 MdcTheme {
                     HomeScreen(
                         state = state,
-                        onSearchButtonClick = { homeViewModel.onSearchCharacter(it) },
-                        onItemClick = { navigateToDetail(it) }
+                        onSearchButtonClick = homeViewModel::onSearchCharacter,
+                        onItemClick = ::navigateToDetail
                     )
                 }
             }

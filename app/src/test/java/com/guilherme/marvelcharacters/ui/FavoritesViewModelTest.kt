@@ -13,7 +13,6 @@ import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import com.guilherme.marvelcharacters.mapper.CharacterMapper
 import com.guilherme.marvelcharacters.model.CharacterVO
 import com.guilherme.marvelcharacters.model.ImageVO
-import com.guilherme.marvelcharacters.ui.favorites.FavoritesEvent
 import com.guilherme.marvelcharacters.ui.favorites.FavoritesState
 import com.guilherme.marvelcharacters.ui.favorites.FavoritesViewModel
 import io.mockk.coEvery
@@ -64,8 +63,8 @@ class FavoritesViewModelTest : BaseUnitTest() {
 
         coVerify { deleteAllFavoriteCharactersUseCase() }
 
-        favoritesViewModel.event.test {
-            assertThat(awaitItem()).isEqualTo(FavoritesEvent.ShowSnackbarMessage(R.string.character_deleted))
+        favoritesViewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(FavoritesState(messageId = R.string.character_deleted))
         }
     }
 
@@ -77,19 +76,8 @@ class FavoritesViewModelTest : BaseUnitTest() {
 
         coVerify { deleteAllFavoriteCharactersUseCase() }
 
-        favoritesViewModel.event.test {
-            assertThat(awaitItem()).isEqualTo(FavoritesEvent.ShowSnackbarMessage(R.string.error_message))
-        }
-    }
-
-    @Test
-    fun `onFavoriteItemClick - send character to details screen`() = testCoroutineRule.runBlockingTest {
-        val character = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
-
-        favoritesViewModel.onFavoriteItemClick(character)
-
-        favoritesViewModel.event.test {
-            assertThat(awaitItem()).isEqualTo(FavoritesEvent.NavigateToDetail(character))
+        favoritesViewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(FavoritesState(messageId = R.string.error_message))
         }
     }
 
@@ -109,6 +97,17 @@ class FavoritesViewModelTest : BaseUnitTest() {
 
         viewModel.state.test {
             assertThat(awaitItem()).isEqualTo(FavoritesState(list = listOf(characterVO)))
+        }
+    }
+
+    @Test
+    fun `onErrorMessageShown should send messageId null state`() = testCoroutineRule.runBlockingTest {
+        // When
+        favoritesViewModel.onErrorMessageShown()
+
+        // Then
+        favoritesViewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(FavoritesState(messageId = null))
         }
     }
 }
