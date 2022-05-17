@@ -21,9 +21,11 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -37,10 +39,27 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.model.CharacterVO
 import com.guilherme.marvelcharacters.model.ImageVO
+
+@Composable
+fun HomeRoute(
+    viewModel: HomeViewModel = hiltViewModel(),
+    navController: NavController
+) {
+    val state by viewModel.state.collectAsState()
+    HomeScreen(
+        state,
+        onSearchButtonClick = viewModel::onSearchCharacter,
+        onItemClick = { character ->
+            navController.navigate("detail/$character")
+        }
+    )
+}
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -53,8 +72,12 @@ fun HomeScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(modifier = Modifier.fillMaxSize()) {
+        TopAppBar(
+            title = { Text(stringResource(R.string.app_name)) }
+        )
         OutlinedTextField(
-            modifier = Modifier.wrapContentHeight()
+            modifier = Modifier
+                .wrapContentHeight()
                 .fillMaxWidth()
                 .padding(8.dp),
             label = { Text(text = stringResource(id = R.string.character)) },

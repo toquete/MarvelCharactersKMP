@@ -1,47 +1,37 @@
 package com.guilherme.marvelcharacters
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.elevation.ElevationOverlayProvider
-import com.guilherme.marvelcharacters.databinding.ActivityMainBinding
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.BottomNavigationDefaults
+import androidx.compose.material.LocalElevationOverlay
+import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.SideEffect
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.android.material.composethemeadapter.MdcTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityMainBinding
+class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContent {
+            MdcTheme {
+                val systemUiController = rememberSystemUiController()
+                val useDarkIcons = isSystemInDarkTheme()
+                val overlaidColor = LocalElevationOverlay.current?.apply(
+                    color = if (useDarkIcons) MaterialTheme.colors.surface else MaterialTheme.colors.primary,
+                    elevation = BottomNavigationDefaults.Elevation
+                )
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.hostFragment) as NavHostFragment
-        val navController = navHostFragment.navController
-
-        setupToolbar(navController)
-        setupBottomNavigationBar(navController)
-        setupNavigationBar()
-    }
-
-    private fun setupBottomNavigationBar(navController: NavController) {
-        binding.bottomNavigation.setupWithNavController(navController)
-    }
-
-    private fun setupToolbar(navController: NavController) {
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.favoritesFragment))
-        binding.mainToolbar.setupWithNavController(navController, appBarConfiguration)
-        setSupportActionBar(binding.mainToolbar)
-    }
-
-    private fun setupNavigationBar() {
-        with(ElevationOverlayProvider(this)) {
-            if (isThemeElevationOverlayEnabled) {
-                window.navigationBarColor = compositeOverlayWithThemeSurfaceColorIfNeeded(binding.bottomNavigation.elevation)
+                MainScreen()
+                SideEffect {
+                    overlaidColor?.let {
+                        systemUiController.setNavigationBarColor(color = overlaidColor)
+                    }
+                }
             }
         }
     }

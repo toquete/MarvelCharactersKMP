@@ -35,7 +35,8 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
                     FavoritesScreen(
                         state = state,
                         onItemClick = ::navigateToDetail,
-                        onErrorMessageShown = favoritesViewModel::onErrorMessageShown
+                        onErrorMessageShown = favoritesViewModel::onErrorMessageShown,
+                        onActionButtonClick = { }
                     )
                 }
             }
