@@ -10,6 +10,7 @@ import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSource
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -70,6 +71,15 @@ class CharacterLocalDataSourceImplTest {
         val result = localDataSource.getFavoriteCharacters()
 
         assertThat(result.first()).isEqualTo(characterList)
+    }
+
+    @Test
+    fun `getFavoriteCharacter - returns favorite character by id`() = runBlockingTest {
+        every { dao.getFavoriteCharacter(id = 0) } returns flowOf(characterEntity)
+
+        val result = localDataSource.getFavoriteCharacter(id = 0)
+
+        assertThat(result.first()).isEqualTo(character)
     }
 
     @Test

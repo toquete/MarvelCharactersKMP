@@ -16,6 +16,9 @@ interface CharacterDao {
     @Query("SELECT COUNT(*) FROM characterentity WHERE id = :id")
     fun isCharacterFavorite(id: Int): Flow<Boolean>
 
+    @Query("SELECT * FROM characterentity WHERE id = :id")
+    fun getFavoriteCharacter(id: Int): Flow<CharacterEntity>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(character: CharacterEntity)
 

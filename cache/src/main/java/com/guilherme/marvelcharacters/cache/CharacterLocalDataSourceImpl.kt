@@ -23,6 +23,11 @@ class CharacterLocalDataSourceImpl @Inject constructor(
             }
     }
 
+    override fun getFavoriteCharacter(id: Int): Flow<CharacterData> {
+        return dao.getFavoriteCharacter(id)
+            .map { mapToData(it) }
+    }
+
     override suspend fun insertFavoriteCharacter(character: CharacterData) = dao.insert(mapToEntity(character))
 
     override suspend fun deleteFavoriteCharacter(id: Int) = dao.delete(id)
