@@ -59,7 +59,8 @@ class CharacterRepositoryImpl @Inject constructor(
             thumbnail = Image(
                 path = origin.thumbnail.path,
                 extension = origin.thumbnail.extension
-            )
+            ),
+            isFavorite = origin.isFavorite
         )
     }
 
@@ -71,7 +72,8 @@ class CharacterRepositoryImpl @Inject constructor(
             thumbnail = ImageData(
                 path = origin.thumbnail.path,
                 extension = origin.thumbnail.extension
-            )
+            ),
+            isFavorite = origin.isFavorite
         )
     }
 }

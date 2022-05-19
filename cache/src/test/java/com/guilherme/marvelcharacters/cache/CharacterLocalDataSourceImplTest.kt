@@ -44,7 +44,8 @@ class CharacterLocalDataSourceImplTest {
         thumbnail = ImageData(
             path = "",
             extension = ""
-        )
+        ),
+        isFavorite = true
     )
 
     @Before

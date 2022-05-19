@@ -54,7 +54,8 @@ class CharacterLocalDataSourceImpl @Inject constructor(
             thumbnail = ImageData(
                 path = origin.thumbnail.path,
                 extension = origin.thumbnail.extension
-            )
+            ),
+            isFavorite = true
         )
     }
 }
