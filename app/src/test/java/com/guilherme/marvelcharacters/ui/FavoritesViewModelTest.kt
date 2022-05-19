@@ -50,11 +50,10 @@ class FavoritesViewModelTest : BaseUnitTest() {
     @Test
     fun `deleteCharacter - check if repository was called`() = testCoroutineRule.runBlockingTest {
         val characterVO = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
-        val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
 
         favoritesViewModel.deleteCharacter(characterVO)
 
-        coVerify { deleteFavoriteCharacterUseCase(character) }
+        coVerify { deleteFavoriteCharacterUseCase(id = 0) }
     }
 
     @Test

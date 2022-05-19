@@ -25,7 +25,7 @@ class CharacterLocalDataSourceImpl @Inject constructor(
 
     override suspend fun insertFavoriteCharacter(character: CharacterData) = dao.insert(mapToEntity(character))
 
-    override suspend fun deleteFavoriteCharacter(character: CharacterData) = dao.delete(mapToEntity(character))
+    override suspend fun deleteFavoriteCharacter(id: Int) = dao.delete(id)
 
     override suspend fun deleteAllFavoriteCharacters() = dao.deleteAll()
 

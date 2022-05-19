@@ -58,7 +58,7 @@ class DetailViewModelTest : BaseUnitTest() {
 
         detailViewModel.onFabClick()
 
-        coVerify { deleteFavoriteCharacterUseCase(character) }
+        coVerify { deleteFavoriteCharacterUseCase(character.id) }
 
         detailViewModel.event.test {
             assertThat(awaitItem()).isEqualTo(DetailEvent.ShowSnackbarMessage(R.string.character_deleted, showAction = true))

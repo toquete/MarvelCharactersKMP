@@ -99,13 +99,9 @@ class CharacterRepositoryImplTest {
 
     @Test
     fun `deleteFavoriteCharacter - check database call`() = runBlockingTest {
-        val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
-        val characterData =
-            CharacterData(0, "Spider-Man", "The Amazing Spider-Man", ImageData("", ""))
+        characterRepository.deleteFavoriteCharacter(id = 0)
 
-        characterRepository.deleteFavoriteCharacter(character)
-
-        coVerify { localDataSource.deleteFavoriteCharacter(characterData) }
+        coVerify { localDataSource.deleteFavoriteCharacter(id = 0) }
     }
 
     @Test

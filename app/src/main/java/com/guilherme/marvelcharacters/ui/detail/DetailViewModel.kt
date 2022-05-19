@@ -33,7 +33,7 @@ class DetailViewModel @AssistedInject constructor(
             sendEvent(
                 try {
                     if (state.value.isFavorite) {
-                        deleteFavoriteCharacterUseCase(character)
+                        deleteFavoriteCharacterUseCase(character.id)
                         DetailEvent.ShowSnackbarMessage(R.string.character_deleted, showAction = true)
                     } else {
                         insertFavoriteCharacterUseCase(character)

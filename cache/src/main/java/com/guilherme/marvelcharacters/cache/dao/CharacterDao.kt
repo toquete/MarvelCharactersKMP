@@ -1,7 +1,6 @@
 package com.guilherme.marvelcharacters.cache.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -23,6 +22,6 @@ interface CharacterDao {
     @Query("DELETE FROM characterentity")
     suspend fun deleteAll()
 
-    @Delete
-    suspend fun delete(character: CharacterEntity)
+    @Query("DELETE FROM characterentity WHERE id = :id")
+    suspend fun delete(id: Int)
 }

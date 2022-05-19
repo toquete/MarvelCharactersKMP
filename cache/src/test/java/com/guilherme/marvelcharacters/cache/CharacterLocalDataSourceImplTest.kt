@@ -81,9 +81,9 @@ class CharacterLocalDataSourceImplTest {
 
     @Test
     fun `deleteFavoriteCharacter - check dao was called`() = runBlockingTest {
-        localDataSource.deleteFavoriteCharacter(character)
+        localDataSource.deleteFavoriteCharacter(id = 0)
 
-        coVerify { dao.delete(characterEntity) }
+        coVerify { dao.delete(id = 0) }
     }
 
     @Test

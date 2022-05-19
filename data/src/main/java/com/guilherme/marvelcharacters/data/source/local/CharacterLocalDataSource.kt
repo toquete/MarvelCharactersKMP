@@ -11,7 +11,7 @@ interface CharacterLocalDataSource {
 
     suspend fun insertFavoriteCharacter(character: CharacterData)
 
-    suspend fun deleteFavoriteCharacter(character: CharacterData)
+    suspend fun deleteFavoriteCharacter(id: Int)
 
     suspend fun deleteAllFavoriteCharacters()
 }

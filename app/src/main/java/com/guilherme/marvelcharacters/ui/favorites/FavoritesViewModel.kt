@@ -36,7 +36,7 @@ class FavoritesViewModel @Inject constructor(
 
     fun deleteCharacter(character: CharacterVO) {
         viewModelScope.launch {
-            deleteFavoriteCharacterUseCase(mapper.mapFrom(character))
+            deleteFavoriteCharacterUseCase(character.id)
         }
     }
 
