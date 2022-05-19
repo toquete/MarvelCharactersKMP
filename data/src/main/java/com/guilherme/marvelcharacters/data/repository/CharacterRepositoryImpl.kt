@@ -34,6 +34,11 @@ class CharacterRepositoryImpl @Inject constructor(
             }
     }
 
+    override fun getFavoriteCharacter(id: Int): Flow<Character> {
+        return localDataSource.getFavoriteCharacter(id)
+            .map { mapToDomain(it) }
+    }
+
     override suspend fun insertFavoriteCharacter(character: Character) {
         localDataSource.insertFavoriteCharacter(mapToData(character))
     }

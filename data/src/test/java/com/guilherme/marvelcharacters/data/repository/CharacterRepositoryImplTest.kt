@@ -10,6 +10,7 @@ import com.guilherme.marvelcharacters.domain.model.Image
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -84,6 +85,19 @@ class CharacterRepositoryImplTest {
         val result = characterRepository.getFavoriteCharacters()
 
         assertThat(result.first()).isEqualTo(characters)
+    }
+
+    @Test
+    fun `getFavoriteCharacter - returns favorite character by id`() = runBlockingTest {
+        val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
+        val characterData =
+            CharacterData(0, "Spider-Man", "The Amazing Spider-Man", ImageData("", ""))
+
+        every { localDataSource.getFavoriteCharacter(id = 0) } returns flowOf(characterData)
+
+        val result = characterRepository.getFavoriteCharacter(id = 0)
+
+        assertThat(result.first()).isEqualTo(character)
     }
 
     @Test
