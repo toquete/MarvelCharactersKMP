@@ -1,17 +1,20 @@
 package com.guilherme.marvelcharacters.cache
 
 import com.guilherme.marvelcharacters.cache.dao.CharacterDao
+import com.guilherme.marvelcharacters.cache.memory.CharacterMemoryCache
 import com.guilherme.marvelcharacters.cache.model.CharacterEntity
 import com.guilherme.marvelcharacters.cache.model.ImageEntity
 import com.guilherme.marvelcharacters.data.model.CharacterData
 import com.guilherme.marvelcharacters.data.model.ImageData
 import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class CharacterLocalDataSourceImpl @Inject constructor(
-    private val dao: CharacterDao
+    private val dao: CharacterDao,
+    private val cache: CharacterMemoryCache
 ) : CharacterLocalDataSource {
 
     override fun isCharacterFavorite(id: Int): Flow<Boolean> = dao.isCharacterFavorite(id)
@@ -23,9 +26,14 @@ class CharacterLocalDataSourceImpl @Inject constructor(
             }
     }
 
-    override fun getFavoriteCharacter(id: Int): Flow<CharacterData> {
+    override fun getCharacter(id: Int): Flow<CharacterData> {
         return dao.getFavoriteCharacter(id)
             .map { mapToData(it) }
+            .catch { emit(cache.getCharacter(id)) }
+    }
+
+    override fun saveInCache(list: List<CharacterData>) {
+        cache.setCache(list)
     }
 
     override suspend fun insertFavoriteCharacter(character: CharacterData) = dao.insert(mapToEntity(character))
