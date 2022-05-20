@@ -6,6 +6,7 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: "org.jlleitschuh.gradle.ktlint"
 apply plugin: 'io.gitlab.arturbosch.detekt'
 apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'com.google.devtools.ksp'
 apply from: "$rootDir/tools/jacoco/android.gradle"
 
 android {
@@ -83,6 +84,14 @@ android {
     kotlin.sourceSets.all {
         languageSettings.optIn("kotlin.RequiresOptIn")
     }
+
+    applicationVariants.all { variant ->
+        kotlin.sourceSets {
+            getByName(variant.name) {
+                kotlin.srcDir("build/generated/ksp/${variant.name}/kotlin")
+            }
+        }
+    }
 }
 
 dependencies {
@@ -113,6 +122,8 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
     implementation "androidx.navigation:navigation-compose:$navigationVersion"
+    implementation 'io.github.raamcosta.compose-destinations:core:1.5.5-beta'
+    ksp 'io.github.raamcosta.compose-destinations:ksp:1.5.5-beta'
 
     implementation "androidx.legacy:legacy-support-v4:$legacySupportVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleExtVersion"
