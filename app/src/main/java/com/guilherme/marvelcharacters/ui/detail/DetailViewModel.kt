@@ -17,7 +17,7 @@ class DetailViewModel @AssistedInject constructor(
     isCharacterFavoriteUseCase: IsCharacterFavoriteUseCase,
     private val deleteFavoriteCharacterUseCase: DeleteFavoriteCharacterUseCase,
     private val insertFavoriteCharacterUseCase: InsertFavoriteCharacterUseCase
-) : BaseViewModel<DetailState, DetailEvent>(DetailState.initialState()) {
+) : BaseViewModel<DetailState, DetailEvent>(DetailState()) {
 
     init {
         viewModelScope.launch {
