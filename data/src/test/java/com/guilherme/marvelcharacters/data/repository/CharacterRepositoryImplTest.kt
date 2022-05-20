@@ -97,7 +97,7 @@ class CharacterRepositoryImplTest {
 
         every { localDataSource.getCharacter(id = 0) } returns flowOf(characterData)
 
-        val result = characterRepository.getFavoriteCharacter(id = 0)
+        val result = characterRepository.getCharacter(id = 0)
 
         assertThat(result.first()).isEqualTo(character)
     }

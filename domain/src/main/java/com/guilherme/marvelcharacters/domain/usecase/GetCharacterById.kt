@@ -5,9 +5,9 @@ import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetFavoriteCharacterById @Inject constructor(
+class GetCharacterById @Inject constructor(
     private val characterRepository: CharacterRepository
 ) {
 
-    operator fun invoke(id: Int): Flow<Character> = characterRepository.getFavoriteCharacter(id)
+    operator fun invoke(id: Int): Flow<Character> = characterRepository.getCharacter(id)
 }

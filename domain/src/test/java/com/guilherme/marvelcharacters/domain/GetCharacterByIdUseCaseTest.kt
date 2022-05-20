@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
-import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharacterById
+import com.guilherme.marvelcharacters.domain.usecase.GetCharacterById
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -18,13 +18,13 @@ import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class GetFavoriteCharacterByIdUseCaseTest {
+class GetCharacterByIdUseCaseTest {
 
     @RelaxedMockK
     private lateinit var characterRepository: CharacterRepository
 
     @InjectMockKs
-    private lateinit var getFavoriteCharacterByIdUseCase: GetFavoriteCharacterById
+    private lateinit var getFavoriteCharacterByIdUseCase: GetCharacterById
 
     @Before
     fun setUp() {
@@ -39,11 +39,11 @@ class GetFavoriteCharacterByIdUseCaseTest {
             description = "",
             thumbnail = Image(path = "", extension = "")
         )
-        every { characterRepository.getFavoriteCharacter(id = 0) } returns flowOf(character)
+        every { characterRepository.getCharacter(id = 0) } returns flowOf(character)
 
         val result = getFavoriteCharacterByIdUseCase(id = 0)
 
-        verify { characterRepository.getFavoriteCharacter(id = 0) }
+        verify { characterRepository.getCharacter(id = 0) }
         assertThat(result.first()).isEqualTo(character)
     }
 }
