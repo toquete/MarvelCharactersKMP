@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
-import com.guilherme.marvelcharacters.domain.usecase.GetCharacterById
+import com.guilherme.marvelcharacters.domain.usecase.GetCharacterByIdUseCase
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -24,7 +24,7 @@ class GetCharacterByIdUseCaseTest {
     private lateinit var characterRepository: CharacterRepository
 
     @InjectMockKs
-    private lateinit var getFavoriteCharacterByIdUseCase: GetCharacterById
+    private lateinit var getFavoriteCharacterByIdUseCase: GetCharacterByIdUseCase
 
     @Before
     fun setUp() {

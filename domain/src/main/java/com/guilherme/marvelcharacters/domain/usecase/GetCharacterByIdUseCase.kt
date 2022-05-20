@@ -5,7 +5,7 @@ import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetCharacterById @Inject constructor(
+class GetCharacterByIdUseCase @Inject constructor(
     private val characterRepository: CharacterRepository
 ) {
 
