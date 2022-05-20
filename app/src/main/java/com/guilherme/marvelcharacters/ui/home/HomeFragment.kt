@@ -14,11 +14,9 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.extension.observe
-import com.guilherme.marvelcharacters.model.CharacterVO
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,7 +34,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     HomeScreen(
                         state = state,
                         onSearchButtonClick = homeViewModel::onSearchCharacter,
-                        onItemClick = ::navigateToDetail
+                        onItemClick = {}
                     )
                 }
             }
@@ -67,12 +65,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun setupObservers() {
         nightModeViewModel.nightMode.observe(viewLifecycleOwner) { mode ->
             AppCompatDelegate.setDefaultNightMode(mode)
-        }
-    }
-
-    private fun navigateToDetail(character: CharacterVO) {
-        HomeFragmentDirections.actionHomeToDetail(character).run {
-            findNavController().navigate(this)
         }
     }
 }

@@ -13,12 +13,10 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.extension.observe
-import com.guilherme.marvelcharacters.model.CharacterVO
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -34,7 +32,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
                 MdcTheme {
                     FavoritesScreen(
                         state = state,
-                        onItemClick = ::navigateToDetail,
+                        onItemClick = { },
                         onErrorMessageShown = favoritesViewModel::onErrorMessageShown,
                         onActionButtonClick = { }
                     )
@@ -66,12 +64,6 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
     private fun setupObservers() {
         favoritesViewModel.state.observe(viewLifecycleOwner) { state ->
             setHasOptionsMenu(state.list.isNotEmpty())
-        }
-    }
-
-    private fun navigateToDetail(character: CharacterVO) {
-        FavoritesFragmentDirections.actionFavoritesToDetail(character).apply {
-            findNavController().navigate(this)
         }
     }
 

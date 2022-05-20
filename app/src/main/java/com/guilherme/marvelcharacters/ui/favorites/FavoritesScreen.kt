@@ -28,8 +28,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.guilherme.marvelcharacters.R
-import com.guilherme.marvelcharacters.model.CharacterVO
-import com.guilherme.marvelcharacters.model.ImageVO
+import com.guilherme.marvelcharacters.domain.model.Character
+import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.ui.home.CharacterItem
 
 @Composable
@@ -51,7 +51,7 @@ fun FavoritesRoute(
 @Composable
 fun FavoritesScreen(
     state: FavoritesState,
-    onItemClick: (CharacterVO) -> Unit,
+    onItemClick: (Character) -> Unit,
     onErrorMessageShown: () -> Unit,
     onActionButtonClick: () -> Unit
 ) {
@@ -94,17 +94,17 @@ fun FavoritesScreenPreview() {
         FavoritesScreen(
             state = FavoritesState(
                 list = listOf(
-                    CharacterVO(
+                    Character(
                         id = 0,
                         name = "Spider-Man",
                         description = "Teste",
-                        thumbnail = ImageVO(path = "", extension = "")
+                        thumbnail = Image(path = "", extension = "")
                     ),
-                    CharacterVO(
+                    Character(
                         id = 0,
                         name = "Spider-Man",
                         description = "Teste",
-                        thumbnail = ImageVO(path = "", extension = "")
+                        thumbnail = Image(path = "", extension = "")
                     )
                 )
             ),

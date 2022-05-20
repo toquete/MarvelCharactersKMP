@@ -7,10 +7,8 @@ import com.guilherme.marvelcharacters.domain.usecase.DeleteAllFavoriteCharacters
 import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharactersUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseViewModel
-import com.guilherme.marvelcharacters.mapper.CharacterMapper
 import com.guilherme.marvelcharacters.model.CharacterVO
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,16 +16,12 @@ import javax.inject.Inject
 class FavoritesViewModel @Inject constructor(
     getFavoriteCharactersUseCase: GetFavoriteCharactersUseCase,
     private val deleteFavoriteCharacterUseCase: DeleteFavoriteCharacterUseCase,
-    private val deleteAllFavoriteCharactersUseCase: DeleteAllFavoriteCharactersUseCase,
-    private val mapper: CharacterMapper
+    private val deleteAllFavoriteCharactersUseCase: DeleteAllFavoriteCharactersUseCase
 ) : BaseViewModel<FavoritesState, FavoritesEvent>(FavoritesState()) {
 
     init {
         viewModelScope.launch {
             getFavoriteCharactersUseCase()
-                .map { list ->
-                    list.map { mapper.mapTo(it) }
-                }
                 .collect { list ->
                     setState { it.copy(list = list) }
                 }

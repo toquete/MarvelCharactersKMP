@@ -7,9 +7,6 @@ import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
-import com.guilherme.marvelcharacters.mapper.CharacterMapper
-import com.guilherme.marvelcharacters.model.CharacterVO
-import com.guilherme.marvelcharacters.model.ImageVO
 import com.guilherme.marvelcharacters.ui.home.HomeState
 import com.guilherme.marvelcharacters.ui.home.HomeViewModel
 import io.mockk.coEvery
@@ -33,20 +30,16 @@ class HomeViewModelTest : BaseUnitTest() {
 
     override fun setUp() {
         super.setUp()
-        homeViewModel = HomeViewModel(
-            getCharactersUseCase,
-            mapper = CharacterMapper()
-        )
+        homeViewModel = HomeViewModel(getCharactersUseCase)
     }
 
     @Test
     fun `onSearchCharacter - send success state when list is loaded`() = testCoroutineRule.runBlockingTest {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
-        val characterVO = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
         val characterList = listOf(character)
         val successState = HomeState(
             isLoading = true,
-            characters = listOf(characterVO),
+            characters = characterList,
             errorMessageId = null
         )
 

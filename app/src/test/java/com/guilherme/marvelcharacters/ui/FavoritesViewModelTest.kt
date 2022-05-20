@@ -10,7 +10,6 @@ import com.guilherme.marvelcharacters.domain.usecase.DeleteAllFavoriteCharacters
 import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharactersUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
-import com.guilherme.marvelcharacters.mapper.CharacterMapper
 import com.guilherme.marvelcharacters.model.CharacterVO
 import com.guilherme.marvelcharacters.model.ImageVO
 import com.guilherme.marvelcharacters.ui.favorites.FavoritesState
@@ -42,8 +41,7 @@ class FavoritesViewModelTest : BaseUnitTest() {
         favoritesViewModel = FavoritesViewModel(
             getFavoriteCharactersUseCase,
             deleteFavoriteCharacterUseCase,
-            deleteAllFavoriteCharactersUseCase,
-            CharacterMapper()
+            deleteAllFavoriteCharactersUseCase
         )
     }
 
@@ -83,19 +81,17 @@ class FavoritesViewModelTest : BaseUnitTest() {
     @Test
     fun `init - send favorites list`() = testCoroutineRule.runBlockingTest {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
-        val characterVO = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
 
         every { getFavoriteCharactersUseCase() } returns flowOf(listOf(character))
 
         val viewModel = FavoritesViewModel(
             getFavoriteCharactersUseCase,
             deleteFavoriteCharacterUseCase,
-            deleteAllFavoriteCharactersUseCase,
-            CharacterMapper()
+            deleteAllFavoriteCharactersUseCase
         )
 
         viewModel.state.test {
-            assertThat(awaitItem()).isEqualTo(FavoritesState(list = listOf(characterVO)))
+            assertThat(awaitItem()).isEqualTo(FavoritesState(list = listOf(character)))
         }
     }
 

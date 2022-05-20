@@ -5,7 +5,6 @@ import com.guilherme.marvelcharacters.BuildConfig
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseViewModel
-import com.guilherme.marvelcharacters.mapper.CharacterMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
@@ -16,8 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getCharactersUseCase: GetCharactersUseCase,
-    private val mapper: CharacterMapper
+    private val getCharactersUseCase: GetCharactersUseCase
 ) : BaseViewModel<HomeState, HomeEvent>(HomeState()) {
 
     fun onSearchCharacter(character: String) {
@@ -40,7 +38,7 @@ class HomeViewModel @Inject constructor(
                 .collect { list ->
                     setState { state ->
                         state.copy(
-                            characters = list.map { mapper.mapTo(it) },
+                            characters = list,
                             errorMessageId = if (list.isEmpty()) R.string.empty_state_message else null
                         )
                     }

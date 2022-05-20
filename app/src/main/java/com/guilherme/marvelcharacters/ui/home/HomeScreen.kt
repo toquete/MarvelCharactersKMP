@@ -43,8 +43,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.guilherme.marvelcharacters.R
-import com.guilherme.marvelcharacters.model.CharacterVO
-import com.guilherme.marvelcharacters.model.ImageVO
+import com.guilherme.marvelcharacters.domain.model.Character
+import com.guilherme.marvelcharacters.domain.model.Image
 
 @Composable
 fun HomeRoute(
@@ -66,7 +66,7 @@ fun HomeRoute(
 fun HomeScreen(
     state: HomeState,
     onSearchButtonClick: (String) -> Unit,
-    onItemClick: (CharacterVO) -> Unit
+    onItemClick: (Character) -> Unit
 ) {
     var query by rememberSaveable { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -130,8 +130,8 @@ fun HomeScreen(
 
 @Composable
 fun CharacterItem(
-    character: CharacterVO,
-    onItemClick: (CharacterVO) -> Unit
+    character: Character,
+    onItemClick: (Character) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -155,17 +155,17 @@ fun HomePreview() {
         HomeScreen(
             state = HomeState(
                 characters = listOf(
-                    CharacterVO(
+                    Character(
                         id = 0,
                         name = "Spider-Man",
                         description = "Teste",
-                        thumbnail = ImageVO(path = "", extension = "")
+                        thumbnail = Image(path = "", extension = "")
                     ),
-                    CharacterVO(
+                    Character(
                         id = 0,
                         name = "Spider-Man",
                         description = "Teste",
-                        thumbnail = ImageVO(path = "", extension = "")
+                        thumbnail = Image(path = "", extension = "")
                     )
                 )
             ),
@@ -204,11 +204,11 @@ fun HomeErrorPreview() {
 fun CharacterItemPreview() {
     MdcTheme {
         CharacterItem(
-            character = CharacterVO(
+            character = Character(
                 id = 0,
                 name = "Spider-Man",
                 description = "Teste",
-                thumbnail = ImageVO(path = "", extension = "")
+                thumbnail = Image(path = "", extension = "")
             ),
             onItemClick = { }
         )
