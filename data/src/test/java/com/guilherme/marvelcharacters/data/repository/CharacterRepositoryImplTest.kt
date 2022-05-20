@@ -12,6 +12,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -62,6 +63,7 @@ class CharacterRepositoryImplTest {
         val list = characterRepository.getCharacters(name = "spider", key = "123", privateKey = "456").first()
 
         assertThat(list).isEqualTo(listOf(character))
+        verify { localDataSource.saveInCache(listOf(characterData)) }
     }
 
     @Test
@@ -93,7 +95,7 @@ class CharacterRepositoryImplTest {
         val characterData =
             CharacterData(0, "Spider-Man", "The Amazing Spider-Man", ImageData("", ""))
 
-        every { localDataSource.getFavoriteCharacter(id = 0) } returns flowOf(characterData)
+        every { localDataSource.getCharacter(id = 0) } returns flowOf(characterData)
 
         val result = characterRepository.getFavoriteCharacter(id = 0)
 

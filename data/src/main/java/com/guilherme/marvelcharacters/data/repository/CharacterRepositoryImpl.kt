@@ -9,6 +9,7 @@ import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class CharacterRepositoryImpl @Inject constructor(
@@ -18,6 +19,7 @@ class CharacterRepositoryImpl @Inject constructor(
 
     override fun getCharacters(name: String, key: String, privateKey: String): Flow<List<Character>> {
         return remoteDataSource.getCharacters(name, key, privateKey)
+            .onEach { localDataSource.saveInCache(it) }
             .map { list ->
                 list.map { mapToDomain(it) }
             }
@@ -35,7 +37,7 @@ class CharacterRepositoryImpl @Inject constructor(
     }
 
     override fun getFavoriteCharacter(id: Int): Flow<Character> {
-        return localDataSource.getFavoriteCharacter(id)
+        return localDataSource.getCharacter(id)
             .map { mapToDomain(it) }
     }
 
