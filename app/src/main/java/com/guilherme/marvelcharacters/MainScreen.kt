@@ -13,12 +13,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.guilherme.marvelcharacters.ui.Screen
+import com.guilherme.marvelcharacters.ui.detail.DetailRoute
 import com.guilherme.marvelcharacters.ui.favorites.FavoritesRoute
 import com.guilherme.marvelcharacters.ui.home.HomeRoute
 
@@ -56,6 +59,14 @@ fun MainScreen() {
             }
             composable(Screen.Favorites.route) {
                 FavoritesRoute(navController = navController)
+            }
+            composable(
+                route = "detail/{characterId}",
+                arguments = listOf(
+                    navArgument("characterId") { type = NavType.IntType }
+                )
+            ) {
+                DetailRoute(navController = navController)
             }
         }
     }

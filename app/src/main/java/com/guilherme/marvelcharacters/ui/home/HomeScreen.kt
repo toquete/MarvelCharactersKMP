@@ -56,7 +56,7 @@ fun HomeRoute(
         state,
         onSearchButtonClick = viewModel::onSearchCharacter,
         onItemClick = { character ->
-            navController.navigate("detail/$character")
+            navController.navigate("detail/${character.id}")
         }
     )
 }

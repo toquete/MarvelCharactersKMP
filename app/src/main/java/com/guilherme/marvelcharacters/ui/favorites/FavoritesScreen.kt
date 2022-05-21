@@ -41,7 +41,7 @@ fun FavoritesRoute(
     FavoritesScreen(
         state,
         onItemClick = { character ->
-            navController.navigate("details/$character")
+            navController.navigate("detail/${character.id}")
         },
         onErrorMessageShown = viewModel::onErrorMessageShown,
         onActionButtonClick = {}
