@@ -29,7 +29,6 @@ import androidx.navigation.NavController
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.model.Character
-import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.ui.home.CharacterItem
 
 @Composable
@@ -98,13 +97,13 @@ fun FavoritesScreenPreview() {
                         id = 0,
                         name = "Spider-Man",
                         description = "Teste",
-                        thumbnail = Image(path = "", extension = "")
+                        thumbnail = ""
                     ),
                     Character(
                         id = 0,
                         name = "Spider-Man",
                         description = "Teste",
-                        thumbnail = Image(path = "", extension = "")
+                        thumbnail = ""
                     )
                 )
             ),
