@@ -3,9 +3,7 @@ package com.guilherme.marvelcharacters.cache
 import com.guilherme.marvelcharacters.cache.dao.CharacterDao
 import com.guilherme.marvelcharacters.cache.memory.CharacterMemoryCache
 import com.guilherme.marvelcharacters.cache.model.CharacterEntity
-import com.guilherme.marvelcharacters.cache.model.ImageEntity
 import com.guilherme.marvelcharacters.data.model.CharacterData
-import com.guilherme.marvelcharacters.data.model.ImageData
 import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -47,10 +45,7 @@ class CharacterLocalDataSourceImpl @Inject constructor(
             id = origin.id,
             name = origin.name,
             description = origin.description,
-            thumbnail = ImageEntity(
-                path = origin.thumbnail.path,
-                extension = origin.thumbnail.extension
-            )
+            thumbnail = origin.thumbnail
         )
     }
 
@@ -59,10 +54,7 @@ class CharacterLocalDataSourceImpl @Inject constructor(
             id = origin.id,
             name = origin.name,
             description = origin.description,
-            thumbnail = ImageData(
-                path = origin.thumbnail.path,
-                extension = origin.thumbnail.extension
-            ),
+            thumbnail = origin.thumbnail,
             isFavorite = true
         )
     }

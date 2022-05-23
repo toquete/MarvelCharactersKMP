@@ -2,7 +2,6 @@ package com.guilherme.marvelcharacters.remote
 
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.data.model.CharacterData
-import com.guilherme.marvelcharacters.data.model.ImageData
 import com.guilherme.marvelcharacters.remote.model.CharacterResponse
 import com.guilherme.marvelcharacters.remote.model.ContainerResponse
 import com.guilherme.marvelcharacters.remote.model.ImageResponse
@@ -38,18 +37,15 @@ class CharacterRemoteDataSourceImplTest {
             name = "Spider-Man",
             description = "The Amazing Spider-Man",
             thumbnail = ImageResponse(
-                path = "",
-                extension = ""
+                path = "path",
+                extension = "jpg"
             )
         )
         val character = CharacterData(
             id = 0,
             name = "Spider-Man",
             description = "The Amazing Spider-Man",
-            thumbnail = ImageData(
-                path = "",
-                extension = ""
-            )
+            thumbnail = "path.jpg"
         )
         val response = Response(ContainerResponse(listOf(characterResponse)))
         val characterName = "spider"

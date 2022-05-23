@@ -4,9 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.cache.dao.CharacterDao
 import com.guilherme.marvelcharacters.cache.memory.CharacterMemoryCache
 import com.guilherme.marvelcharacters.cache.model.CharacterEntity
-import com.guilherme.marvelcharacters.cache.model.ImageEntity
 import com.guilherme.marvelcharacters.data.model.CharacterData
-import com.guilherme.marvelcharacters.data.model.ImageData
 import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSource
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -37,20 +35,14 @@ class CharacterLocalDataSourceImplTest {
         id = 0,
         name = "Spider-Man",
         description = "",
-        thumbnail = ImageEntity(
-            path = "",
-            extension = ""
-        )
+        thumbnail = ""
     )
 
     private val character = CharacterData(
         id = 0,
         name = "Spider-Man",
         description = "",
-        thumbnail = ImageData(
-            path = "",
-            extension = ""
-        ),
+        thumbnail = "",
         isFavorite = true
     )
 

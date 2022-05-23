@@ -2,11 +2,9 @@ package com.guilherme.marvelcharacters.data.repository
 
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.data.model.CharacterData
-import com.guilherme.marvelcharacters.data.model.ImageData
 import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSource
 import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSource
 import com.guilherme.marvelcharacters.domain.model.Character
-import com.guilherme.marvelcharacters.domain.model.Image
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -43,19 +41,13 @@ class CharacterRepositoryImplTest {
             id = 0,
             name = "Spider-Man",
             description = "The Amazing Spider-Man",
-            thumbnail = ImageData(
-                path = "",
-                extension = ""
-            )
+            thumbnail = ""
         )
         val character = Character(
             id = 0,
             name = "Spider-Man",
             description = "The Amazing Spider-Man",
-            thumbnail = Image(
-                path = "",
-                extension = ""
-            )
+            thumbnail = ""
         )
 
         coEvery { remoteDataSource.getCharacters(name = "spider", any(), any()) } returns flowOf(listOf(characterData))
@@ -77,9 +69,9 @@ class CharacterRepositoryImplTest {
 
     @Test
     fun `getFavoriteCharacters - returns favorite characters list`() = runBlockingTest {
-        val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
+        val character = Character(0, "Spider-Man", "The Amazing Spider-Man", "")
         val characterData =
-            CharacterData(0, "Spider-Man", "The Amazing Spider-Man", ImageData("", ""))
+            CharacterData(0, "Spider-Man", "The Amazing Spider-Man", "")
         val characters = listOf(character)
 
         coEvery { localDataSource.getFavoriteCharacters() } returns flowOf(listOf(characterData))
@@ -91,9 +83,9 @@ class CharacterRepositoryImplTest {
 
     @Test
     fun `getFavoriteCharacter - returns favorite character by id`() = runBlockingTest {
-        val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
+        val character = Character(0, "Spider-Man", "The Amazing Spider-Man", "")
         val characterData =
-            CharacterData(0, "Spider-Man", "The Amazing Spider-Man", ImageData("", ""))
+            CharacterData(0, "Spider-Man", "The Amazing Spider-Man", "")
 
         every { localDataSource.getCharacter(id = 0) } returns flowOf(characterData)
 
@@ -104,9 +96,9 @@ class CharacterRepositoryImplTest {
 
     @Test
     fun `insertFavoriteCharacter - check database call`() = runBlockingTest {
-        val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
+        val character = Character(0, "Spider-Man", "The Amazing Spider-Man", "")
         val characterData =
-            CharacterData(0, "Spider-Man", "The Amazing Spider-Man", ImageData("", ""))
+            CharacterData(0, "Spider-Man", "The Amazing Spider-Man", "")
 
         characterRepository.insertFavoriteCharacter(character)
 

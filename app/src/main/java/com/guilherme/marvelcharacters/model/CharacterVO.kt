@@ -8,8 +8,5 @@ data class CharacterVO(
     val id: Int,
     val name: String,
     val description: String,
-    val thumbnail: ImageVO
+    val thumbnail: String
 ) : Parcelable
-
-@Parcelize
-data class ImageVO(val path: String, val extension: String) : Parcelable

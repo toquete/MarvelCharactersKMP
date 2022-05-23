@@ -2,7 +2,6 @@ package com.guilherme.marvelcharacters.cache.memory
 
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.data.model.CharacterData
-import com.guilherme.marvelcharacters.data.model.ImageData
 import org.junit.Test
 
 class CharacterMemoryCacheImplTest {
@@ -17,10 +16,7 @@ class CharacterMemoryCacheImplTest {
             id = 0,
             name = "Spider-Man",
             description = "",
-            thumbnail = ImageData(
-                path = "",
-                extension = ""
-            )
+            thumbnail = ""
         )
 
         cache.setCache(list = listOf(character))
@@ -30,16 +26,13 @@ class CharacterMemoryCacheImplTest {
 
     @Test
     fun `setCache - clean and set cache with list passed as parameter`() {
-        list.add(CharacterData(id = 1, name = "Iron Man", description = "", thumbnail = ImageData(path = "", extension = "")))
+        list.add(CharacterData(id = 1, name = "Iron Man", description = "", thumbnail = ""))
 
         val character = CharacterData(
             id = 0,
             name = "Spider-Man",
             description = "",
-            thumbnail = ImageData(
-                path = "",
-                extension = ""
-            )
+            thumbnail = ""
         )
 
         cache.setCache(list = listOf(character))
@@ -53,10 +46,7 @@ class CharacterMemoryCacheImplTest {
             id = 0,
             name = "Spider-Man",
             description = "",
-            thumbnail = ImageData(
-                path = "",
-                extension = ""
-            )
+            thumbnail = ""
         )
         list.add(character)
 

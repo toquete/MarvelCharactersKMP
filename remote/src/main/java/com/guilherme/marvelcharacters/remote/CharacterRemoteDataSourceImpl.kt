@@ -1,7 +1,6 @@
 package com.guilherme.marvelcharacters.remote
 
 import com.guilherme.marvelcharacters.data.model.CharacterData
-import com.guilherme.marvelcharacters.data.model.ImageData
 import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSource
 import com.guilherme.marvelcharacters.remote.service.Api
 import kotlinx.coroutines.flow.Flow
@@ -31,10 +30,7 @@ class CharacterRemoteDataSourceImpl @Inject constructor(
                     id = source.id,
                     name = source.name,
                     description = source.description,
-                    thumbnail = ImageData(
-                        path = source.thumbnail.path,
-                        extension = source.thumbnail.extension
-                    )
+                    thumbnail = "${source.thumbnail.path}.${source.thumbnail.extension}"
                 )
             }
             .apply { emit(this) }

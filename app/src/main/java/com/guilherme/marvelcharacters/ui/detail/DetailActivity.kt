@@ -67,7 +67,7 @@ class DetailActivity : AppCompatActivity() {
             args.character.description
         }
         Glide.with(this)
-            .load("${args.character.thumbnail.path}.${args.character.thumbnail.extension}")
+            .load(args.character.thumbnail)
             .centerCrop()
             .into(binding.imageView)
 
