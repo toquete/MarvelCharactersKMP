@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
@@ -30,26 +31,20 @@ fun MainScreen() {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
-            BottomNavigation {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
-                TopLevelDestination.values().forEach { screen ->
-                    BottomNavigationItem(
-                        icon = { Icon(imageVector = screen.icon, contentDescription = null) },
-                        label = { Text(text = stringResource(screen.titleId)) },
-                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                        onClick = {
-                            navController.navigate(screen.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentDestination = navBackStackEntry?.destination
+            MainBottomBar(
+                onNavigationItemClick = { route ->
+                    navController.navigate(route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
                         }
-                    )
-                }
-            }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                currentDestination = currentDestination
+            )
         }
     ) { innerPadding ->
         NavHost(navController, startDestination = TopLevelDestination.HOME.route, modifier = Modifier.padding(innerPadding)) {
@@ -67,6 +62,23 @@ fun MainScreen() {
             ) {
                 DetailRoute(navController = navController)
             }
+        }
+    }
+}
+
+@Composable
+fun MainBottomBar(
+    onNavigationItemClick: (String) -> Unit,
+    currentDestination: NavDestination?
+) {
+    BottomNavigation {
+        TopLevelDestination.values().forEach { screen ->
+            BottomNavigationItem(
+                icon = { Icon(imageVector = screen.icon, contentDescription = null) },
+                label = { Text(text = stringResource(screen.titleId)) },
+                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                onClick = { onNavigationItemClick(screen.route) }
+            )
         }
     }
 }
