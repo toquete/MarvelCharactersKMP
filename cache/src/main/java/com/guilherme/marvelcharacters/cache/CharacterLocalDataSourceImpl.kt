@@ -54,8 +54,7 @@ class CharacterLocalDataSourceImpl @Inject constructor(
             id = origin.id,
             name = origin.name,
             description = origin.description,
-            thumbnail = origin.thumbnail,
-            isFavorite = true
+            thumbnail = origin.thumbnail
         )
     }
 }

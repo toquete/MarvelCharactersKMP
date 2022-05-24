@@ -42,8 +42,7 @@ class CharacterLocalDataSourceImplTest {
         id = 0,
         name = "Spider-Man",
         description = "",
-        thumbnail = "",
-        isFavorite = true
+        thumbnail = ""
     )
 
     @Before
