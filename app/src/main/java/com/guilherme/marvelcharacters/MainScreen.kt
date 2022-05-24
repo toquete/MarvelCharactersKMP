@@ -14,18 +14,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.google.android.material.composethemeadapter.MdcTheme
+import com.guilherme.marvelcharacters.navigation.MainNavHost
 import com.guilherme.marvelcharacters.navigation.TOP_LEVEL_DESTINATION_ROUTES
 import com.guilherme.marvelcharacters.navigation.TopLevelDestination
-import com.guilherme.marvelcharacters.ui.detail.DetailRoute
-import com.guilherme.marvelcharacters.ui.favorites.FavoritesRoute
-import com.guilherme.marvelcharacters.ui.home.HomeRoute
 
 @Composable
 fun MainScreen() {
@@ -48,22 +42,10 @@ fun MainScreen() {
             )
         }
     ) { innerPadding ->
-        NavHost(navController, startDestination = TopLevelDestination.HOME.route, modifier = Modifier.padding(innerPadding)) {
-            composable(TopLevelDestination.HOME.route) {
-                HomeRoute(navController = navController)
-            }
-            composable(TopLevelDestination.FAVORITES.route) {
-                FavoritesRoute(navController = navController)
-            }
-            composable(
-                route = "detail/{characterId}",
-                arguments = listOf(
-                    navArgument("characterId") { type = NavType.IntType }
-                )
-            ) {
-                DetailRoute(navController = navController)
-            }
-        }
+        MainNavHost(
+            navController = navController,
+            modifier = Modifier.padding(innerPadding)
+        )
     }
 }
 
