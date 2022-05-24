@@ -8,10 +8,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.guilherme.marvelcharacters.R
 
 enum class TopLevelDestination(
-    val route: String,
+    override val route: String,
     @StringRes val titleId: Int,
     val icon: ImageVector
-) {
+) : Destination {
     HOME(
         route = "home",
         titleId = R.string.home,

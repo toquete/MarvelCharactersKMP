@@ -19,7 +19,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.model.Character
@@ -27,12 +26,12 @@ import com.guilherme.marvelcharacters.domain.model.Character
 @Composable
 fun DetailRoute(
     viewModel: DetailComposeViewModel = hiltViewModel(),
-    navController: NavController
+    onBackClick: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     DetailScreen(
         state,
-        onNavigationButtonClick = navController::popBackStack,
+        onNavigationButtonClick = onBackClick,
         onActionButtonClick = viewModel::onFabClick
     )
 }
