@@ -23,3 +23,5 @@ enum class TopLevelDestination(
         icon = Icons.Filled.Favorite
     )
 }
+
+val TOP_LEVEL_DESTINATION_ROUTES = TopLevelDestination.values().map { it.route }

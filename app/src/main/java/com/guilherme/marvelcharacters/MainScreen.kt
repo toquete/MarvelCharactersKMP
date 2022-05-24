@@ -21,6 +21,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.android.material.composethemeadapter.MdcTheme
+import com.guilherme.marvelcharacters.navigation.TOP_LEVEL_DESTINATION_ROUTES
 import com.guilherme.marvelcharacters.navigation.TopLevelDestination
 import com.guilherme.marvelcharacters.ui.detail.DetailRoute
 import com.guilherme.marvelcharacters.ui.favorites.FavoritesRoute
@@ -34,6 +35,7 @@ fun MainScreen() {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentDestination = navBackStackEntry?.destination
             MainBottomBar(
+                currentDestination = currentDestination,
                 onNavigationItemClick = { route ->
                     navController.navigate(route) {
                         popUpTo(navController.graph.findStartDestination().id) {
@@ -42,8 +44,7 @@ fun MainScreen() {
                         launchSingleTop = true
                         restoreState = true
                     }
-                },
-                currentDestination = currentDestination
+                }
             )
         }
     ) { innerPadding ->
@@ -67,26 +68,32 @@ fun MainScreen() {
 }
 
 @Composable
-fun MainBottomBar(
-    onNavigationItemClick: (String) -> Unit,
-    currentDestination: NavDestination?
+private fun MainBottomBar(
+    currentDestination: NavDestination?,
+    onNavigationItemClick: (String) -> Unit = {}
 ) {
-    BottomNavigation {
-        TopLevelDestination.values().forEach { screen ->
-            BottomNavigationItem(
-                icon = { Icon(imageVector = screen.icon, contentDescription = null) },
-                label = { Text(text = stringResource(screen.titleId)) },
-                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                onClick = { onNavigationItemClick(screen.route) }
-            )
+    if (currentDestination?.route in TOP_LEVEL_DESTINATION_ROUTES) {
+        BottomNavigation {
+            TopLevelDestination.values().forEach { screen ->
+                BottomNavigationItem(
+                    icon = { Icon(imageVector = screen.icon, contentDescription = null) },
+                    label = { Text(text = stringResource(screen.titleId)) },
+                    selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                    onClick = { onNavigationItemClick(screen.route) }
+                )
+            }
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun MainScreenPreview() {
+fun MainBottomBarPreview() {
     MdcTheme {
-        MainScreen()
+        MainBottomBar(
+            currentDestination = NavDestination(navigatorName = "Main").apply {
+                route = TopLevelDestination.HOME.route
+            }
+        )
     }
 }
