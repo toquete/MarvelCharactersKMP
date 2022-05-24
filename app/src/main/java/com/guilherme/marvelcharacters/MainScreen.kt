@@ -20,21 +20,20 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.android.material.composethemeadapter.MdcTheme
-import com.guilherme.marvelcharacters.ui.Screen
+import com.guilherme.marvelcharacters.navigation.TopLevelDestination
 import com.guilherme.marvelcharacters.ui.detail.DetailRoute
 import com.guilherme.marvelcharacters.ui.favorites.FavoritesRoute
 import com.guilherme.marvelcharacters.ui.home.HomeRoute
 
 @Composable
 fun MainScreen() {
-    val screens = listOf(Screen.Home, Screen.Favorites)
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
             BottomNavigation {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
-                screens.forEach { screen ->
+                TopLevelDestination.values().forEach { screen ->
                     BottomNavigationItem(
                         icon = { Icon(imageVector = screen.icon, contentDescription = null) },
                         label = { Text(text = stringResource(screen.titleId)) },
@@ -53,11 +52,11 @@ fun MainScreen() {
             }
         }
     ) { innerPadding ->
-        NavHost(navController, startDestination = Screen.Home.route, modifier = Modifier.padding(innerPadding)) {
-            composable(Screen.Home.route) {
+        NavHost(navController, startDestination = TopLevelDestination.HOME.route, modifier = Modifier.padding(innerPadding)) {
+            composable(TopLevelDestination.HOME.route) {
                 HomeRoute(navController = navController)
             }
-            composable(Screen.Favorites.route) {
+            composable(TopLevelDestination.FAVORITES.route) {
                 FavoritesRoute(navController = navController)
             }
             composable(
