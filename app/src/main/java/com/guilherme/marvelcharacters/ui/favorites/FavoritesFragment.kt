@@ -34,7 +34,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
                         state = state,
                         onItemClick = { },
                         onErrorMessageShown = favoritesViewModel::onErrorMessageShown,
-                        onActionButtonClick = { }
+                        onDeleteAllClick = { }
                     )
                 }
             }
