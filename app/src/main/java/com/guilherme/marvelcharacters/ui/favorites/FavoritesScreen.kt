@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -14,6 +15,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
@@ -60,13 +62,15 @@ fun FavoritesScreen(
     onDeleteAllClick: () -> Unit = {}
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    var showDialog by remember { mutableStateOf(false) }
+
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
             title = { Text(stringResource(R.string.favorites)) },
             actions = {
                 FavoritesDropdownMenu(
                     isActionButtonVisible = state.list.isNotEmpty(),
-                    onDeleteAllClick = onDeleteAllClick
+                    onDeleteAllClick = { showDialog = true }
                 )
             }
         )
@@ -90,6 +94,14 @@ fun FavoritesScreen(
             )
         }
     }
+    FavoritesDeletionAlertDialog(
+        isDialogVisible = showDialog,
+        onDeleteButtonClick = {
+            onDeleteAllClick()
+            showDialog = false
+        },
+        onDismiss = { showDialog = false }
+    )
 }
 
 @Composable
@@ -117,6 +129,31 @@ private fun FavoritesDropdownMenu(
                 Text(stringResource(R.string.delete_dialog_title))
             }
         }
+    }
+}
+
+@Composable
+private fun FavoritesDeletionAlertDialog(
+    isDialogVisible: Boolean,
+    onDeleteButtonClick: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    if (isDialogVisible) {
+        AlertDialog(
+            title = { Text(stringResource(R.string.delete_dialog_title)) },
+            text = { Text(stringResource(R.string.delete_dialog_message)) },
+            onDismissRequest = onDismiss,
+            confirmButton = {
+                TextButton(onClick = onDeleteButtonClick) {
+                    Text(stringResource(R.string.delete).uppercase())
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismiss) {
+                    Text(stringResource(R.string.cancel).uppercase())
+                }
+            }
+        )
     }
 }
 
