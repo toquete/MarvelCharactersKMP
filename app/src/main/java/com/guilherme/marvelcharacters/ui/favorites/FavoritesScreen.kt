@@ -32,7 +32,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.model.Character
@@ -41,13 +40,13 @@ import com.guilherme.marvelcharacters.ui.home.CharacterItem
 @Composable
 fun FavoritesRoute(
     viewModel: FavoritesViewModel = hiltViewModel(),
-    navController: NavController
+    onNavigateToDetail: (Int) -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     FavoritesScreen(
         state,
         onItemClick = { character ->
-            navController.navigate("detail/${character.id}")
+            onNavigateToDetail(character.id)
         },
         onErrorMessageShown = viewModel::onErrorMessageShown,
         onDeleteAllClick = viewModel::onDeleteAllClick
