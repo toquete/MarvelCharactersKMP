@@ -40,7 +40,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.model.Character
@@ -48,14 +47,14 @@ import com.guilherme.marvelcharacters.domain.model.Character
 @Composable
 fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel(),
-    navController: NavController
+    onNavigateToDetail: (Int) -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     HomeScreen(
         state,
         onSearchButtonClick = viewModel::onSearchCharacter,
         onItemClick = { character ->
-            navController.navigate("detail/${character.id}")
+            onNavigateToDetail(character.id)
         }
     )
 }

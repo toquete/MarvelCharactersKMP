@@ -23,7 +23,7 @@ fun MainNavHost(
         modifier
     ) {
         composable(TopLevelDestination.HOME.route) {
-            HomeRoute(navController = navController)
+            HomeRoute(onNavigateToDetail = { navController.navigate("detail/$it") })
         }
         composable(TopLevelDestination.FAVORITES.route) {
             FavoritesRoute(navController = navController)
