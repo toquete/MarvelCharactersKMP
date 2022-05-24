@@ -2,7 +2,6 @@ package com.guilherme.marvelcharacters.domain
 
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.domain.model.Character
-import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharactersUseCase
 import io.mockk.MockKAnnotations
@@ -38,7 +37,7 @@ class GetFavoriteCharactersUseCaseTest {
                 id = 0,
                 name = "Spider-Man",
                 description = "",
-                thumbnail = Image(path = "", extension = "")
+                thumbnail = ""
             )
         )
         every { characterRepository.getFavoriteCharacters() } returns flowOf(list)

@@ -56,8 +56,7 @@ class CharacterRepositoryImpl @Inject constructor(
             id = origin.id,
             name = origin.name,
             description = origin.description,
-            thumbnail = origin.thumbnail,
-            isFavorite = origin.isFavorite
+            thumbnail = origin.thumbnail
         )
     }
 
@@ -66,8 +65,7 @@ class CharacterRepositoryImpl @Inject constructor(
             id = origin.id,
             name = origin.name,
             description = origin.description,
-            thumbnail = origin.thumbnail,
-            isFavorite = origin.isFavorite
+            thumbnail = origin.thumbnail
         )
     }
 }

@@ -5,7 +5,6 @@ import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.model.Character
-import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.InsertFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.IsCharacterFavoriteUseCase
@@ -34,7 +33,7 @@ class DetailViewModelTest : BaseUnitTest() {
     @RelaxedMockK
     private lateinit var insertFavoriteCharacterUseCase: InsertFavoriteCharacterUseCase
 
-    private val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
+    private val character = Character(0, "Spider-Man", "The Amazing Spider-Man", "")
 
     @Test
     fun `init - send character state`() = testCoroutineRule.runBlockingTest {

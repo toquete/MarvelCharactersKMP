@@ -55,7 +55,7 @@ fun DetailScreen(
                 actions = {
                     IconButton(onClick = { onActionButtonClick(character) }) {
                         Icon(
-                            imageVector = if (character.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                            imageVector = if (state.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                             contentDescription = null
                         )
                     }
@@ -83,9 +83,9 @@ fun DetailScreenPreview() {
                     id = 0,
                     name = "Spider-Man",
                     description = "The Amazing Spider-Man",
-                    thumbnail = "",
-                    isFavorite = true
-                )
+                    thumbnail = ""
+                ),
+                isFavorite = true
             )
         )
     }

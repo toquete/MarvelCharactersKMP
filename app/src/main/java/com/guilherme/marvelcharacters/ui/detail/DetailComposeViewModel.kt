@@ -38,9 +38,9 @@ class DetailComposeViewModel @Inject constructor(
                 getCharacterByIdUseCase(characterId),
                 isCharacterFavoriteUseCase(characterId)
             ) { character, isFavorite ->
-                character.copy(isFavorite = isFavorite)
-            }.collect { character ->
-                _state.update { it.copy(character = character) }
+                DetailComposeState(character, isFavorite)
+            }.collect { state ->
+                _state.value = state
             }
         }
     }
@@ -48,7 +48,7 @@ class DetailComposeViewModel @Inject constructor(
     fun onFabClick(character: Character) {
         viewModelScope.launch {
             try {
-                if (character.isFavorite) {
+                if (state.value.isFavorite) {
                     deleteFavoriteCharacterUseCase(character.id)
                     _state.update { it.copy(message = SnackbarMessage(R.string.character_deleted, showAction = true)) }
                 } else {

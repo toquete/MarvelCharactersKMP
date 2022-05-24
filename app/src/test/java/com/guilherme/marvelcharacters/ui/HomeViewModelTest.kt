@@ -4,7 +4,6 @@ import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.model.Character
-import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import com.guilherme.marvelcharacters.ui.home.HomeState
@@ -35,7 +34,7 @@ class HomeViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onSearchCharacter - send success state when list is loaded`() = testCoroutineRule.runBlockingTest {
-        val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
+        val character = Character(0, "Spider-Man", "The Amazing Spider-Man", "")
         val characterList = listOf(character)
         val successState = HomeState(
             isLoading = true,

@@ -13,5 +13,6 @@ data class SnackbarMessage(
 
 data class DetailComposeState(
     val character: Character? = null,
+    val isFavorite: Boolean = false,
     val message: SnackbarMessage? = null
 )
