@@ -28,7 +28,7 @@ import com.guilherme.marvelcharacters.domain.model.Character
 
 @Composable
 fun DetailRoute(
-    viewModel: DetailComposeViewModel = hiltViewModel(),
+    viewModel: DetailViewModel = hiltViewModel(),
     onBackClick: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()

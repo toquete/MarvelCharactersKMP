@@ -1,58 +1,77 @@
 package com.guilherme.marvelcharacters.ui.detail
 
 import android.database.sqlite.SQLiteException
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
+import com.guilherme.marvelcharacters.domain.usecase.GetCharacterByIdUseCase
 import com.guilherme.marvelcharacters.domain.usecase.InsertFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.IsCharacterFavoriteUseCase
-import com.guilherme.marvelcharacters.infrastructure.BaseViewModel
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DetailViewModel @AssistedInject constructor(
-    @Assisted private val character: Character,
+@HiltViewModel
+class DetailViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    getCharacterByIdUseCase: GetCharacterByIdUseCase,
     isCharacterFavoriteUseCase: IsCharacterFavoriteUseCase,
     private val deleteFavoriteCharacterUseCase: DeleteFavoriteCharacterUseCase,
-    private val insertFavoriteCharacterUseCase: InsertFavoriteCharacterUseCase
-) : BaseViewModel<DetailState, DetailEvent>(DetailState()) {
+    private val insertFavoriteCharacterUseCase: InsertFavoriteCharacterUseCase,
+) : ViewModel() {
+
+    private val characterId: Int = checkNotNull(savedStateHandle[DetailDestination.characterIdArg])
+
+    private val _state = MutableStateFlow(DetailComposeState())
+    val state = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
-            isCharacterFavoriteUseCase(character.id)
-                .collect { isFavorite ->
-                    setState { it.copy(isFavorite = isFavorite) }
-                }
+            combine(
+                getCharacterByIdUseCase(characterId),
+                isCharacterFavoriteUseCase(characterId)
+            ) { character, isFavorite ->
+                character to isFavorite
+            }.collect { state ->
+                _state.update { it.copy(character = state.first, isFavorite = state.second) }
+            }
         }
     }
 
-    fun onFabClick() {
+    fun onFabClick(character: Character) {
         viewModelScope.launch {
-            sendEvent(
-                try {
-                    if (state.value.isFavorite) {
-                        deleteFavoriteCharacterUseCase(character.id)
-                        DetailEvent.ShowSnackbarMessage(R.string.character_deleted, showAction = true)
-                    } else {
-                        insertFavoriteCharacterUseCase(character)
-                        DetailEvent.ShowSnackbarMessage(R.string.character_added, showAction = false)
-                    }
-                } catch (error: SQLiteException) {
-                    DetailEvent.ShowSnackbarMessage(R.string.error_message, showAction = false)
+            try {
+                if (state.value.isFavorite) {
+                    deleteFavoriteCharacterUseCase(character.id)
+                    _state.update { it.copy(message = SnackbarMessage(R.string.character_deleted, showAction = true)) }
+                } else {
+                    insertFavoriteCharacterUseCase(character)
+                    _state.update { it.copy(message = SnackbarMessage(R.string.character_added)) }
                 }
-            )
+            } catch (error: SQLiteException) {
+                _state.update { it.copy(message = SnackbarMessage(R.string.error_message)) }
+            }
         }
     }
 
-    fun onUndoClick() {
+    fun onUndoClick(character: Character) {
         viewModelScope.launch {
             try {
                 insertFavoriteCharacterUseCase(character)
             } catch (error: SQLiteException) {
-                sendEvent(DetailEvent.ShowSnackbarMessage(R.string.error_message, showAction = false))
+                _state.update { it.copy(message = SnackbarMessage(R.string.error_message)) }
             }
         }
+    }
+
+    fun onSnackbarShown() {
+        _state.update { it.copy(message = null) }
     }
 }
