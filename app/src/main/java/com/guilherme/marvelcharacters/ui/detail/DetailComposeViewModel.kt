@@ -38,9 +38,9 @@ class DetailComposeViewModel @Inject constructor(
                 getCharacterByIdUseCase(characterId),
                 isCharacterFavoriteUseCase(characterId)
             ) { character, isFavorite ->
-                DetailComposeState(character, isFavorite)
+                character to isFavorite
             }.collect { state ->
-                _state.value = state
+                _state.update { it.copy(character = state.first, isFavorite = state.second) }
             }
         }
     }
@@ -59,5 +59,19 @@ class DetailComposeViewModel @Inject constructor(
                 _state.update { it.copy(message = SnackbarMessage(R.string.error_message)) }
             }
         }
+    }
+
+    fun onUndoClick(character: Character) {
+        viewModelScope.launch {
+            try {
+                insertFavoriteCharacterUseCase(character)
+            } catch (error: SQLiteException) {
+                _state.update { it.copy(message = SnackbarMessage(R.string.error_message)) }
+            }
+        }
+    }
+
+    fun onSnackbarShown() {
+        _state.update { it.copy(message = null) }
     }
 }

@@ -7,7 +7,7 @@ import com.guilherme.marvelcharacters.infrastructure.State
 data class DetailState(val isFavorite: Boolean = false) : State
 
 data class SnackbarMessage(
-    @StringRes val message: Int,
+    @StringRes val messageId: Int,
     val showAction: Boolean = false
 )
 
