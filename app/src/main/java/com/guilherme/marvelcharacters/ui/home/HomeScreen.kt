@@ -23,6 +23,7 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Brightness4
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -71,7 +72,12 @@ fun HomeScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
-            title = { Text(stringResource(R.string.app_name)) }
+            title = { Text(stringResource(R.string.app_name)) },
+            actions = {
+                IconButton(onClick = { }) {
+                    Icon(imageVector = Icons.Filled.Brightness4, contentDescription = null)
+                }
+            }
         )
         OutlinedTextField(
             modifier = Modifier
