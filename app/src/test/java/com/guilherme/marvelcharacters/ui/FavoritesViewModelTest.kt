@@ -6,10 +6,8 @@ import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.usecase.DeleteAllFavoriteCharactersUseCase
-import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharactersUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
-import com.guilherme.marvelcharacters.model.CharacterVO
 import com.guilherme.marvelcharacters.ui.favorites.FavoritesState
 import com.guilherme.marvelcharacters.ui.favorites.FavoritesViewModel
 import io.mockk.coEvery
@@ -29,27 +27,14 @@ class FavoritesViewModelTest : BaseUnitTest() {
     private lateinit var getFavoriteCharactersUseCase: GetFavoriteCharactersUseCase
 
     @RelaxedMockK
-    private lateinit var deleteFavoriteCharacterUseCase: DeleteFavoriteCharacterUseCase
-
-    @RelaxedMockK
     private lateinit var deleteAllFavoriteCharactersUseCase: DeleteAllFavoriteCharactersUseCase
 
     override fun setUp() {
         super.setUp()
         favoritesViewModel = FavoritesViewModel(
             getFavoriteCharactersUseCase,
-            deleteFavoriteCharacterUseCase,
             deleteAllFavoriteCharactersUseCase
         )
-    }
-
-    @Test
-    fun `deleteCharacter - check if repository was called`() = testCoroutineRule.runBlockingTest {
-        val characterVO = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", "")
-
-        favoritesViewModel.deleteCharacter(characterVO)
-
-        coVerify { deleteFavoriteCharacterUseCase(id = 0) }
     }
 
     @Test
@@ -84,7 +69,6 @@ class FavoritesViewModelTest : BaseUnitTest() {
 
         val viewModel = FavoritesViewModel(
             getFavoriteCharactersUseCase,
-            deleteFavoriteCharacterUseCase,
             deleteAllFavoriteCharactersUseCase
         )
 
