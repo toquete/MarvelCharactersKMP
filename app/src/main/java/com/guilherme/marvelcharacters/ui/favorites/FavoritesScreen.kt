@@ -32,10 +32,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.android.material.composethemeadapter.MdcTheme
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.ui.home.CharacterItem
+import com.guilherme.marvelcharacters.ui.theme.MarvelCharactersTheme
 
 @Composable
 fun FavoritesRoute(
@@ -159,7 +159,7 @@ private fun FavoritesDeletionAlertDialog(
 @Preview(showBackground = true)
 @Composable
 fun FavoritesScreenPreview() {
-    MdcTheme {
+    MarvelCharactersTheme {
         FavoritesScreen(
             state = FavoritesState(
                 list = listOf(

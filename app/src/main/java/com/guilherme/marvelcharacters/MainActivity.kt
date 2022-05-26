@@ -9,7 +9,7 @@ import androidx.compose.material.LocalElevationOverlay
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.google.android.material.composethemeadapter.MdcTheme
+import com.guilherme.marvelcharacters.ui.theme.MarvelCharactersTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MdcTheme {
+            MarvelCharactersTheme {
                 val systemUiController = rememberSystemUiController()
                 val useDarkIcons = isSystemInDarkTheme()
                 val overlaidColor = LocalElevationOverlay.current?.apply(

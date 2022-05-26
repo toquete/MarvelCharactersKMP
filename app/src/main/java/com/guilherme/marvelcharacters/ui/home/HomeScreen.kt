@@ -41,9 +41,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.android.material.composethemeadapter.MdcTheme
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.model.Character
+import com.guilherme.marvelcharacters.ui.theme.MarvelCharactersTheme
 
 @Composable
 fun HomeRoute(
@@ -155,7 +155,7 @@ fun CharacterItem(
 @Preview(showBackground = true)
 @Composable
 fun HomePreview() {
-    MdcTheme {
+    MarvelCharactersTheme {
         HomeScreen(
             state = HomeState(
                 characters = listOf(
@@ -182,7 +182,7 @@ fun HomePreview() {
 @Preview(showBackground = true)
 @Composable
 fun HomeLoadingPreview() {
-    MdcTheme {
+    MarvelCharactersTheme {
         HomeScreen(
             state = HomeState(isLoading = true),
             onSearchButtonClick = { },
@@ -194,7 +194,7 @@ fun HomeLoadingPreview() {
 @Preview(showBackground = true)
 @Composable
 fun HomeErrorPreview() {
-    MdcTheme {
+    MarvelCharactersTheme {
         HomeScreen(
             state = HomeState(errorMessageId = R.string.error_message),
             onSearchButtonClick = { },
@@ -206,7 +206,7 @@ fun HomeErrorPreview() {
 @Preview(showBackground = true)
 @Composable
 fun CharacterItemPreview() {
-    MdcTheme {
+    MarvelCharactersTheme {
         CharacterItem(
             character = Character(
                 id = 0,

@@ -16,10 +16,10 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.google.android.material.composethemeadapter.MdcTheme
 import com.guilherme.marvelcharacters.navigation.MainNavHost
 import com.guilherme.marvelcharacters.navigation.TOP_LEVEL_DESTINATION_ROUTES
 import com.guilherme.marvelcharacters.navigation.TopLevelDestination
+import com.guilherme.marvelcharacters.ui.theme.MarvelCharactersTheme
 
 @Composable
 fun MainScreen() {
@@ -71,7 +71,7 @@ private fun MainBottomBar(
 @Preview(showBackground = true)
 @Composable
 fun MainBottomBarPreview() {
-    MdcTheme {
+    MarvelCharactersTheme {
         MainBottomBar(
             currentDestination = NavDestination(navigatorName = "Main").apply {
                 route = TopLevelDestination.HOME.route
