@@ -13,16 +13,18 @@ import com.guilherme.marvelcharacters.ui.home.homeGraph
 fun MainNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    startDestination: String = TopLevelDestination.HOME.route
+    startDestination: String = TopLevelDestination.HOME.route,
+    onDarkModeClick: () -> Unit = {}
 ) {
     NavHost(
         navController,
         startDestination,
         modifier
     ) {
-        homeGraph {
-            navController.navigate("${DetailDestination.route}/$it")
-        }
+        homeGraph(
+            onDarkModeClick = onDarkModeClick,
+            onNavigateToDetail = { navController.navigate("${DetailDestination.route}/$it") }
+        )
         favoritesGraph {
             navController.navigate("${DetailDestination.route}/$it")
         }

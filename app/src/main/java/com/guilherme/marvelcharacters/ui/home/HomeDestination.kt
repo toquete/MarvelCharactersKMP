@@ -5,11 +5,13 @@ import androidx.navigation.compose.composable
 import com.guilherme.marvelcharacters.navigation.TopLevelDestination
 
 fun NavGraphBuilder.homeGraph(
+    onDarkModeClick: () -> Unit,
     onNavigateToDetail: (Int) -> Unit
 ) {
     composable(TopLevelDestination.HOME.route) {
-        HomeRoute {
-            onNavigateToDetail(it)
-        }
+        HomeRoute(
+            onDarkModeClick = onDarkModeClick,
+            onNavigateToDetail = onNavigateToDetail
+        )
     }
 }

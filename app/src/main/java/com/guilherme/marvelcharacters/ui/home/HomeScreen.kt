@@ -48,6 +48,7 @@ import com.guilherme.marvelcharacters.ui.theme.MarvelCharactersTheme
 @Composable
 fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel(),
+    onDarkModeClick: () -> Unit,
     onNavigateToDetail: (Int) -> Unit
 ) {
     val state by viewModel.state.collectAsState()
@@ -56,7 +57,8 @@ fun HomeRoute(
         onSearchButtonClick = viewModel::onSearchCharacter,
         onItemClick = { character ->
             onNavigateToDetail(character.id)
-        }
+        },
+        onDarkModeClick = onDarkModeClick
     )
 }
 
@@ -65,7 +67,8 @@ fun HomeRoute(
 fun HomeScreen(
     state: HomeState,
     onSearchButtonClick: (String) -> Unit,
-    onItemClick: (Character) -> Unit
+    onItemClick: (Character) -> Unit,
+    onDarkModeClick: () -> Unit = {}
 ) {
     var query by rememberSaveable { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -74,7 +77,7 @@ fun HomeScreen(
         TopAppBar(
             title = { Text(stringResource(R.string.app_name)) },
             actions = {
-                IconButton(onClick = { }) {
+                IconButton(onClick = onDarkModeClick) {
                     Icon(imageVector = Icons.Filled.Brightness4, contentDescription = null)
                 }
             }

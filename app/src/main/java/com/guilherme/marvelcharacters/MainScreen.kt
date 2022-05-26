@@ -19,10 +19,11 @@ import androidx.navigation.compose.rememberNavController
 import com.guilherme.marvelcharacters.navigation.MainNavHost
 import com.guilherme.marvelcharacters.navigation.TOP_LEVEL_DESTINATION_ROUTES
 import com.guilherme.marvelcharacters.navigation.TopLevelDestination
+import com.guilherme.marvelcharacters.ui.home.NightModeViewModel
 import com.guilherme.marvelcharacters.ui.theme.MarvelCharactersTheme
 
 @Composable
-fun MainScreen() {
+fun MainScreen(nightModeViewModel: NightModeViewModel) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -44,7 +45,8 @@ fun MainScreen() {
     ) { innerPadding ->
         MainNavHost(
             navController = navController,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
+            onDarkModeClick = nightModeViewModel::toggleDarkMode
         )
     }
 }
