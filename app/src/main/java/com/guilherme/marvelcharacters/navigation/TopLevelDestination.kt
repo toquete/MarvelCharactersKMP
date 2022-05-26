@@ -4,23 +4,28 @@ import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.outlined.EmojiEvents
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.guilherme.marvelcharacters.R
 
 enum class TopLevelDestination(
     override val route: String,
     @StringRes val titleId: Int,
-    val icon: ImageVector
+    val icon: ImageVector,
+    val unselectedIcon: ImageVector
 ) : Destination {
     HOME(
         route = "home",
         titleId = R.string.home,
-        icon = Icons.Filled.EmojiEvents
+        icon = Icons.Filled.EmojiEvents,
+        unselectedIcon = Icons.Outlined.EmojiEvents
     ),
     FAVORITES(
         route = "favorites",
         titleId = R.string.favorites,
-        icon = Icons.Filled.Favorite
+        icon = Icons.Filled.Favorite,
+        unselectedIcon = Icons.Filled.FavoriteBorder
     )
 }
 

@@ -59,10 +59,16 @@ private fun MainBottomBar(
     if (currentDestination?.route in TOP_LEVEL_DESTINATION_ROUTES) {
         BottomNavigation {
             TopLevelDestination.values().forEach { screen ->
+                val isSelected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
                 BottomNavigationItem(
-                    icon = { Icon(imageVector = screen.icon, contentDescription = null) },
+                    icon = {
+                        Icon(
+                            imageVector = if (isSelected) screen.icon else screen.unselectedIcon,
+                            contentDescription = null
+                        )
+                    },
                     label = { Text(text = stringResource(screen.titleId)) },
-                    selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                    selected = isSelected,
                     onClick = { onNavigationItemClick(screen.route) }
                 )
             }
