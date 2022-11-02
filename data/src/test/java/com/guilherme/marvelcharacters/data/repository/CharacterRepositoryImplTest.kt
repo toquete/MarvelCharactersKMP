@@ -3,6 +3,7 @@ package com.guilherme.marvelcharacters.data.repository
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.data.model.CharacterData
 import com.guilherme.marvelcharacters.data.model.ImageData
+import com.guilherme.marvelcharacters.data.repository.infrastructure.TestCoroutineRule
 import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSource
 import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSource
 import com.guilherme.marvelcharacters.domain.model.Character
@@ -16,10 +17,14 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class CharacterRepositoryImplTest {
+
+    @get:Rule
+    val testCoroutineRule = TestCoroutineRule()
 
     @RelaxedMockK
     private lateinit var remoteDataSource: CharacterRemoteDataSource
@@ -32,7 +37,7 @@ class CharacterRepositoryImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        characterRepository = CharacterRepositoryImpl(remoteDataSource, localDataSource)
+        characterRepository = CharacterRepositoryImpl(remoteDataSource, localDataSource, testCoroutineRule.testCoroutineDispatcher)
     }
 
     @Test
@@ -56,9 +61,9 @@ class CharacterRepositoryImplTest {
             )
         )
 
-        coEvery { remoteDataSource.getCharacters(name = "spider", any(), any()) } returns flowOf(listOf(characterData))
+        coEvery { remoteDataSource.getCharacters(name = "spider", any(), any()) } returns listOf(characterData)
 
-        val list = characterRepository.getCharacters(name = "spider", key = "123", privateKey = "456").first()
+        val list = characterRepository.getCharacters(name = "spider", key = "123", privateKey = "456")
 
         assertThat(list).isEqualTo(listOf(character))
     }

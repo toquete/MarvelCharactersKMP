@@ -12,7 +12,6 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
@@ -65,6 +64,6 @@ class CharacterRemoteDataSourceImplTest {
 
         val result = remoteDataSource.getCharacters(name = characterName, key = "123", privateKey = "456")
 
-        assertThat(result.first()).isEqualTo(listOf(character))
+        assertThat(result).isEqualTo(listOf(character))
     }
 }

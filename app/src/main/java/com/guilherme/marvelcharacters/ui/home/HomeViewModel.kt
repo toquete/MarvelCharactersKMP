@@ -8,10 +8,6 @@ import com.guilherme.marvelcharacters.infrastructure.BaseViewModel
 import com.guilherme.marvelcharacters.mapper.CharacterMapper
 import com.guilherme.marvelcharacters.model.CharacterVO
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -26,29 +22,30 @@ class HomeViewModel @Inject constructor(
 
     fun onSearchCharacter(character: String) {
         viewModelScope.launch {
-            getCharactersUseCase(character, BuildConfig.MARVEL_KEY, BuildConfig.MARVEL_PRIVATE_KEY)
-                .onStart { setState { it.showLoading() } }
-                .onCompletion { setState { it.hideLoading() } }
-                .catch { error ->
-                    // TODO: melhorar tratativa de erro
-                    setState {
-                        it.copy(
-                            errorMessageId = if (error is HttpException) {
-                                R.string.request_error_message
-                            } else {
-                                R.string.network_error_message
-                            }
-                        )
-                    }
+            setState { it.showLoading() }
+            runCatching {
+                getCharactersUseCase(character, BuildConfig.MARVEL_KEY, BuildConfig.MARVEL_PRIVATE_KEY)
+            }.onSuccess { list ->
+                setState { state ->
+                    state.copy(
+                        isLoading = false,
+                        characters = list.map { mapper.mapTo(it) },
+                        errorMessageId = if (list.isEmpty()) R.string.empty_state_message else null
+                    )
                 }
-                .collect { list ->
-                    setState { state ->
-                        state.copy(
-                            characters = list.map { mapper.mapTo(it) },
-                            errorMessageId = if (list.isEmpty()) R.string.empty_state_message else null
-                        )
-                    }
+            }.onFailure { error ->
+                // TODO: melhorar tratativa de erro
+                setState {
+                    it.copy(
+                        isLoading = false,
+                        errorMessageId = if (error is HttpException) {
+                            R.string.request_error_message
+                        } else {
+                            R.string.network_error_message
+                        }
+                    )
                 }
+            }
         }
     }
 

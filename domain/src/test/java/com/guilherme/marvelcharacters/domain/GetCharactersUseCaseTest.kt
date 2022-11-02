@@ -6,13 +6,11 @@ import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
 import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
 import io.mockk.MockKAnnotations
+import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
@@ -44,11 +42,11 @@ class GetCharactersUseCaseTest {
                 thumbnail = Image(path = "", extension = "")
             )
         )
-        every { characterRepository.getCharacters(name, key, privateKey) } returns flowOf(list)
+        coEvery { characterRepository.getCharacters(name, key, privateKey) } returns list
 
         val result = getCharactersUseCase(name, key, privateKey)
 
         coVerify { characterRepository.getCharacters(name, key, privateKey) }
-        assertThat(result.first()).isEqualTo(list)
+        assertThat(result).isEqualTo(list)
     }
 }

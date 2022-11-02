@@ -5,11 +5,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface CharacterRepository {
 
-    fun getCharacters(
+    suspend fun getCharacters(
         name: String,
         key: String,
         privateKey: String
-    ): Flow<List<Character>>
+    ): List<Character>
 
     fun isCharacterFavorite(id: Int): Flow<Boolean>
 

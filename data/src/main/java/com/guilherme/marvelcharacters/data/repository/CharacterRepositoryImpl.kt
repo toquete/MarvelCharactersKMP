@@ -1,5 +1,6 @@
 package com.guilherme.marvelcharacters.data.repository
 
+import com.guilherme.marvelcharacters.data.annotation.IoDispatcher
 import com.guilherme.marvelcharacters.data.model.CharacterData
 import com.guilherme.marvelcharacters.data.model.ImageData
 import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSource
@@ -7,20 +8,26 @@ import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSour
 import com.guilherme.marvelcharacters.domain.model.Character
 import com.guilherme.marvelcharacters.domain.model.Image
 import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CharacterRepositoryImpl @Inject constructor(
     private val remoteDataSource: CharacterRemoteDataSource,
-    private val localDataSource: CharacterLocalDataSource
+    private val localDataSource: CharacterLocalDataSource,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : CharacterRepository {
 
-    override fun getCharacters(name: String, key: String, privateKey: String): Flow<List<Character>> {
-        return remoteDataSource.getCharacters(name, key, privateKey)
-            .map { list ->
-                list.map { mapToDomain(it) }
-            }
+    override suspend fun getCharacters(name: String, key: String, privateKey: String): List<Character> {
+        return withContext(dispatcher) {
+            remoteDataSource.getCharacters(name, key, privateKey)
+                .map { data ->
+                    mapToDomain(data)
+                }
+        }
     }
 
     override fun isCharacterFavorite(id: Int): Flow<Boolean> {
