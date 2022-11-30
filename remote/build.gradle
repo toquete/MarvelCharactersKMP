@@ -1,20 +1,37 @@
 plugins {
-    id 'java-library'
-    id 'kotlin'
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
     id 'kotlinx-serialization'
 }
 
-apply from: "$rootDir/tools/jacoco/kotlin.gradle"
+apply from: "$rootDir/tools/jacoco/android.gradle"
 
-java {
-    sourceCompatibility = sourceCompatibilityVersion
-    targetCompatibility = targetCompatibilityVersion
+android {
+    compileSdk rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
+    }
+    compileOptions {
+        sourceCompatibility sourceCompatibilityVersion
+        targetCompatibility targetCompatibilityVersion
+    }
+    kotlinOptions {
+        jvmTarget = jvmTargetVersion
+    }
 }
 
 dependencies {
     implementation project(':data')
 
-    implementation "javax.inject:javax.inject:$javaxInjectVersion"
+    implementation "androidx.core:core-ktx:$coreVersion"
+    implementation "androidx.appcompat:appcompat:$appCompatVersion"
+
+    implementation "com.google.dagger:hilt-android:$hiltVersion"
+    kapt "com.google.dagger:hilt-compiler:$hiltVersion"
+
     api "com.squareup.retrofit2:retrofit:$retrofitVersion"
     api "com.squareup.okhttp3:okhttp:$okHttpVersion"
     implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$kotlinSerializationConverterVersion"
