@@ -3,7 +3,7 @@ package com.guilherme.marvelcharacters.ui.detail
 import android.database.sqlite.SQLiteException
 import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.R
-import com.guilherme.marvelcharacters.domain.model.Character
+import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.InsertFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.IsCharacterFavoriteUseCase

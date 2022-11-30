@@ -1,13 +1,13 @@
 package com.guilherme.marvelcharacters.data.repository
 
 import com.google.common.truth.Truth.assertThat
+import com.guilherme.marvelcharacters.core.model.Character
+import com.guilherme.marvelcharacters.core.model.Image
 import com.guilherme.marvelcharacters.data.model.CharacterData
 import com.guilherme.marvelcharacters.data.model.ImageData
 import com.guilherme.marvelcharacters.data.repository.infrastructure.TestCoroutineRule
 import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSource
 import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSource
-import com.guilherme.marvelcharacters.domain.model.Character
-import com.guilherme.marvelcharacters.domain.model.Image
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify

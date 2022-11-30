@@ -2,7 +2,7 @@ package com.guilherme.marvelcharacters.ui.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.guilherme.marvelcharacters.domain.model.Character
+import com.guilherme.marvelcharacters.core.model.Character
 import dagger.assisted.AssistedFactory
 
 @AssistedFactory

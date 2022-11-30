@@ -1,7 +1,7 @@
 package com.guilherme.marvelcharacters.mapper
 
-import com.guilherme.marvelcharacters.domain.model.Character
-import com.guilherme.marvelcharacters.domain.model.Image
+import com.guilherme.marvelcharacters.core.model.Character
+import com.guilherme.marvelcharacters.core.model.Image
 import com.guilherme.marvelcharacters.model.CharacterVO
 import com.guilherme.marvelcharacters.model.ImageVO
 import javax.inject.Inject

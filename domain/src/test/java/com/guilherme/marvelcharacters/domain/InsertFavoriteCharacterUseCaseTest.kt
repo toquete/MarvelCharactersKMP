@@ -1,7 +1,7 @@
 package com.guilherme.marvelcharacters.domain
 
-import com.guilherme.marvelcharacters.domain.model.Character
-import com.guilherme.marvelcharacters.domain.model.Image
+import com.guilherme.marvelcharacters.core.model.Character
+import com.guilherme.marvelcharacters.core.model.Image
 import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
 import com.guilherme.marvelcharacters.domain.usecase.InsertFavoriteCharacterUseCase
 import io.mockk.MockKAnnotations

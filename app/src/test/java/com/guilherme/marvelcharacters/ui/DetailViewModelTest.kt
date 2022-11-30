@@ -4,8 +4,8 @@ import android.database.sqlite.SQLiteException
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.R
-import com.guilherme.marvelcharacters.domain.model.Character
-import com.guilherme.marvelcharacters.domain.model.Image
+import com.guilherme.marvelcharacters.core.model.Character
+import com.guilherme.marvelcharacters.core.model.Image
 import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.InsertFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.IsCharacterFavoriteUseCase

@@ -1,6 +1,6 @@
 package com.guilherme.marvelcharacters.domain.repository
 
-import com.guilherme.marvelcharacters.domain.model.Character
+import com.guilherme.marvelcharacters.core.model.Character
 import kotlinx.coroutines.flow.Flow
 
 interface CharacterRepository {

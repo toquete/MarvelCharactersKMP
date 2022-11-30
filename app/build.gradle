@@ -80,6 +80,7 @@ dependencies {
     implementation project(':remote')
     implementation project(':data')
     implementation project(':domain')
+    implementation project(':core:model')
     
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
     implementation "androidx.appcompat:appcompat:$appCompatVersion"

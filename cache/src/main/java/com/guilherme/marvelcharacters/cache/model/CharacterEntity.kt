@@ -11,5 +11,3 @@ data class CharacterEntity(
     val description: String,
     @Embedded val thumbnail: ImageEntity
 )
-
-data class ImageEntity(val path: String, val extension: String)
