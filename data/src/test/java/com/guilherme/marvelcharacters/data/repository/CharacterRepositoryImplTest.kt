@@ -58,7 +58,7 @@ class CharacterRepositoryImplTest {
     }
 
     @Test
-    fun `getCharacterById - returns character`() = runBlockingTest {
+    fun `getCharacterById - returns character from remote`() = runBlockingTest {
         val character = Character(
             id = 0,
             name = "Spider-Man",
@@ -69,7 +69,27 @@ class CharacterRepositoryImplTest {
             )
         )
 
+        coEvery { localDataSource.getCharacterById(id = 0) } returns null
         coEvery { remoteDataSource.getCharacterById(id = 0, any(), any()) } returns character
+
+        val list = characterRepository.getCharacterById(id = 0, key = "123", privateKey = "456")
+
+        assertThat(list).isEqualTo(character)
+    }
+
+    @Test
+    fun `getCharacterById - returns character from local`() = runBlockingTest {
+        val character = Character(
+            id = 0,
+            name = "Spider-Man",
+            description = "The Amazing Spider-Man",
+            thumbnail = Image(
+                path = "",
+                extension = ""
+            )
+        )
+
+        coEvery { localDataSource.getCharacterById(id = 0) } returns character
 
         val list = characterRepository.getCharacterById(id = 0, key = "123", privateKey = "456")
 

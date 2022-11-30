@@ -23,7 +23,11 @@ internal class CharacterRepositoryImpl @Inject constructor(
 
     override suspend fun getCharacterById(id: Int, key: String, privateKey: String): Character {
         return withContext(dispatcher) {
-            remoteDataSource.getCharacterById(id, key, privateKey)
+            localDataSource.getCharacterById(id) ?: remoteDataSource.getCharacterById(
+                id,
+                key,
+                privateKey
+            )
         }
     }
 
