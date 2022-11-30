@@ -1,9 +1,9 @@
-package com.guilherme.marvelcharacters.infrastructure.di
+package com.guilherme.marvelcharacters.data.infrastructure.di
 
+import com.guilherme.marvelcharacters.data.repository.CharacterRepository
 import com.guilherme.marvelcharacters.data.repository.CharacterRepositoryImpl
+import com.guilherme.marvelcharacters.data.repository.NightModeRepository
 import com.guilherme.marvelcharacters.data.repository.NightModeRepositoryImpl
-import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
-import com.guilherme.marvelcharacters.domain.repository.NightModeRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

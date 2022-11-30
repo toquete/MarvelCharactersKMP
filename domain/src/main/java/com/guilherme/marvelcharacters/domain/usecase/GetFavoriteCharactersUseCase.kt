@@ -1,7 +1,7 @@
 package com.guilherme.marvelcharacters.domain.usecase
 
 import com.guilherme.marvelcharacters.core.model.Character
-import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
+import com.guilherme.marvelcharacters.data.repository.CharacterRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

@@ -1,7 +1,7 @@
 package com.guilherme.marvelcharacters.domain
 
 import com.google.common.truth.Truth.assertThat
-import com.guilherme.marvelcharacters.domain.repository.NightModeRepository
+import com.guilherme.marvelcharacters.data.repository.NightModeRepository
 import com.guilherme.marvelcharacters.domain.usecase.GetDarkModeUseCase
 import io.mockk.MockKAnnotations
 import io.mockk.every

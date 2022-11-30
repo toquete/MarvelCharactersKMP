@@ -2,8 +2,7 @@ package com.guilherme.marvelcharacters.data.repository
 
 import com.guilherme.marvelcharacters.cache.CharacterLocalDataSource
 import com.guilherme.marvelcharacters.core.model.Character
-import com.guilherme.marvelcharacters.data.annotation.IoDispatcher
-import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
+import com.guilherme.marvelcharacters.data.infrastructure.annotation.IoDispatcher
 import com.guilherme.marvelcharacters.remote.CharacterRemoteDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow

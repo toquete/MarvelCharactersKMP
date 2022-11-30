@@ -1,6 +1,6 @@
 package com.guilherme.marvelcharacters.domain
 
-import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
+import com.guilherme.marvelcharacters.data.repository.CharacterRepository
 import com.guilherme.marvelcharacters.domain.usecase.DeleteAllFavoriteCharactersUseCase
 import io.mockk.MockKAnnotations
 import io.mockk.coVerify

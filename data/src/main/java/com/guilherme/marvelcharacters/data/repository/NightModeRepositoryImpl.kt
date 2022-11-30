@@ -1,7 +1,6 @@
 package com.guilherme.marvelcharacters.data.repository
 
 import com.guilherme.marvelcharacters.cache.NightModeLocalDataSource
-import com.guilherme.marvelcharacters.domain.repository.NightModeRepository
 import javax.inject.Inject
 
 class NightModeRepositoryImpl @Inject constructor(

@@ -1,4 +1,4 @@
-package com.guilherme.marvelcharacters.domain.repository
+package com.guilherme.marvelcharacters.data.repository
 
 import com.guilherme.marvelcharacters.core.model.Character
 import kotlinx.coroutines.flow.Flow

@@ -1,4 +1,4 @@
-package com.guilherme.marvelcharacters.domain.repository
+package com.guilherme.marvelcharacters.data.repository
 
 interface NightModeRepository {
 

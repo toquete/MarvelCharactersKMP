@@ -1,6 +1,6 @@
 package com.guilherme.marvelcharacters.domain.usecase
 
-import com.guilherme.marvelcharacters.domain.repository.NightModeRepository
+import com.guilherme.marvelcharacters.data.repository.NightModeRepository
 import javax.inject.Inject
 
 class IsDarkModeEnabledUseCase @Inject constructor(

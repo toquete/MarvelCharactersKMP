@@ -1,6 +1,6 @@
 package com.guilherme.marvelcharacters.domain
 
-import com.guilherme.marvelcharacters.domain.repository.NightModeRepository
+import com.guilherme.marvelcharacters.data.repository.NightModeRepository
 import com.guilherme.marvelcharacters.domain.usecase.ToggleDarkModeUseCase
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.InjectMockKs
