@@ -9,7 +9,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class RemoteDataSourceModule {
+internal abstract class RemoteDataSourceModule {
 
     @Binds
     abstract fun bindsCharacterRemoteDataSource(

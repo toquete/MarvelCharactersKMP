@@ -5,12 +5,12 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ImageResponse(
+internal data class ImageResponse(
     @SerialName("path") val path: String,
     @SerialName("extension") val extension: String
 )
 
-fun ImageResponse.toExternalModel() = Image(
+internal fun ImageResponse.toExternalModel() = Image(
     path = path,
     extension = extension
 )

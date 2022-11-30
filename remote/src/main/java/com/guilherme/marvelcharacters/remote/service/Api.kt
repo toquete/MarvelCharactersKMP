@@ -5,7 +5,7 @@ import com.guilherme.marvelcharacters.remote.model.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface Api {
+internal interface Api {
 
     @GET("characters")
     suspend fun getCharacters(

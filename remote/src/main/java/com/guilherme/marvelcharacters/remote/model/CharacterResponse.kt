@@ -5,14 +5,14 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CharacterResponse(
+internal data class CharacterResponse(
     @SerialName("id") val id: Int,
     @SerialName("name") val name: String,
     @SerialName("description") val description: String,
     @SerialName("thumbnail") val thumbnail: ImageResponse
 )
 
-fun CharacterResponse.toExternalModel() = Character(
+internal fun CharacterResponse.toExternalModel() = Character(
     id = id,
     name = name,
     description = description,

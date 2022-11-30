@@ -8,7 +8,7 @@ import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.DigestUtils
 import javax.inject.Inject
 
-class CharacterRemoteDataSourceImpl @Inject constructor(
+internal class CharacterRemoteDataSourceImpl @Inject constructor(
     private val api: Api
 ) : CharacterRemoteDataSource {
 

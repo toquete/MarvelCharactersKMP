@@ -9,7 +9,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 
 @ExperimentalSerializationApi
-object RetrofitFactory {
+internal object RetrofitFactory {
     private const val BASE_URL = "https://gateway.marvel.com/v1/public/"
     private const val JSON_MEDIA_TYPE = "application/json"
     private val json = Json { ignoreUnknownKeys = true }
