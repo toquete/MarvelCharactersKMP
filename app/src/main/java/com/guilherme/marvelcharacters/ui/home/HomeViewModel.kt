@@ -9,7 +9,6 @@ import com.guilherme.marvelcharacters.mapper.CharacterMapper
 import com.guilherme.marvelcharacters.model.CharacterVO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,11 +37,7 @@ class HomeViewModel @Inject constructor(
                 setState {
                     it.copy(
                         isLoading = false,
-                        errorMessageId = if (error is HttpException) {
-                            R.string.request_error_message
-                        } else {
-                            R.string.network_error_message
-                        }
+                        errorMessageId = R.string.request_error_message
                     )
                 }
             }
