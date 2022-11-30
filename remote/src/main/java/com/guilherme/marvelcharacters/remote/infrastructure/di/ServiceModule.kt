@@ -1,4 +1,4 @@
-package com.guilherme.marvelcharacters.infrastructure.di
+package com.guilherme.marvelcharacters.remote.infrastructure.di
 
 import com.guilherme.marvelcharacters.remote.service.Api
 import com.guilherme.marvelcharacters.remote.service.RetrofitFactory

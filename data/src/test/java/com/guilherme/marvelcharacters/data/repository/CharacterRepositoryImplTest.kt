@@ -4,10 +4,8 @@ import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.cache.CharacterLocalDataSource
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.core.model.Image
-import com.guilherme.marvelcharacters.data.model.CharacterData
-import com.guilherme.marvelcharacters.data.model.ImageData
 import com.guilherme.marvelcharacters.data.repository.infrastructure.TestCoroutineRule
-import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSource
+import com.guilherme.marvelcharacters.remote.CharacterRemoteDataSource
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -42,15 +40,6 @@ class CharacterRepositoryImplTest {
 
     @Test
     fun `getCharacters - returns character list`() = runBlockingTest {
-        val characterData = CharacterData(
-            id = 0,
-            name = "Spider-Man",
-            description = "The Amazing Spider-Man",
-            thumbnail = ImageData(
-                path = "",
-                extension = ""
-            )
-        )
         val character = Character(
             id = 0,
             name = "Spider-Man",
@@ -61,7 +50,7 @@ class CharacterRepositoryImplTest {
             )
         )
 
-        coEvery { remoteDataSource.getCharacters(name = "spider", any(), any()) } returns listOf(characterData)
+        coEvery { remoteDataSource.getCharacters(name = "spider", any(), any()) } returns listOf(character)
 
         val list = characterRepository.getCharacters(name = "spider", key = "123", privateKey = "456")
 

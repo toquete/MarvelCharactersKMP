@@ -1,6 +1,6 @@
 package com.guilherme.marvelcharacters.infrastructure
 
-import com.guilherme.marvelcharacters.infrastructure.di.ServiceModule
+import com.guilherme.marvelcharacters.remote.infrastructure.di.ServiceModule
 import com.guilherme.marvelcharacters.remote.service.Api
 import dagger.Module
 import dagger.Provides

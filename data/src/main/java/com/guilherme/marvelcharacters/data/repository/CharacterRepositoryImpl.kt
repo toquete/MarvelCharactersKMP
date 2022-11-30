@@ -2,11 +2,9 @@ package com.guilherme.marvelcharacters.data.repository
 
 import com.guilherme.marvelcharacters.cache.CharacterLocalDataSource
 import com.guilherme.marvelcharacters.core.model.Character
-import com.guilherme.marvelcharacters.core.model.Image
 import com.guilherme.marvelcharacters.data.annotation.IoDispatcher
-import com.guilherme.marvelcharacters.data.model.CharacterData
-import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSource
 import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
+import com.guilherme.marvelcharacters.remote.CharacterRemoteDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -21,9 +19,6 @@ class CharacterRepositoryImpl @Inject constructor(
     override suspend fun getCharacters(name: String, key: String, privateKey: String): List<Character> {
         return withContext(dispatcher) {
             remoteDataSource.getCharacters(name, key, privateKey)
-                .map { data ->
-                    mapToDomain(data)
-                }
         }
     }
 
@@ -45,17 +40,5 @@ class CharacterRepositoryImpl @Inject constructor(
 
     override suspend fun deleteAllFavoriteCharacters() {
         localDataSource.deleteAllFavoriteCharacters()
-    }
-
-    private fun mapToDomain(origin: CharacterData): Character {
-        return Character(
-            id = origin.id,
-            name = origin.name,
-            description = origin.description,
-            thumbnail = Image(
-                path = origin.thumbnail.path,
-                extension = origin.thumbnail.extension
-            )
-        )
     }
 }
