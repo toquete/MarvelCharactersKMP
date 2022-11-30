@@ -58,6 +58,25 @@ class CharacterRepositoryImplTest {
     }
 
     @Test
+    fun `getCharacterById - returns character`() = runBlockingTest {
+        val character = Character(
+            id = 0,
+            name = "Spider-Man",
+            description = "The Amazing Spider-Man",
+            thumbnail = Image(
+                path = "",
+                extension = ""
+            )
+        )
+
+        coEvery { remoteDataSource.getCharacterById(id = 0, any(), any()) } returns character
+
+        val list = characterRepository.getCharacterById(id = 0, key = "123", privateKey = "456")
+
+        assertThat(list).isEqualTo(character)
+    }
+
+    @Test
     fun `isCharacterFavorite - returns if character is favorite`() = runBlockingTest {
         coEvery { localDataSource.isCharacterFavorite(id = any()) } returns flowOf(true)
 
