@@ -71,6 +71,15 @@ class CharacterLocalDataSourceImplTest {
     }
 
     @Test
+    fun `getCharacterById - returns character`() = runBlockingTest {
+        coEvery { dao.getCharacterById(any()) } returns characterEntity
+
+        val result = localDataSource.getCharacterById(id = 0)
+
+        assertThat(result).isEqualTo(character)
+    }
+
+    @Test
     fun `insertFavoriteCharacter - check dao was called`() = runBlockingTest {
         localDataSource.insertFavoriteCharacter(character)
 

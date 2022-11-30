@@ -15,6 +15,10 @@ internal class CharacterLocalDataSourceImpl @Inject constructor(
 
     override fun isCharacterFavorite(id: Int): Flow<Boolean> = dao.isCharacterFavorite(id)
 
+    override suspend fun getCharacterById(id: Int): Character? {
+        return dao.getCharacterById(id)?.toExternalModel()
+    }
+
     override fun getFavoriteCharacters(): Flow<List<Character>> {
         return dao.getCharacterList().map {
             it.map(CharacterEntity::toExternalModel)

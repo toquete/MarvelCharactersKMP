@@ -7,6 +7,8 @@ interface CharacterLocalDataSource {
 
     fun isCharacterFavorite(id: Int): Flow<Boolean>
 
+    suspend fun getCharacterById(id: Int): Character?
+
     fun getFavoriteCharacters(): Flow<List<Character>>
 
     suspend fun insertFavoriteCharacter(character: Character)

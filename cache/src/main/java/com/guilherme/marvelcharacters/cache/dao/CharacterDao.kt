@@ -14,6 +14,9 @@ internal interface CharacterDao {
     @Query("SELECT * FROM characterentity")
     fun getCharacterList(): Flow<List<CharacterEntity>>
 
+    @Query("SELECT * FROM characterentity WHERE id = :id")
+    suspend fun getCharacterById(id: Int): CharacterEntity?
+
     @Query("SELECT COUNT(*) FROM characterentity WHERE id = :id")
     fun isCharacterFavorite(id: Int): Flow<Boolean>
 
