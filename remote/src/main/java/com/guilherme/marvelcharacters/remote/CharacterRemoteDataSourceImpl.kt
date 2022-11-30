@@ -18,12 +18,30 @@ internal class CharacterRemoteDataSourceImpl @Inject constructor(
         privateKey: String
     ): List<Character> {
         // TODO: mover regra para use case
-        val ts = System.currentTimeMillis().toString()
-        val hash = String(Hex.encodeHex(DigestUtils.md5(ts + privateKey + key)))
+        val (ts, hash) = getKeys(privateKey, key)
 
         return api.getCharacters(ts, hash, key, name)
             .container
             .results
             .map(CharacterResponse::toExternalModel)
+    }
+
+    override suspend fun getCharacterById(id: Int, key: String, privateKey: String): Character {
+        val (ts, hash) = getKeys(privateKey, key)
+
+        return api.getCharacterById(id, ts, hash, key)
+            .container
+            .results
+            .first()
+            .toExternalModel()
+    }
+
+    private fun getKeys(
+        privateKey: String,
+        key: String
+    ): Pair<String, String> {
+        val ts = System.currentTimeMillis().toString()
+        val hash = String(Hex.encodeHex(DigestUtils.md5(ts + privateKey + key)))
+        return Pair(ts, hash)
     }
 }

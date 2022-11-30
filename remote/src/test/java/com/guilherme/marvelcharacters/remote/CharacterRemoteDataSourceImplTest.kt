@@ -24,6 +24,28 @@ class CharacterRemoteDataSourceImplTest {
 
     private lateinit var remoteDataSource: CharacterRemoteDataSourceImpl
 
+    private val characterResponse = CharacterResponse(
+        id = 0,
+        name = "Spider-Man",
+        description = "The Amazing Spider-Man",
+        thumbnail = ImageResponse(
+            path = "",
+            extension = ""
+        )
+    )
+
+    private val character = Character(
+        id = 0,
+        name = "Spider-Man",
+        description = "The Amazing Spider-Man",
+        thumbnail = Image(
+            path = "",
+            extension = ""
+        )
+    )
+
+    private val response = Response(ContainerResponse(listOf(characterResponse)))
+
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
@@ -32,25 +54,6 @@ class CharacterRemoteDataSourceImplTest {
 
     @Test
     fun `getCharacters - returns character list on success`() = runBlockingTest {
-        val characterResponse = CharacterResponse(
-            id = 0,
-            name = "Spider-Man",
-            description = "The Amazing Spider-Man",
-            thumbnail = ImageResponse(
-                path = "",
-                extension = ""
-            )
-        )
-        val character = Character(
-            id = 0,
-            name = "Spider-Man",
-            description = "The Amazing Spider-Man",
-            thumbnail = Image(
-                path = "",
-                extension = ""
-            )
-        )
-        val response = Response(ContainerResponse(listOf(characterResponse)))
         val characterName = "spider"
 
         coEvery {
@@ -65,5 +68,27 @@ class CharacterRemoteDataSourceImplTest {
         val result = remoteDataSource.getCharacters(name = characterName, key = "123", privateKey = "456")
 
         assertThat(result).isEqualTo(listOf(character))
+    }
+
+    @Test
+    fun `getCharacterById - returns character on success`() = runBlockingTest {
+        val characterId = 0
+
+        coEvery {
+            api.getCharacterById(
+                id = characterId,
+                ts = any(),
+                hash = any(),
+                apiKey = any()
+            )
+        } returns response
+
+        val result = remoteDataSource.getCharacterById(
+            id = characterId,
+            key = "123",
+            privateKey = "456"
+        )
+
+        assertThat(result).isEqualTo(character)
     }
 }

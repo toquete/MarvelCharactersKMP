@@ -9,4 +9,10 @@ interface CharacterRemoteDataSource {
         key: String,
         privateKey: String
     ): List<Character>
+
+    suspend fun getCharacterById(
+        id: Int,
+        key: String,
+        privateKey: String
+    ): Character
 }
