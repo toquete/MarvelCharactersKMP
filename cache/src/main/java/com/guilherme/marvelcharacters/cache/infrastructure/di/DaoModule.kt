@@ -1,4 +1,4 @@
-package com.guilherme.marvelcharacters.infrastructure.di
+package com.guilherme.marvelcharacters.cache.infrastructure.di
 
 import com.guilherme.marvelcharacters.cache.dao.CharacterDao
 import com.guilherme.marvelcharacters.cache.dao.CharacterDatabase
