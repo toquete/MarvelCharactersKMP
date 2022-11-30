@@ -5,13 +5,13 @@ import com.guilherme.marvelcharacters.data.infrastructure.annotation.MainDispatc
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
 @Module
-@InstallIn(ActivityRetainedComponent::class)
-object DispatcherModule {
+@InstallIn(SingletonComponent::class)
+internal object DispatcherModule {
 
     @Provides
     @IoDispatcher

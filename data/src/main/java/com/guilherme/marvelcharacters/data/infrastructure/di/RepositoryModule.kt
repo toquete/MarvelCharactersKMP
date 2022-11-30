@@ -7,11 +7,11 @@ import com.guilherme.marvelcharacters.data.repository.NightModeRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(ActivityRetainedComponent::class)
-abstract class RepositoryModule {
+@InstallIn(SingletonComponent::class)
+internal abstract class RepositoryModule {
 
     @Binds
     abstract fun bindCharacterRepository(

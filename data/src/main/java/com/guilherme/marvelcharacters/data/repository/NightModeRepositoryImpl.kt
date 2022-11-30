@@ -3,7 +3,7 @@ package com.guilherme.marvelcharacters.data.repository
 import com.guilherme.marvelcharacters.cache.NightModeLocalDataSource
 import javax.inject.Inject
 
-class NightModeRepositoryImpl @Inject constructor(
+internal class NightModeRepositoryImpl @Inject constructor(
     private val nightModeLocalDataSource: NightModeLocalDataSource
 ) : NightModeRepository {
 
