@@ -4,9 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.cache.dao.CharacterDao
 import com.guilherme.marvelcharacters.cache.model.CharacterEntity
 import com.guilherme.marvelcharacters.cache.model.ImageEntity
-import com.guilherme.marvelcharacters.data.model.CharacterData
-import com.guilherme.marvelcharacters.data.model.ImageData
-import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSource
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -36,16 +33,6 @@ class CharacterLocalDataSourceImplTest {
         )
     )
 
-    private val character = CharacterData(
-        id = 0,
-        name = "Spider-Man",
-        description = "",
-        thumbnail = ImageData(
-            path = "",
-            extension = ""
-        )
-    )
-
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
@@ -64,24 +51,23 @@ class CharacterLocalDataSourceImplTest {
     @Test
     fun `getFavoriteCharacters - returns favorite characters list`() = runBlockingTest {
         val characterEntityList = listOf(characterEntity)
-        val characterList = listOf(character)
         coEvery { dao.getCharacterList() } returns flowOf(characterEntityList)
 
         val result = localDataSource.getFavoriteCharacters()
 
-        assertThat(result.first()).isEqualTo(characterList)
+        assertThat(result.first()).isEqualTo(characterEntityList)
     }
 
     @Test
     fun `insertFavoriteCharacter - check dao was called`() = runBlockingTest {
-        localDataSource.insertFavoriteCharacter(character)
+        localDataSource.insertFavoriteCharacter(characterEntity)
 
         coVerify { dao.insert(characterEntity) }
     }
 
     @Test
     fun `deleteFavoriteCharacter - check dao was called`() = runBlockingTest {
-        localDataSource.deleteFavoriteCharacter(character)
+        localDataSource.deleteFavoriteCharacter(characterEntity)
 
         coVerify { dao.delete(characterEntity) }
     }

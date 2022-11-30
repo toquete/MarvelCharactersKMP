@@ -1,12 +1,14 @@
 package com.guilherme.marvelcharacters.data.repository
 
 import com.google.common.truth.Truth.assertThat
+import com.guilherme.marvelcharacters.cache.CharacterLocalDataSource
+import com.guilherme.marvelcharacters.cache.model.CharacterEntity
+import com.guilherme.marvelcharacters.cache.model.ImageEntity
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.core.model.Image
 import com.guilherme.marvelcharacters.data.model.CharacterData
 import com.guilherme.marvelcharacters.data.model.ImageData
 import com.guilherme.marvelcharacters.data.repository.infrastructure.TestCoroutineRule
-import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSource
 import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSource
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -80,11 +82,11 @@ class CharacterRepositoryImplTest {
     @Test
     fun `getFavoriteCharacters - returns favorite characters list`() = runBlockingTest {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
-        val characterData =
-            CharacterData(0, "Spider-Man", "The Amazing Spider-Man", ImageData("", ""))
+        val characterEntity =
+            CharacterEntity(0, "Spider-Man", "The Amazing Spider-Man", ImageEntity("", ""))
         val characters = listOf(character)
 
-        coEvery { localDataSource.getFavoriteCharacters() } returns flowOf(listOf(characterData))
+        coEvery { localDataSource.getFavoriteCharacters() } returns flowOf(listOf(characterEntity))
 
         val result = characterRepository.getFavoriteCharacters()
 
@@ -94,23 +96,23 @@ class CharacterRepositoryImplTest {
     @Test
     fun `insertFavoriteCharacter - check database call`() = runBlockingTest {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
-        val characterData =
-            CharacterData(0, "Spider-Man", "The Amazing Spider-Man", ImageData("", ""))
+        val characterEntity =
+            CharacterEntity(0, "Spider-Man", "The Amazing Spider-Man", ImageEntity("", ""))
 
         characterRepository.insertFavoriteCharacter(character)
 
-        coVerify { localDataSource.insertFavoriteCharacter(characterData) }
+        coVerify { localDataSource.insertFavoriteCharacter(characterEntity) }
     }
 
     @Test
     fun `deleteFavoriteCharacter - check database call`() = runBlockingTest {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
-        val characterData =
-            CharacterData(0, "Spider-Man", "The Amazing Spider-Man", ImageData("", ""))
+        val characterEntity =
+            CharacterEntity(0, "Spider-Man", "The Amazing Spider-Man", ImageEntity("", ""))
 
         characterRepository.deleteFavoriteCharacter(character)
 
-        coVerify { localDataSource.deleteFavoriteCharacter(characterData) }
+        coVerify { localDataSource.deleteFavoriteCharacter(characterEntity) }
     }
 
     @Test

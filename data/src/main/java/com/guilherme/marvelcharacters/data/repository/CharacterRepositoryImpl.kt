@@ -1,11 +1,12 @@
 package com.guilherme.marvelcharacters.data.repository
 
+import com.guilherme.marvelcharacters.cache.CharacterLocalDataSource
+import com.guilherme.marvelcharacters.cache.model.toExternalModel
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.core.model.Image
 import com.guilherme.marvelcharacters.data.annotation.IoDispatcher
+import com.guilherme.marvelcharacters.data.extension.toEntity
 import com.guilherme.marvelcharacters.data.model.CharacterData
-import com.guilherme.marvelcharacters.data.model.ImageData
-import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSource
 import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSource
 import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -36,16 +37,16 @@ class CharacterRepositoryImpl @Inject constructor(
     override fun getFavoriteCharacters(): Flow<List<Character>> {
         return localDataSource.getFavoriteCharacters()
             .map { list ->
-                list.map { mapToDomain(it) }
+                list.map { it.toExternalModel() }
             }
     }
 
     override suspend fun insertFavoriteCharacter(character: Character) {
-        localDataSource.insertFavoriteCharacter(mapToData(character))
+        localDataSource.insertFavoriteCharacter(character.toEntity())
     }
 
     override suspend fun deleteFavoriteCharacter(character: Character) {
-        localDataSource.deleteFavoriteCharacter(mapToData(character))
+        localDataSource.deleteFavoriteCharacter(character.toEntity())
     }
 
     override suspend fun deleteAllFavoriteCharacters() {
@@ -58,18 +59,6 @@ class CharacterRepositoryImpl @Inject constructor(
             name = origin.name,
             description = origin.description,
             thumbnail = Image(
-                path = origin.thumbnail.path,
-                extension = origin.thumbnail.extension
-            )
-        )
-    }
-
-    private fun mapToData(origin: Character): CharacterData {
-        return CharacterData(
-            id = origin.id,
-            name = origin.name,
-            description = origin.description,
-            thumbnail = ImageData(
                 path = origin.thumbnail.path,
                 extension = origin.thumbnail.extension
             )

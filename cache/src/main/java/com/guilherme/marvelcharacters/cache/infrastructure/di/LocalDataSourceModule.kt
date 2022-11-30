@@ -1,16 +1,16 @@
-package com.guilherme.marvelcharacters.infrastructure.di
+package com.guilherme.marvelcharacters.cache.infrastructure.di
 
+import com.guilherme.marvelcharacters.cache.CharacterLocalDataSource
 import com.guilherme.marvelcharacters.cache.CharacterLocalDataSourceImpl
+import com.guilherme.marvelcharacters.cache.NightModeLocalDataSource
 import com.guilherme.marvelcharacters.cache.NightModeLocalDataSourceImpl
-import com.guilherme.marvelcharacters.data.source.local.CharacterLocalDataSource
-import com.guilherme.marvelcharacters.data.source.local.NightModeLocalDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(ActivityRetainedComponent::class)
+@InstallIn(SingletonComponent::class)
 abstract class LocalDataSourceModule {
 
     @Binds

@@ -1,4 +1,4 @@
-package com.guilherme.marvelcharacters.data.source.local
+package com.guilherme.marvelcharacters.cache
 
 interface NightModeLocalDataSource {
 

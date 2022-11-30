@@ -1,4 +1,4 @@
-package com.guilherme.marvelcharacters.infrastructure.di
+package com.guilherme.marvelcharacters.cache.infrastructure.di
 
 import android.content.Context
 import android.content.SharedPreferences
