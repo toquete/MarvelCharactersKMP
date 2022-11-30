@@ -8,7 +8,7 @@ import javax.inject.Inject
 private const val PREFERENCE_NIGHT_MODE = "PREFERENCE_NIGHT_MODE"
 private const val PREFERENCE_NIGHT_MODE_DEFAULT = AppCompatDelegate.MODE_NIGHT_NO
 
-class NightModeLocalDataSourceImpl @Inject constructor(
+internal class NightModeLocalDataSourceImpl @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) : NightModeLocalDataSource {
 

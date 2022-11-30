@@ -2,8 +2,6 @@ package com.guilherme.marvelcharacters.data.repository
 
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.cache.CharacterLocalDataSource
-import com.guilherme.marvelcharacters.cache.model.CharacterEntity
-import com.guilherme.marvelcharacters.cache.model.ImageEntity
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.core.model.Image
 import com.guilherme.marvelcharacters.data.model.CharacterData
@@ -82,11 +80,9 @@ class CharacterRepositoryImplTest {
     @Test
     fun `getFavoriteCharacters - returns favorite characters list`() = runBlockingTest {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
-        val characterEntity =
-            CharacterEntity(0, "Spider-Man", "The Amazing Spider-Man", ImageEntity("", ""))
         val characters = listOf(character)
 
-        coEvery { localDataSource.getFavoriteCharacters() } returns flowOf(listOf(characterEntity))
+        coEvery { localDataSource.getFavoriteCharacters() } returns flowOf(characters)
 
         val result = characterRepository.getFavoriteCharacters()
 
@@ -96,23 +92,19 @@ class CharacterRepositoryImplTest {
     @Test
     fun `insertFavoriteCharacter - check database call`() = runBlockingTest {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
-        val characterEntity =
-            CharacterEntity(0, "Spider-Man", "The Amazing Spider-Man", ImageEntity("", ""))
 
         characterRepository.insertFavoriteCharacter(character)
 
-        coVerify { localDataSource.insertFavoriteCharacter(characterEntity) }
+        coVerify { localDataSource.insertFavoriteCharacter(character) }
     }
 
     @Test
     fun `deleteFavoriteCharacter - check database call`() = runBlockingTest {
         val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
-        val characterEntity =
-            CharacterEntity(0, "Spider-Man", "The Amazing Spider-Man", ImageEntity("", ""))
 
         characterRepository.deleteFavoriteCharacter(character)
 
-        coVerify { localDataSource.deleteFavoriteCharacter(characterEntity) }
+        coVerify { localDataSource.deleteFavoriteCharacter(character) }
     }
 
     @Test

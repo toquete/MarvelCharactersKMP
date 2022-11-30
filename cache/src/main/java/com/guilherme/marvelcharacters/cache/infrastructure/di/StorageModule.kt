@@ -16,7 +16,7 @@ private const val DEFAULT_PREFERENCES = "default_preferences"
 
 @Module
 @InstallIn(SingletonComponent::class)
-object StorageModule {
+internal object StorageModule {
 
     @Provides
     @Singleton

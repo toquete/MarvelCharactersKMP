@@ -1,17 +1,14 @@
 package com.guilherme.marvelcharacters.data.repository
 
 import com.guilherme.marvelcharacters.cache.CharacterLocalDataSource
-import com.guilherme.marvelcharacters.cache.model.toExternalModel
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.core.model.Image
 import com.guilherme.marvelcharacters.data.annotation.IoDispatcher
-import com.guilherme.marvelcharacters.data.extension.toEntity
 import com.guilherme.marvelcharacters.data.model.CharacterData
 import com.guilherme.marvelcharacters.data.source.remote.CharacterRemoteDataSource
 import com.guilherme.marvelcharacters.domain.repository.CharacterRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -36,17 +33,14 @@ class CharacterRepositoryImpl @Inject constructor(
 
     override fun getFavoriteCharacters(): Flow<List<Character>> {
         return localDataSource.getFavoriteCharacters()
-            .map { list ->
-                list.map { it.toExternalModel() }
-            }
     }
 
     override suspend fun insertFavoriteCharacter(character: Character) {
-        localDataSource.insertFavoriteCharacter(character.toEntity())
+        localDataSource.insertFavoriteCharacter(character)
     }
 
     override suspend fun deleteFavoriteCharacter(character: Character) {
-        localDataSource.deleteFavoriteCharacter(character.toEntity())
+        localDataSource.deleteFavoriteCharacter(character)
     }
 
     override suspend fun deleteAllFavoriteCharacters() {

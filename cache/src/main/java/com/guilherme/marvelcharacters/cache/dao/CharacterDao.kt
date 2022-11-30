@@ -9,7 +9,7 @@ import com.guilherme.marvelcharacters.cache.model.CharacterEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface CharacterDao {
+internal interface CharacterDao {
 
     @Query("SELECT * FROM characterentity")
     fun getCharacterList(): Flow<List<CharacterEntity>>
