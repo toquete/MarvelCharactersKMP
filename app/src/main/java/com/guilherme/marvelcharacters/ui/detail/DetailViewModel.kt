@@ -7,9 +7,8 @@ import com.guilherme.marvelcharacters.BuildConfig
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.domain.model.FavoriteCharacter
-import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharacterByIdUseCase
-import com.guilherme.marvelcharacters.domain.usecase.InsertFavoriteCharacterUseCase
+import com.guilherme.marvelcharacters.domain.usecase.ToggleFavoriteCharacterUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,8 +20,7 @@ import kotlinx.coroutines.launch
 class DetailViewModel @AssistedInject constructor(
     @Assisted private val character: Character,
     getFavoriteCharacterByIdUseCase: GetFavoriteCharacterByIdUseCase,
-    private val deleteFavoriteCharacterUseCase: DeleteFavoriteCharacterUseCase,
-    private val insertFavoriteCharacterUseCase: InsertFavoriteCharacterUseCase
+    private val toggleFavoriteCharacterUseCase: ToggleFavoriteCharacterUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<DetailUiState>(Loading)
@@ -42,15 +40,13 @@ class DetailViewModel @AssistedInject constructor(
 
     fun onFabClick(character: FavoriteCharacter) {
         viewModelScope.launch {
-            try {
-                if (character.isFavorite) {
-                    deleteFavoriteCharacterUseCase(character.character)
-                    _uiState.update { ShowSnackbar(R.string.character_deleted, showAction = true) }
-                } else {
-                    insertFavoriteCharacterUseCase(character.character)
-                    _uiState.update { ShowSnackbar(R.string.character_added, showAction = false) }
-                }
-            } catch (error: SQLiteException) {
+            val message = if (character.isFavorite) R.string.character_deleted else R.string.character_added
+
+            runCatching {
+                toggleFavoriteCharacterUseCase(character.character.id, character.isFavorite)
+            }.onSuccess {
+                _uiState.update { ShowSnackbar(message, showAction = character.isFavorite) }
+            }.onFailure {
                 _uiState.update { ShowSnackbar(R.string.error_message, showAction = false) }
             }
         }
@@ -59,7 +55,7 @@ class DetailViewModel @AssistedInject constructor(
     fun onUndoClick() {
         viewModelScope.launch {
             try {
-                insertFavoriteCharacterUseCase(character)
+                toggleFavoriteCharacterUseCase(character.id, isFavorite = false)
             } catch (error: SQLiteException) {
                 _uiState.update { ShowSnackbar(R.string.error_message, showAction = false) }
             }
