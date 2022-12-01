@@ -19,6 +19,11 @@ internal class CharacterLocalDataSourceImpl @Inject constructor(
         return dao.getCharacterById(id)?.toExternalModel()
     }
 
+    override suspend fun getCharactersByName(name: String): List<Character> {
+        return dao.getCharactersByName(name)
+            .map(CharacterEntity::toExternalModel)
+    }
+
     override fun getFavoriteCharacters(): Flow<List<Character>> {
         return dao.getCharacterList().map {
             it.map(CharacterEntity::toExternalModel)
@@ -27,6 +32,10 @@ internal class CharacterLocalDataSourceImpl @Inject constructor(
 
     override suspend fun insertFavoriteCharacter(character: Character) {
         dao.insert(character.toEntity())
+    }
+
+    override suspend fun insertAll(characters: List<Character>) {
+        dao.insertAll(characters.map(Character::toEntity))
     }
 
     override suspend fun deleteFavoriteCharacter(character: Character) {

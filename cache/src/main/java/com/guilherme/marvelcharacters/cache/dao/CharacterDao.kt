@@ -14,6 +14,9 @@ internal interface CharacterDao {
     @Query("SELECT * FROM characterentity")
     fun getCharacterList(): Flow<List<CharacterEntity>>
 
+    @Query("SELECT * FROM characterentity WHERE name LIKE :name || '%'")
+    suspend fun getCharactersByName(name: String): List<CharacterEntity>
+
     @Query("SELECT * FROM characterentity WHERE id = :id")
     suspend fun getCharacterById(id: Int): CharacterEntity?
 
@@ -22,6 +25,9 @@ internal interface CharacterDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(character: CharacterEntity)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertAll(characters: List<CharacterEntity>)
 
     @Query("DELETE FROM characterentity")
     suspend fun deleteAll()

@@ -9,9 +9,13 @@ interface CharacterLocalDataSource {
 
     suspend fun getCharacterById(id: Int): Character?
 
+    suspend fun getCharactersByName(name: String): List<Character>
+
     fun getFavoriteCharacters(): Flow<List<Character>>
 
     suspend fun insertFavoriteCharacter(character: Character)
+
+    suspend fun insertAll(characters: List<Character>)
 
     suspend fun deleteFavoriteCharacter(character: Character)
 

@@ -1,6 +1,7 @@
 package com.guilherme.marvelcharacters.data.repository
 
 import com.guilherme.marvelcharacters.cache.CharacterLocalDataSource
+import com.guilherme.marvelcharacters.cache.FavoriteCharacterLocalDataSource
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.data.infrastructure.annotation.IoDispatcher
 import com.guilherme.marvelcharacters.remote.CharacterRemoteDataSource
@@ -12,12 +13,17 @@ import javax.inject.Inject
 internal class CharacterRepositoryImpl @Inject constructor(
     private val remoteDataSource: CharacterRemoteDataSource,
     private val localDataSource: CharacterLocalDataSource,
+    private val favoriteLocalDataSource: FavoriteCharacterLocalDataSource,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : CharacterRepository {
 
     override suspend fun getCharacters(name: String, key: String, privateKey: String): List<Character> {
         return withContext(dispatcher) {
-            remoteDataSource.getCharacters(name, key, privateKey)
+            localDataSource.getCharactersByName(name).ifEmpty {
+                remoteDataSource.getCharacters(name, key, privateKey).also {
+                    localDataSource.insertAll(it)
+                }
+            }
         }
     }
 
@@ -32,22 +38,22 @@ internal class CharacterRepositoryImpl @Inject constructor(
     }
 
     override fun isCharacterFavorite(id: Int): Flow<Boolean> {
-        return localDataSource.isCharacterFavorite(id)
+        return favoriteLocalDataSource.isCharacterFavorite(id)
     }
 
     override fun getFavoriteCharacters(): Flow<List<Character>> {
-        return localDataSource.getFavoriteCharacters()
+        return favoriteLocalDataSource.getFavoriteCharacters()
     }
 
     override suspend fun insertFavoriteCharacter(character: Character) {
-        localDataSource.insertFavoriteCharacter(character)
+        favoriteLocalDataSource.insert(character)
     }
 
     override suspend fun deleteFavoriteCharacter(character: Character) {
-        localDataSource.deleteFavoriteCharacter(character)
+        favoriteLocalDataSource.delete(character)
     }
 
     override suspend fun deleteAllFavoriteCharacters() {
-        localDataSource.deleteAllFavoriteCharacters()
+        favoriteLocalDataSource.deleteAll()
     }
 }

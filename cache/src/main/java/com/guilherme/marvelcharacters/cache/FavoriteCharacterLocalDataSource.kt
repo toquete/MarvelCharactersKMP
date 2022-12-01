@@ -9,7 +9,7 @@ interface FavoriteCharacterLocalDataSource {
 
     fun isCharacterFavorite(id: Int): Flow<Boolean>
 
-    suspend fun insertAll(characters: List<Character>)
+    suspend fun insert(character: Character)
 
     suspend fun deleteAll()
 

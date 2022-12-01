@@ -14,7 +14,7 @@ internal interface FavoriteCharacterDao {
     fun isCharacterFavorite(id: Int): Flow<Boolean>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAll(characters: List<FavoriteCharacterEntity>)
+    suspend fun insert(character: FavoriteCharacterEntity)
 
     @Query("DELETE FROM favoritecharacterentity")
     suspend fun deleteAll()
