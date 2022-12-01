@@ -1,12 +1,12 @@
 package com.guilherme.marvelcharacters.ui.home
 
 import androidx.annotation.StringRes
+import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.infrastructure.State
-import com.guilherme.marvelcharacters.model.CharacterVO
 
 data class HomeState(
     val isLoading: Boolean,
-    val characters: List<CharacterVO>,
+    val characters: List<Character>,
     @StringRes val errorMessageId: Int?
 ) : State {
 

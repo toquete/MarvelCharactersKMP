@@ -16,9 +16,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.guilherme.marvelcharacters.R
+import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.databinding.FragmentHomeBinding
 import com.guilherme.marvelcharacters.extension.observe
-import com.guilherme.marvelcharacters.model.CharacterVO
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -139,7 +139,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun navigateToDetail(character: CharacterVO) {
+    private fun navigateToDetail(character: Character) {
         HomeFragmentDirections.actionHomeToDetail(character.id).run {
             findNavController().navigate(this)
         }

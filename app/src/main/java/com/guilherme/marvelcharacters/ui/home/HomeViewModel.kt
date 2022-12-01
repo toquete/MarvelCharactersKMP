@@ -3,18 +3,16 @@ package com.guilherme.marvelcharacters.ui.home
 import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.BuildConfig
 import com.guilherme.marvelcharacters.R
+import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseViewModel
-import com.guilherme.marvelcharacters.mapper.CharacterMapper
-import com.guilherme.marvelcharacters.model.CharacterVO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getCharactersUseCase: GetCharactersUseCase,
-    private val mapper: CharacterMapper
+    private val getCharactersUseCase: GetCharactersUseCase
 ) : BaseViewModel<HomeState, HomeEvent>(HomeState.initialState()) {
 
     var query: String? = null
@@ -28,7 +26,7 @@ class HomeViewModel @Inject constructor(
                 setState { state ->
                     state.copy(
                         isLoading = false,
-                        characters = list.map { mapper.mapTo(it) },
+                        characters = list,
                         errorMessageId = if (list.isEmpty()) R.string.empty_state_message else null
                     )
                 }
@@ -44,7 +42,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun onItemClick(character: CharacterVO) {
+    fun onItemClick(character: Character) {
         sendEvent(HomeEvent.NavigateToDetails(character))
     }
 }
