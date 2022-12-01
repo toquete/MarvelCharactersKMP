@@ -1,10 +1,9 @@
 package com.guilherme.marvelcharacters.ui.detail
 
-import com.guilherme.marvelcharacters.infrastructure.State
+import androidx.annotation.StringRes
+import com.guilherme.marvelcharacters.domain.model.FavoriteCharacter
 
-data class DetailState(val isFavorite: Boolean) : State {
-
-    companion object {
-        fun initialState() = DetailState(isFavorite = false)
-    }
-}
+sealed interface DetailUiState
+data class Success(val character: FavoriteCharacter): DetailUiState
+data class ShowSnackbar(@StringRes val messageId: Int?, val showAction: Boolean): DetailUiState
+object Loading: DetailUiState

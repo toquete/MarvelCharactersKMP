@@ -35,42 +35,40 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupViewBindings()
         setupObservers()
     }
 
     private fun setupObservers() {
-        detailViewModel.state.observe(this) { state ->
-            binding.fab.isActivated = state.isFavorite
-        }
-
-        detailViewModel.event.observe(this) { event ->
-            when (event) {
-                is DetailEvent.ShowSnackbarMessage -> showSnackbar(event.message, event.showAction)
+        detailViewModel.uiState.observe(this) { state ->
+            when (state) {
+                is ShowSnackbar -> showSnackbar(state.messageId, state.showAction)
+                Loading -> {}
+                is Success -> setupViewBindings(state)
             }
         }
     }
 
-    private fun showSnackbar(stringId: Int, showAction: Boolean) {
-        Snackbar.make(binding.fab, stringId, Snackbar.LENGTH_LONG).apply {
-            if (showAction) {
-                setAction(R.string.undo) { detailViewModel.onUndoClick() }
-            }
-        }.show()
+    private fun showSnackbar(stringId: Int?, showAction: Boolean) {
+        stringId?.let {
+            Snackbar.make(binding.fab, stringId, Snackbar.LENGTH_LONG).apply {
+                if (showAction) {
+                    setAction(R.string.undo) { detailViewModel.onUndoClick() }
+                }
+            }.show()
+        }
     }
 
-    private fun setupViewBindings() {
-        binding.collapsingToolbarLayout.title = args.character.name
-        binding.description.text = if (args.character.description.isEmpty()) {
+    private fun setupViewBindings(state: Success) {
+        binding.fab.isActivated = state.character.isFavorite
+        binding.collapsingToolbarLayout.title = state.character.character.name
+        binding.description.text = state.character.character.description.ifEmpty {
             getString(R.string.no_description_available)
-        } else {
-            args.character.description
         }
         Glide.with(this)
-            .load("${args.character.thumbnail.path}.${args.character.thumbnail.extension}")
+            .load("${state.character.character.thumbnail.path}.${state.character.character.thumbnail.extension}")
             .centerCrop()
             .into(binding.imageView)
 
-        binding.fab.setOnClickListener { detailViewModel.onFabClick() }
+        binding.fab.setOnClickListener { detailViewModel.onFabClick(state.character) }
     }
 }

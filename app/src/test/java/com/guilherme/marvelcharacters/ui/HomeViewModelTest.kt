@@ -17,10 +17,7 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import okhttp3.ResponseBody
 import org.junit.Test
-import retrofit2.HttpException
-import retrofit2.Response
 import java.io.IOException
 
 @ExperimentalCoroutinesApi
@@ -90,12 +87,7 @@ class HomeViewModelTest : BaseUnitTest() {
             characters = emptyList(),
             errorMessageId = R.string.request_error_message
         )
-        coEvery { getCharactersUseCase(any(), any(), any()) } throws HttpException(
-            Response.error<String>(
-                404,
-                ResponseBody.create(null, "xablau")
-            )
-        )
+        coEvery { getCharactersUseCase(any(), any(), any()) } throws IOException()
 
         homeViewModel.state.test {
             homeViewModel.onSearchCharacter("spider")
