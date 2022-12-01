@@ -1,8 +1,7 @@
 package com.guilherme.marvelcharacters.cache.infrastructure.di
 
-import com.guilherme.marvelcharacters.cache.CharacterLocalDataSource
+import com.guilherme.marvelcharacters.cache.*
 import com.guilherme.marvelcharacters.cache.CharacterLocalDataSourceImpl
-import com.guilherme.marvelcharacters.cache.NightModeLocalDataSource
 import com.guilherme.marvelcharacters.cache.NightModeLocalDataSourceImpl
 import dagger.Binds
 import dagger.Module
@@ -17,6 +16,11 @@ internal abstract class LocalDataSourceModule {
     abstract fun bindCharacterLocalDataSource(
         characterLocalDataSourceImpl: CharacterLocalDataSourceImpl
     ): CharacterLocalDataSource
+
+    @Binds
+    abstract fun bindFavoriteCharacterLocalDataSource(
+        favoriteCharacterLocalDataSourceImpl: FavoriteCharacterLocalDataSourceImpl
+    ): FavoriteCharacterLocalDataSource
 
     @Binds
     abstract fun bindNightModeLocalDataSource(
