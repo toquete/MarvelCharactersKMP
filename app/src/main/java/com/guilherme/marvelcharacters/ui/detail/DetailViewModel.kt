@@ -1,12 +1,10 @@
 package com.guilherme.marvelcharacters.ui.detail
 
-import android.database.sqlite.SQLiteException
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.BuildConfig
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.core.model.Character
-import com.guilherme.marvelcharacters.domain.model.FavoriteCharacter
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharacterByIdUseCase
 import com.guilherme.marvelcharacters.domain.usecase.ToggleFavoriteCharacterUseCase
 import dagger.assisted.Assisted
@@ -38,14 +36,14 @@ class DetailViewModel @AssistedInject constructor(
         }
     }
 
-    fun onFabClick(character: FavoriteCharacter) {
+    fun onFabClick(isFavorite: Boolean) {
         viewModelScope.launch {
-            val message = if (character.isFavorite) R.string.character_deleted else R.string.character_added
+            val message = if (isFavorite) R.string.character_deleted else R.string.character_added
 
             runCatching {
-                toggleFavoriteCharacterUseCase(character.character.id, character.isFavorite)
+                toggleFavoriteCharacterUseCase(character.id, isFavorite)
             }.onSuccess {
-                _uiState.update { ShowSnackbar(message, showAction = character.isFavorite) }
+                _uiState.update { ShowSnackbar(message, showAction = isFavorite) }
             }.onFailure {
                 _uiState.update { ShowSnackbar(R.string.error_message, showAction = false) }
             }
@@ -54,9 +52,9 @@ class DetailViewModel @AssistedInject constructor(
 
     fun onUndoClick() {
         viewModelScope.launch {
-            try {
+            runCatching {
                 toggleFavoriteCharacterUseCase(character.id, isFavorite = false)
-            } catch (error: SQLiteException) {
+            }.onFailure {
                 _uiState.update { ShowSnackbar(R.string.error_message, showAction = false) }
             }
         }

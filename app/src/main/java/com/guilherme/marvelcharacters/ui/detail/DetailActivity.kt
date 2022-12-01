@@ -69,6 +69,6 @@ class DetailActivity : AppCompatActivity() {
             .centerCrop()
             .into(binding.imageView)
 
-        binding.fab.setOnClickListener { detailViewModel.onFabClick(state.character) }
+        binding.fab.setOnClickListener { detailViewModel.onFabClick(state.character.isFavorite) }
     }
 }
