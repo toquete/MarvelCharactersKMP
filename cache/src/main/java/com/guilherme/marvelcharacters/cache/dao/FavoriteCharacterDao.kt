@@ -13,8 +13,12 @@ internal interface FavoriteCharacterDao {
     @Query("SELECT COUNT(*) FROM favoritecharacterentity WHERE id = :id")
     fun isCharacterFavorite(id: Int): Flow<Boolean>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(character: FavoriteCharacterEntity)
+    @Query(
+        "INSERT INTO favoritecharacterentity " +
+        "SELECT * FROM characterentity " +
+        "WHERE id = :id"
+    )
+    suspend fun copyFavoriteCharacter(id: Int)
 
     @Query("DELETE FROM favoritecharacterentity")
     suspend fun deleteAll()

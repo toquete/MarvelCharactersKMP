@@ -23,8 +23,8 @@ internal class FavoriteCharacterLocalDataSourceImpl @Inject constructor(
         return dao.isCharacterFavorite(id)
     }
 
-    override suspend fun insert(character: Character) {
-        dao.insert(character.toFavoriteEntity())
+    override suspend fun copyFavoriteCharacter(id: Int) {
+        dao.copyFavoriteCharacter(id)
     }
 
     override suspend fun deleteAll() {
