@@ -3,32 +3,19 @@ package com.guilherme.marvelcharacters.ui.detail
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.databinding.ActivityDetailBinding
 import com.guilherme.marvelcharacters.extension.observe
-import com.guilherme.marvelcharacters.mapper.CharacterMapper
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class DetailActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var mapper: CharacterMapper
-
-    @Inject
-    lateinit var viewModelFactory: DetailViewModelFactory
-
     private lateinit var binding: ActivityDetailBinding
 
-    private val args: DetailActivityArgs by navArgs()
-
-    private val detailViewModel: DetailViewModel by viewModels {
-        provideFactory(viewModelFactory, mapper.mapFrom(args.character))
-    }
+    private val detailViewModel: DetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

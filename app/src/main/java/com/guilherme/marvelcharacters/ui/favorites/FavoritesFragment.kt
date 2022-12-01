@@ -88,7 +88,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
     }
 
     private fun navigateToDetail(character: CharacterVO) {
-        FavoritesFragmentDirections.actionFavoritesToDetail(character).apply {
+        FavoritesFragmentDirections.actionFavoritesToDetail(character.id).apply {
             findNavController().navigate(this)
         }
     }
