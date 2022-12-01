@@ -23,6 +23,6 @@ internal interface FavoriteCharacterDao {
     @Query("DELETE FROM favoritecharacterentity")
     suspend fun deleteAll()
 
-    @Delete
-    suspend fun delete(character: FavoriteCharacterEntity)
+    @Query("DELETE FROM favoritecharacterentity WHERE id = :id")
+    suspend fun delete(id: Int)
 }

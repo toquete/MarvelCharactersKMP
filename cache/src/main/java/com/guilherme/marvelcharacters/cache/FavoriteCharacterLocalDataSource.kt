@@ -13,5 +13,5 @@ interface FavoriteCharacterLocalDataSource {
 
     suspend fun deleteAll()
 
-    suspend fun delete(character: Character)
+    suspend fun delete(id: Int)
 }

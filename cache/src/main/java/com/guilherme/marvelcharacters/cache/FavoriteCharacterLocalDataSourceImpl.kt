@@ -1,7 +1,6 @@
 package com.guilherme.marvelcharacters.cache
 
 import com.guilherme.marvelcharacters.cache.dao.FavoriteCharacterDao
-import com.guilherme.marvelcharacters.cache.extension.toFavoriteEntity
 import com.guilherme.marvelcharacters.cache.model.FavoriteCharacterEntity
 import com.guilherme.marvelcharacters.cache.model.toExternalModel
 import com.guilherme.marvelcharacters.core.model.Character
@@ -31,7 +30,7 @@ internal class FavoriteCharacterLocalDataSourceImpl @Inject constructor(
         dao.deleteAll()
     }
 
-    override suspend fun delete(character: Character) {
-        dao.delete(character.toFavoriteEntity())
+    override suspend fun delete(id: Int) {
+        dao.delete(id)
     }
 }
