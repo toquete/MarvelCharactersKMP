@@ -49,8 +49,16 @@ internal class CharacterRepositoryImpl @Inject constructor(
         favoriteLocalDataSource.copyFavoriteCharacter(character.id)
     }
 
+    override suspend fun insertFavoriteCharacter(id: Int) {
+        favoriteLocalDataSource.copyFavoriteCharacter(id)
+    }
+
     override suspend fun deleteFavoriteCharacter(character: Character) {
         favoriteLocalDataSource.delete(character.id)
+    }
+
+    override suspend fun deleteFavoriteCharacter(id: Int) {
+        favoriteLocalDataSource.delete(id)
     }
 
     override suspend fun deleteAllFavoriteCharacters() {

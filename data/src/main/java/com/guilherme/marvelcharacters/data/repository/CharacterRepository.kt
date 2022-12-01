@@ -25,5 +25,9 @@ interface CharacterRepository {
 
     suspend fun deleteFavoriteCharacter(character: Character)
 
+    suspend fun insertFavoriteCharacter(id: Int)
+
+    suspend fun deleteFavoriteCharacter(id: Int)
+
     suspend fun deleteAllFavoriteCharacters()
 }
