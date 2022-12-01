@@ -3,30 +3,24 @@ package com.guilherme.marvelcharacters.ui.favorites
 import android.database.sqlite.SQLiteException
 import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.R
+import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.domain.usecase.DeleteAllFavoriteCharactersUseCase
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharactersUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseViewModel
-import com.guilherme.marvelcharacters.mapper.CharacterMapper
-import com.guilherme.marvelcharacters.model.CharacterVO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class FavoritesViewModel @Inject constructor(
     getFavoriteCharactersUseCase: GetFavoriteCharactersUseCase,
-    private val deleteAllFavoriteCharactersUseCase: DeleteAllFavoriteCharactersUseCase,
-    private val mapper: CharacterMapper
+    private val deleteAllFavoriteCharactersUseCase: DeleteAllFavoriteCharactersUseCase
 ) : BaseViewModel<FavoritesState, FavoritesEvent>(FavoritesState.initialState()) {
 
     init {
         viewModelScope.launch {
             getFavoriteCharactersUseCase()
-                .map { list ->
-                    list.map { mapper.mapTo(it) }
-                }
                 .collect { list ->
                     setState { it.copy(list = list) }
                 }
@@ -44,7 +38,7 @@ class FavoritesViewModel @Inject constructor(
         }
     }
 
-    fun onFavoriteItemClick(character: CharacterVO) {
+    fun onFavoriteItemClick(character: Character) {
         viewModelScope.launch {
             sendEvent(FavoritesEvent.NavigateToDetail(character))
         }

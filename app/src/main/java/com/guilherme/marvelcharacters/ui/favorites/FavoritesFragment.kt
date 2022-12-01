@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.guilherme.marvelcharacters.R
+import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.databinding.FragmentFavoritesBinding
 import com.guilherme.marvelcharacters.extension.observe
-import com.guilherme.marvelcharacters.model.CharacterVO
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -87,7 +87,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
             .show()
     }
 
-    private fun navigateToDetail(character: CharacterVO) {
+    private fun navigateToDetail(character: Character) {
         FavoritesFragmentDirections.actionFavoritesToDetail(character.id).apply {
             findNavController().navigate(this)
         }
