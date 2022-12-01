@@ -7,9 +7,7 @@ import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.core.model.Image
 import com.guilherme.marvelcharacters.domain.model.FavoriteCharacter
-import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharacterByIdUseCase
-import com.guilherme.marvelcharacters.domain.usecase.InsertFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import com.guilherme.marvelcharacters.ui.detail.DetailViewModel
 import com.guilherme.marvelcharacters.ui.detail.ShowSnackbar

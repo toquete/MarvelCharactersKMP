@@ -4,7 +4,6 @@ import android.database.sqlite.SQLiteException
 import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.usecase.DeleteAllFavoriteCharactersUseCase
-import com.guilherme.marvelcharacters.domain.usecase.DeleteFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharactersUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseViewModel
 import com.guilherme.marvelcharacters.mapper.CharacterMapper
@@ -18,7 +17,6 @@ import javax.inject.Inject
 @HiltViewModel
 class FavoritesViewModel @Inject constructor(
     getFavoriteCharactersUseCase: GetFavoriteCharactersUseCase,
-    private val deleteFavoriteCharacterUseCase: DeleteFavoriteCharacterUseCase,
     private val deleteAllFavoriteCharactersUseCase: DeleteAllFavoriteCharactersUseCase,
     private val mapper: CharacterMapper
 ) : BaseViewModel<FavoritesState, FavoritesEvent>(FavoritesState.initialState()) {
@@ -32,12 +30,6 @@ class FavoritesViewModel @Inject constructor(
                 .collect { list ->
                     setState { it.copy(list = list) }
                 }
-        }
-    }
-
-    fun deleteCharacter(character: CharacterVO) {
-        viewModelScope.launch {
-            deleteFavoriteCharacterUseCase(mapper.mapFrom(character))
         }
     }
 
