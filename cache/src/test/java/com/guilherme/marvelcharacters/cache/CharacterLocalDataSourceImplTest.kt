@@ -2,8 +2,7 @@ package com.guilherme.marvelcharacters.cache
 
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.cache.dao.CharacterDao
-import com.guilherme.marvelcharacters.cache.model.CharacterEntity
-import com.guilherme.marvelcharacters.core.model.Character
+import com.guilherme.marvelcharacters.cache.util.Fixtures
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -23,20 +22,6 @@ class CharacterLocalDataSourceImplTest {
     @InjectMockKs
     private lateinit var localDataSource: CharacterLocalDataSourceImpl
 
-    private val characterEntity = CharacterEntity(
-        id = 0,
-        name = "Spider-Man",
-        description = "",
-        thumbnail = "test.jpg"
-    )
-
-    private val character = Character(
-        id = 0,
-        name = "Spider-Man",
-        description = "",
-        thumbnail = "test.jpg"
-    )
-
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
@@ -44,28 +29,26 @@ class CharacterLocalDataSourceImplTest {
 
     @Test
     fun `getCharacterById - returns character`() = runBlockingTest {
-        coEvery { dao.getCharacterById(any()) } returns characterEntity
+        coEvery { dao.getCharacterById(any()) } returns Fixtures.characterEntity
 
         val result = localDataSource.getCharacterById(id = 0)
 
-        assertThat(result).isEqualTo(character)
+        assertThat(result).isEqualTo(Fixtures.character)
     }
 
     @Test
     fun `getCharactersByName - returns character list`() = runBlockingTest {
-        coEvery { dao.getCharactersByName(any()) } returns listOf(characterEntity)
+        coEvery { dao.getCharactersByName(any()) } returns Fixtures.characterEntityList
 
         val result = localDataSource.getCharactersByName(name = "spider")
 
-        assertThat(result).containsExactly(character)
+        assertThat(result).containsExactly(Fixtures.character)
     }
 
     @Test
     fun `insertAll - check if characters are inserted`() = runBlockingTest {
-        val list = listOf(characterEntity)
+        localDataSource.insertAll(Fixtures.characterList)
 
-        localDataSource.insertAll(listOf(character))
-
-        coVerify { dao.insertAll(list) }
+        coVerify { dao.insertAll(Fixtures.characterEntityList) }
     }
 }
