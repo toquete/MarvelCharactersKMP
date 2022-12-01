@@ -16,5 +16,5 @@ internal fun CharacterResponse.toExternalModel() = Character(
     id = id,
     name = name,
     description = description,
-    thumbnail = thumbnail.toExternalModel()
+    thumbnail = "${thumbnail.path}.${thumbnail.extension}"
 )

@@ -1,6 +1,5 @@
 package com.guilherme.marvelcharacters.remote.model
 
-import com.guilherme.marvelcharacters.core.model.Image
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -8,9 +7,4 @@ import kotlinx.serialization.Serializable
 internal data class ImageResponse(
     @SerialName("path") val path: String,
     @SerialName("extension") val extension: String
-)
-
-internal fun ImageResponse.toExternalModel() = Image(
-    path = path,
-    extension = extension
 )

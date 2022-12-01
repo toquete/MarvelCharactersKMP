@@ -52,7 +52,7 @@ class DetailActivity : AppCompatActivity() {
             getString(R.string.no_description_available)
         }
         Glide.with(this)
-            .load("${state.character.character.thumbnail.path}.${state.character.character.thumbnail.extension}")
+            .load(state.character.character.thumbnail)
             .centerCrop()
             .into(binding.imageView)
 

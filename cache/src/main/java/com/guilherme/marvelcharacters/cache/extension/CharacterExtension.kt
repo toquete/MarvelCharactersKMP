@@ -7,5 +7,5 @@ internal fun Character.toEntity() = CharacterEntity(
     id = id,
     name = name,
     description = description,
-    thumbnail = thumbnail.toEntity()
+    thumbnail = thumbnail
 )
