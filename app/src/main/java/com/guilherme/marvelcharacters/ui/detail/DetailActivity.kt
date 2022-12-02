@@ -28,9 +28,9 @@ class DetailActivity : AppCompatActivity() {
     private fun setupObservers() {
         detailViewModel.uiState.observe(this) { state ->
             when (state) {
-                is ShowSnackbar -> showSnackbar(state.messageId, state.showAction)
-                Loading -> {}
-                is Success -> setupViewBindings(state)
+                is DetailUiState.ShowSnackbar -> showSnackbar(state.messageId, state.showAction)
+                DetailUiState.Loading -> {}
+                is DetailUiState.Success -> setupViewBindings(state)
             }
         }
     }
@@ -42,10 +42,11 @@ class DetailActivity : AppCompatActivity() {
                     setAction(R.string.undo) { detailViewModel.onUndoClick() }
                 }
             }.show()
+            detailViewModel.onSnackbarShown()
         }
     }
 
-    private fun setupViewBindings(state: Success) {
+    private fun setupViewBindings(state: DetailUiState.Success) {
         binding.fab.isActivated = state.character.isFavorite
         binding.collapsingToolbarLayout.title = state.character.character.name
         binding.description.text = state.character.character.description.ifEmpty {

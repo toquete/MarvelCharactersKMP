@@ -123,6 +123,17 @@ class DetailViewModelTest : BaseUnitTest() {
         }
     }
 
+    @Test
+    fun `onSnackbarShown - send null message`() = testCoroutineRule.runBlockingTest {
+        val detailViewModel = getViewModel()
+
+        detailViewModel.onSnackbarShown()
+
+        detailViewModel.uiState.test {
+            assertThat(awaitItem()).isEqualTo(DetailUiState.ShowSnackbar(messageId = null, showAction = false))
+        }
+    }
+
     private fun getViewModel(): DetailViewModel {
         return DetailViewModel(
             savedStateHandle,

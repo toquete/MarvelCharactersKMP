@@ -58,4 +58,8 @@ class DetailViewModel @Inject constructor(
             }
         }
     }
+
+    fun onSnackbarShown() {
+        _uiState.update { DetailUiState.ShowSnackbar(messageId = null, showAction = false) }
+    }
 }
