@@ -11,9 +11,9 @@ class GetFavoriteCharacterByIdUseCase @Inject constructor(
     private val repository: CharacterRepository
 ) {
 
-    operator fun invoke(id: Int, key: String, privateKey: String): Flow<FavoriteCharacter> {
+    operator fun invoke(id: Int): Flow<FavoriteCharacter> {
         return combine(
-            flow { emit(repository.getCharacterById(id, key, privateKey)) },
+            flow { emit(repository.getCharacterById(id)) },
             repository.isCharacterFavorite(id),
         ) { character, isFavorite ->
             FavoriteCharacter(

@@ -3,7 +3,6 @@ package com.guilherme.marvelcharacters.ui.detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.guilherme.marvelcharacters.BuildConfig
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharacterByIdUseCase
 import com.guilherme.marvelcharacters.domain.usecase.ToggleFavoriteCharacterUseCase
@@ -29,13 +28,10 @@ class DetailViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getFavoriteCharacterByIdUseCase(
-                characterId,
-                BuildConfig.MARVEL_KEY,
-                BuildConfig.MARVEL_PRIVATE_KEY
-            ).collect { favoriteCharacter ->
-                _uiState.update { Success(favoriteCharacter) }
-            }
+            getFavoriteCharacterByIdUseCase(characterId)
+                .collect { favoriteCharacter ->
+                    _uiState.update { Success(favoriteCharacter) }
+                }
         }
     }
 

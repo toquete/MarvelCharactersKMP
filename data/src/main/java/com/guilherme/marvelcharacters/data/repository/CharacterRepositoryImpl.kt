@@ -27,7 +27,7 @@ internal class CharacterRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCharacterById(id: Int, key: String, privateKey: String): Character {
+    override suspend fun getCharacterById(id: Int): Character {
         return localDataSource.getCharacterById(id)
     }
 
