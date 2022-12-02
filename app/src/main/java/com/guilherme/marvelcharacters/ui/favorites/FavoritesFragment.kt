@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -56,7 +57,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
 
     private fun setupView() = with(favoritesBinding) {
         favoritesAdapter = FavoritesAdapter { character ->
-            favoritesViewModel.onFavoriteItemClick(character)
+            navigateToDetail(character)
         }
         recyclerViewFavorites.adapter = favoritesAdapter
         recyclerViewFavorites.addItemDecoration(
@@ -68,23 +69,26 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
     }
 
     private fun setupObservers() {
-        favoritesViewModel.state.observe(viewLifecycleOwner) { state ->
-            favoritesAdapter.submitList(state.list)
-            setHasOptionsMenu(state.list.isNotEmpty())
-        }
-
-        favoritesViewModel.event.observe(viewLifecycleOwner) { event ->
-            when (event) {
-                is FavoritesEvent.ShowSnackbarMessage -> showSnackbar(event.messageId)
-                is FavoritesEvent.NavigateToDetail -> navigateToDetail(event.character)
+        favoritesViewModel.uiState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is FavoritesUiState.ShowSnackbar -> showSnackbar(state.messageId)
+                is FavoritesUiState.Success -> setupSuccess(state.list)
             }
         }
     }
 
-    private fun showSnackbar(stringId: Int) {
-        Snackbar.make(favoritesBinding.recyclerViewFavorites, stringId, Snackbar.LENGTH_LONG)
-            .setAnchorView(R.id.bottomNavigation)
-            .show()
+    private fun setupSuccess(characters: List<Character>) {
+        favoritesAdapter.submitList(characters)
+        setHasOptionsMenu(characters.isNotEmpty())
+    }
+
+    private fun showSnackbar(@StringRes stringId: Int?) {
+        stringId?.let {
+            Snackbar.make(favoritesBinding.recyclerViewFavorites, it, Snackbar.LENGTH_LONG)
+                .setAnchorView(R.id.bottomNavigation)
+                .show()
+            favoritesViewModel.onSnackbarShown()
+        }
     }
 
     private fun navigateToDetail(character: Character) {

@@ -1,11 +1,9 @@
 package com.guilherme.marvelcharacters.ui.favorites
 
+import androidx.annotation.StringRes
 import com.guilherme.marvelcharacters.core.model.Character
-import com.guilherme.marvelcharacters.infrastructure.State
 
-data class FavoritesState(val list: List<Character>) : State {
-
-    companion object {
-        fun initialState() = FavoritesState(list = emptyList())
-    }
+sealed interface FavoritesUiState {
+    data class Success(val list: List<Character> = emptyList()): FavoritesUiState
+    data class ShowSnackbar(@StringRes val messageId: Int?): FavoritesUiState
 }

@@ -1,14 +1,12 @@
 package com.guilherme.marvelcharacters.ui
 
-import android.database.sqlite.SQLiteException
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.domain.usecase.DeleteAllFavoriteCharactersUseCase
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharactersUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
-import com.guilherme.marvelcharacters.ui.favorites.FavoritesEvent
-import com.guilherme.marvelcharacters.ui.favorites.FavoritesState
+import com.guilherme.marvelcharacters.ui.favorites.FavoritesUiState
 import com.guilherme.marvelcharacters.ui.favorites.FavoritesViewModel
 import com.guilherme.marvelcharacters.util.Fixtures
 import io.mockk.coEvery
@@ -18,6 +16,7 @@ import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import org.junit.Test
+import java.io.IOException
 
 @ExperimentalCoroutinesApi
 class FavoritesViewModelTest : BaseUnitTest() {
@@ -44,30 +43,28 @@ class FavoritesViewModelTest : BaseUnitTest() {
 
         coVerify { deleteAllFavoriteCharactersUseCase() }
 
-        favoritesViewModel.event.test {
-            assertThat(awaitItem()).isEqualTo(FavoritesEvent.ShowSnackbarMessage(R.string.character_deleted))
+        favoritesViewModel.uiState.test {
+            assertThat(awaitItem()).isEqualTo(FavoritesUiState.ShowSnackbar(R.string.character_deleted))
         }
     }
 
     @Test
     fun `onDeleteAllClick - send error message`() = testCoroutineRule.runBlockingTest {
-        coEvery { deleteAllFavoriteCharactersUseCase() } throws SQLiteException()
+        coEvery { deleteAllFavoriteCharactersUseCase() } throws IOException()
 
         favoritesViewModel.onDeleteAllClick()
 
-        coVerify { deleteAllFavoriteCharactersUseCase() }
-
-        favoritesViewModel.event.test {
-            assertThat(awaitItem()).isEqualTo(FavoritesEvent.ShowSnackbarMessage(R.string.error_message))
+        favoritesViewModel.uiState.test {
+            assertThat(awaitItem()).isEqualTo(FavoritesUiState.ShowSnackbar(R.string.error_message))
         }
     }
 
     @Test
-    fun `onFavoriteItemClick - send character to details screen`() = testCoroutineRule.runBlockingTest {
-        favoritesViewModel.onFavoriteItemClick(Fixtures.character)
+    fun `onSnackbarShown - send null message`() = testCoroutineRule.runBlockingTest {
+        favoritesViewModel.onSnackbarShown()
 
-        favoritesViewModel.event.test {
-            assertThat(awaitItem()).isEqualTo(FavoritesEvent.NavigateToDetail(Fixtures.character))
+        favoritesViewModel.uiState.test {
+            assertThat(awaitItem()).isEqualTo(FavoritesUiState.ShowSnackbar(messageId = null))
         }
     }
 
@@ -80,8 +77,8 @@ class FavoritesViewModelTest : BaseUnitTest() {
             deleteAllFavoriteCharactersUseCase
         )
 
-        viewModel.state.test {
-            assertThat(awaitItem()).isEqualTo(FavoritesState(Fixtures.characterList))
+        viewModel.uiState.test {
+            assertThat(awaitItem()).isEqualTo(FavoritesUiState.Success(Fixtures.characterList))
         }
     }
 }

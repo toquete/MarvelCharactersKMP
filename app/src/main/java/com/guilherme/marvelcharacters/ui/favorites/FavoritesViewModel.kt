@@ -1,14 +1,15 @@
 package com.guilherme.marvelcharacters.ui.favorites
 
-import android.database.sqlite.SQLiteException
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.R
-import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.domain.usecase.DeleteAllFavoriteCharactersUseCase
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharactersUseCase
-import com.guilherme.marvelcharacters.infrastructure.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,31 +17,32 @@ import javax.inject.Inject
 class FavoritesViewModel @Inject constructor(
     getFavoriteCharactersUseCase: GetFavoriteCharactersUseCase,
     private val deleteAllFavoriteCharactersUseCase: DeleteAllFavoriteCharactersUseCase
-) : BaseViewModel<FavoritesState, FavoritesEvent>(FavoritesState.initialState()) {
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow<FavoritesUiState>(FavoritesUiState.Success())
+    val uiState = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
             getFavoriteCharactersUseCase()
                 .collect { list ->
-                    setState { it.copy(list = list) }
+                    _uiState.update { FavoritesUiState.Success(list) }
                 }
         }
     }
 
     fun onDeleteAllClick() {
         viewModelScope.launch {
-            try {
+            runCatching {
                 deleteAllFavoriteCharactersUseCase()
-                sendEvent(FavoritesEvent.ShowSnackbarMessage(R.string.character_deleted))
-            } catch (exception: SQLiteException) {
-                sendEvent(FavoritesEvent.ShowSnackbarMessage(R.string.error_message))
+                _uiState.update { FavoritesUiState.ShowSnackbar(R.string.character_deleted) }
+            }.onFailure {
+                _uiState.update { FavoritesUiState.ShowSnackbar(R.string.error_message) }
             }
         }
     }
 
-    fun onFavoriteItemClick(character: Character) {
-        viewModelScope.launch {
-            sendEvent(FavoritesEvent.NavigateToDetail(character))
-        }
+    fun onSnackbarShown() {
+        _uiState.update { FavoritesUiState.ShowSnackbar(messageId = null) }
     }
 }
