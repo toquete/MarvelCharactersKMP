@@ -23,14 +23,14 @@ class DetailViewModel @Inject constructor(
 
     private val characterId: Int = checkNotNull(savedStateHandle["characterId"])
 
-    private val _uiState = MutableStateFlow<DetailUiState>(Loading)
+    private val _uiState = MutableStateFlow<DetailUiState>(DetailUiState.Loading)
     val uiState = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
             getFavoriteCharacterByIdUseCase(characterId)
                 .collect { favoriteCharacter ->
-                    _uiState.update { Success(favoriteCharacter) }
+                    _uiState.update { DetailUiState.Success(favoriteCharacter) }
                 }
         }
     }
@@ -42,9 +42,9 @@ class DetailViewModel @Inject constructor(
             runCatching {
                 toggleFavoriteCharacterUseCase(characterId, isFavorite)
             }.onSuccess {
-                _uiState.update { ShowSnackbar(message, showAction = isFavorite) }
+                _uiState.update { DetailUiState.ShowSnackbar(message, showAction = isFavorite) }
             }.onFailure {
-                _uiState.update { ShowSnackbar(R.string.error_message, showAction = false) }
+                _uiState.update { DetailUiState.ShowSnackbar(R.string.error_message, showAction = false) }
             }
         }
     }
@@ -54,7 +54,7 @@ class DetailViewModel @Inject constructor(
             runCatching {
                 toggleFavoriteCharacterUseCase(characterId, isFavorite = false)
             }.onFailure {
-                _uiState.update { ShowSnackbar(R.string.error_message, showAction = false) }
+                _uiState.update { DetailUiState.ShowSnackbar(R.string.error_message, showAction = false) }
             }
         }
     }

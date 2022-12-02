@@ -8,9 +8,8 @@ import com.guilherme.marvelcharacters.domain.model.FavoriteCharacter
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharacterByIdUseCase
 import com.guilherme.marvelcharacters.domain.usecase.ToggleFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
+import com.guilherme.marvelcharacters.ui.detail.DetailUiState
 import com.guilherme.marvelcharacters.ui.detail.DetailViewModel
-import com.guilherme.marvelcharacters.ui.detail.ShowSnackbar
-import com.guilherme.marvelcharacters.ui.detail.Success
 import com.guilherme.marvelcharacters.util.Fixtures
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -41,7 +40,7 @@ class DetailViewModelTest : BaseUnitTest() {
         val detailViewModel = getViewModel()
 
         detailViewModel.uiState.test {
-            assertThat(awaitItem()).isEqualTo(Success(favoriteCharacter))
+            assertThat(awaitItem()).isEqualTo(DetailUiState.Success(favoriteCharacter))
         }
     }
 
@@ -60,7 +59,7 @@ class DetailViewModelTest : BaseUnitTest() {
         coVerify { toggleFavoriteCharacterUseCase(Fixtures.character.id, isFavorite = true) }
 
         detailViewModel.uiState.test {
-            assertThat(awaitItem()).isEqualTo(ShowSnackbar(R.string.character_deleted, showAction = true))
+            assertThat(awaitItem()).isEqualTo(DetailUiState.ShowSnackbar(R.string.character_deleted, showAction = true))
             job.cancel()
         }
     }
@@ -80,7 +79,7 @@ class DetailViewModelTest : BaseUnitTest() {
         coVerify { toggleFavoriteCharacterUseCase(Fixtures.character.id, isFavorite = false) }
 
         detailViewModel.uiState.test {
-            assertThat(awaitItem()).isEqualTo(ShowSnackbar(R.string.character_added, showAction = false))
+            assertThat(awaitItem()).isEqualTo(DetailUiState.ShowSnackbar(R.string.character_added, showAction = false))
             job.cancel()
         }
     }
@@ -98,7 +97,7 @@ class DetailViewModelTest : BaseUnitTest() {
         coVerify { toggleFavoriteCharacterUseCase(Fixtures.character.id, isFavorite = false) }
 
         detailViewModel.uiState.test {
-            assertThat(awaitItem()).isEqualTo(ShowSnackbar(R.string.error_message, showAction = false))
+            assertThat(awaitItem()).isEqualTo(DetailUiState.ShowSnackbar(R.string.error_message, showAction = false))
         }
     }
 
@@ -120,7 +119,7 @@ class DetailViewModelTest : BaseUnitTest() {
         detailViewModel.onUndoClick()
 
         detailViewModel.uiState.test {
-            assertThat(awaitItem()).isEqualTo(ShowSnackbar(R.string.error_message, showAction = false))
+            assertThat(awaitItem()).isEqualTo(DetailUiState.ShowSnackbar(R.string.error_message, showAction = false))
         }
     }
 
