@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -69,7 +70,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun setupAdapter() {
-        homeAdapter = HomeAdapter { character -> homeViewModel.onItemClick(character) }
+        homeAdapter = HomeAdapter { character -> navigateToDetail(character) }
         homeBinding.recyclerviewCharacters.adapter = homeAdapter
         homeBinding.recyclerviewCharacters.addItemDecoration(
             DividerItemDecoration(
@@ -104,11 +105,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun setupObservers() {
-        homeViewModel.state.observe(viewLifecycleOwner) { state ->
-            setupState(state)
-        }
-        homeViewModel.event.observe(viewLifecycleOwner) { event ->
-            setupEvent(event)
+        homeViewModel.uiState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                HomeUiState.Empty -> setupEmptyState()
+                is HomeUiState.Error -> setupError(state.errorMessageId)
+                HomeUiState.Loading -> setupLoading()
+                is HomeUiState.Success -> setupSuccess(state.characters)
+            }
         }
         nightModeViewModel.nightMode.observe(viewLifecycleOwner) { mode ->
             AppCompatDelegate.setDefaultNightMode(mode)
@@ -121,22 +124,31 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun setupState(state: HomeState) = with(homeBinding) {
-        progressBar.isVisible = state.isLoading
-        recyclerviewCharacters.isVisible = !state.isLoading && state.errorMessageId == null
-        textviewMessage.isVisible = !state.isLoading && state.errorMessageId != null
-
-        homeAdapter.submitList(state.characters)
-
-        state.errorMessageId?.let {
-            textviewMessage.setText(it)
-        }
+    private fun setupEmptyState() = with(homeBinding) {
+        progressBar.isVisible = false
+        recyclerviewCharacters.isVisible = true
+        textviewMessage.isVisible = false
     }
 
-    private fun setupEvent(event: HomeEvent) {
-        when (event) {
-            is HomeEvent.NavigateToDetails -> navigateToDetail(event.character)
-        }
+    private fun setupError(@StringRes messageId: Int) = with(homeBinding) {
+        progressBar.isVisible = false
+        recyclerviewCharacters.isVisible = false
+        textviewMessage.isVisible = true
+        textviewMessage.setText(messageId)
+    }
+
+    private fun setupLoading() = with(homeBinding) {
+        progressBar.isVisible = true
+        recyclerviewCharacters.isVisible = false
+        textviewMessage.isVisible = false
+    }
+
+    private fun setupSuccess(list: List<Character>) = with(homeBinding) {
+        homeAdapter.submitList(list)
+
+        progressBar.isVisible = false
+        recyclerviewCharacters.isVisible = true
+        textviewMessage.isVisible = false
     }
 
     private fun navigateToDetail(character: Character) {
