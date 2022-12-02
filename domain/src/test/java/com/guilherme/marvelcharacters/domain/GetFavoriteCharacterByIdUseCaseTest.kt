@@ -1,11 +1,10 @@
 package com.guilherme.marvelcharacters.domain
 
 import com.google.common.truth.Truth.assertThat
-import com.guilherme.marvelcharacters.core.model.Character
-import com.guilherme.marvelcharacters.core.model.Image
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
 import com.guilherme.marvelcharacters.domain.model.FavoriteCharacter
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharacterByIdUseCase
+import com.guilherme.marvelcharacters.domain.util.Fixtures
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -36,22 +35,14 @@ class GetFavoriteCharacterByIdUseCaseTest {
     @Test
     fun `invoke - check character is returned`() = runBlockingTest {
         val id = 0
-        val key = "123"
-        val privateKey = "456"
-        val character = Character(
-            id = 0,
-            name = "Spider-Man",
-            description = "",
-            thumbnail = Image(path = "", extension = "")
-        )
-        val expected = FavoriteCharacter(character, isFavorite = true)
+        val expected = FavoriteCharacter(Fixtures.character, isFavorite = true)
 
-        coEvery { characterRepository.getCharacterById(id, key, privateKey) } returns character
+        coEvery { characterRepository.getCharacterById(id) } returns Fixtures.character
         every { characterRepository.isCharacterFavorite(id) } returns flowOf(true)
 
-        val result = getFavoriteCharacterByIdUseCase(id, key, privateKey)
+        val result = getFavoriteCharacterByIdUseCase(id)
 
-        coVerify { characterRepository.getCharacterById(id, key, privateKey) }
         assertThat(result.first()).isEqualTo(expected)
+        coVerify { characterRepository.getCharacterById(id) }
     }
 }

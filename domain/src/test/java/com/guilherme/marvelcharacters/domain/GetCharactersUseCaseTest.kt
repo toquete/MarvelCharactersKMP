@@ -1,10 +1,9 @@
 package com.guilherme.marvelcharacters.domain
 
 import com.google.common.truth.Truth.assertThat
-import com.guilherme.marvelcharacters.core.model.Character
-import com.guilherme.marvelcharacters.core.model.Image
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
 import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
+import com.guilherme.marvelcharacters.domain.util.Fixtures
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -34,19 +33,12 @@ class GetCharactersUseCaseTest {
         val name = "spider"
         val key = "123"
         val privateKey = "456"
-        val list = listOf(
-            Character(
-                id = 0,
-                name = "Spider-Man",
-                description = "",
-                thumbnail = Image(path = "", extension = "")
-            )
-        )
-        coEvery { characterRepository.getCharacters(name, key, privateKey) } returns list
+
+        coEvery { characterRepository.getCharacters(name, key, privateKey) } returns Fixtures.characterList
 
         val result = getCharactersUseCase(name, key, privateKey)
 
         coVerify { characterRepository.getCharacters(name, key, privateKey) }
-        assertThat(result).isEqualTo(list)
+        assertThat(result).containsExactly(Fixtures.character)
     }
 }

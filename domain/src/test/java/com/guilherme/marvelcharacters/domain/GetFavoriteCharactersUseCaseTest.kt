@@ -1,10 +1,9 @@
 package com.guilherme.marvelcharacters.domain
 
 import com.google.common.truth.Truth.assertThat
-import com.guilherme.marvelcharacters.core.model.Character
-import com.guilherme.marvelcharacters.core.model.Image
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharactersUseCase
+import com.guilherme.marvelcharacters.domain.util.Fixtures
 import io.mockk.MockKAnnotations
 import io.mockk.coVerify
 import io.mockk.every
@@ -33,19 +32,11 @@ class GetFavoriteCharactersUseCaseTest {
 
     @Test
     fun `invoke - check list is returned`() = runBlockingTest {
-        val list = listOf(
-            Character(
-                id = 0,
-                name = "Spider-Man",
-                description = "",
-                thumbnail = Image(path = "", extension = "")
-            )
-        )
-        every { characterRepository.getFavoriteCharacters() } returns flowOf(list)
+        every { characterRepository.getFavoriteCharacters() } returns flowOf(Fixtures.characterList)
 
         val result = getFavoriteCharactersUseCase()
 
         coVerify { characterRepository.getFavoriteCharacters() }
-        assertThat(result.first()).isEqualTo(list)
+        assertThat(result.first()).containsExactly(Fixtures.character)
     }
 }
