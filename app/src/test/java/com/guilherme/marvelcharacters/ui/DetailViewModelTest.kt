@@ -1,17 +1,17 @@
 package com.guilherme.marvelcharacters.ui
 
-import android.database.sqlite.SQLiteException
+import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.R
-import com.guilherme.marvelcharacters.core.model.Character
-import com.guilherme.marvelcharacters.core.model.Image
 import com.guilherme.marvelcharacters.domain.model.FavoriteCharacter
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharacterByIdUseCase
+import com.guilherme.marvelcharacters.domain.usecase.ToggleFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
 import com.guilherme.marvelcharacters.ui.detail.DetailViewModel
 import com.guilherme.marvelcharacters.ui.detail.ShowSnackbar
 import com.guilherme.marvelcharacters.ui.detail.Success
+import com.guilherme.marvelcharacters.util.Fixtures
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -20,6 +20,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import org.junit.Test
+import java.io.IOException
 
 @ExperimentalCoroutinesApi
 class DetailViewModelTest : BaseUnitTest() {
@@ -28,17 +29,14 @@ class DetailViewModelTest : BaseUnitTest() {
     private lateinit var getFavoriteCharacterByIdUseCase: GetFavoriteCharacterByIdUseCase
 
     @RelaxedMockK
-    private lateinit var deleteFavoriteCharacterUseCase: DeleteFavoriteCharacterUseCase
+    private lateinit var toggleFavoriteCharacterUseCase: ToggleFavoriteCharacterUseCase
 
-    @RelaxedMockK
-    private lateinit var insertFavoriteCharacterUseCase: InsertFavoriteCharacterUseCase
-
-    private val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
+    private val savedStateHandle = SavedStateHandle(mapOf("characterId" to Fixtures.character.id))
 
     @Test
     fun `init - send character state`() = testCoroutineRule.runBlockingTest {
-        val favoriteCharacter = FavoriteCharacter(character, isFavorite = true)
-        every { getFavoriteCharacterByIdUseCase(character.id, any(), any()) } returns flowOf(favoriteCharacter)
+        val favoriteCharacter = FavoriteCharacter(Fixtures.character, isFavorite = true)
+        every { getFavoriteCharacterByIdUseCase(Fixtures.character.id) } returns flowOf(favoriteCharacter)
 
         val detailViewModel = getViewModel()
 
@@ -49,17 +47,17 @@ class DetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onFabClick - send deleted character event`() = testCoroutineRule.runBlockingTest {
-        val favoriteCharacter = FavoriteCharacter(character, isFavorite = true)
-        every { getFavoriteCharacterByIdUseCase(character.id, any(), any()) } returns flowOf(favoriteCharacter)
+        val favoriteCharacter = FavoriteCharacter(Fixtures.character, isFavorite = true)
+        every { getFavoriteCharacterByIdUseCase(Fixtures.character.id) } returns flowOf(favoriteCharacter)
 
         val detailViewModel = getViewModel()
 
         // simulate first collection
         val job = detailViewModel.uiState.launchIn(this)
 
-        detailViewModel.onFabClick(favoriteCharacter)
+        detailViewModel.onFabClick(isFavorite = true)
 
-        coVerify { deleteFavoriteCharacterUseCase(character) }
+        coVerify { toggleFavoriteCharacterUseCase(Fixtures.character.id, isFavorite = true) }
 
         detailViewModel.uiState.test {
             assertThat(awaitItem()).isEqualTo(ShowSnackbar(R.string.character_deleted, showAction = true))
@@ -69,17 +67,17 @@ class DetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onFabClick - send added character event`() = testCoroutineRule.runBlockingTest {
-        val favoriteCharacter = FavoriteCharacter(character, isFavorite = false)
-        every { getFavoriteCharacterByIdUseCase(character.id, any(), any()) } returns flowOf(favoriteCharacter)
+        val favoriteCharacter = FavoriteCharacter(Fixtures.character, isFavorite = false)
+        every { getFavoriteCharacterByIdUseCase(Fixtures.character.id) } returns flowOf(favoriteCharacter)
 
         val detailViewModel = getViewModel()
 
         // simulate first collection
         val job = detailViewModel.uiState.launchIn(this)
 
-        detailViewModel.onFabClick(favoriteCharacter)
+        detailViewModel.onFabClick(isFavorite = false)
 
-        coVerify { insertFavoriteCharacterUseCase(character) }
+        coVerify { toggleFavoriteCharacterUseCase(Fixtures.character.id, isFavorite = false) }
 
         detailViewModel.uiState.test {
             assertThat(awaitItem()).isEqualTo(ShowSnackbar(R.string.character_added, showAction = false))
@@ -89,15 +87,15 @@ class DetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onFabClick - send generic error event`() = testCoroutineRule.runBlockingTest {
-        val favoriteCharacter = FavoriteCharacter(character, isFavorite = false)
-        every { getFavoriteCharacterByIdUseCase(character.id, any(), any()) } returns flowOf(favoriteCharacter)
-        coEvery { insertFavoriteCharacterUseCase(character) } throws SQLiteException()
+        val favoriteCharacter = FavoriteCharacter(Fixtures.character, isFavorite = false)
+        every { getFavoriteCharacterByIdUseCase(Fixtures.character.id) } returns flowOf(favoriteCharacter)
+        coEvery { toggleFavoriteCharacterUseCase(Fixtures.character.id, isFavorite = false) } throws IOException()
 
         val detailViewModel = getViewModel()
 
-        detailViewModel.onFabClick(favoriteCharacter)
+        detailViewModel.onFabClick(isFavorite = false)
 
-        coVerify { insertFavoriteCharacterUseCase(character) }
+        coVerify { toggleFavoriteCharacterUseCase(Fixtures.character.id, isFavorite = false) }
 
         detailViewModel.uiState.test {
             assertThat(awaitItem()).isEqualTo(ShowSnackbar(R.string.error_message, showAction = false))
@@ -110,12 +108,12 @@ class DetailViewModelTest : BaseUnitTest() {
 
         detailViewModel.onUndoClick()
 
-        coVerify { insertFavoriteCharacterUseCase(character) }
+        coVerify { toggleFavoriteCharacterUseCase(Fixtures.character.id, isFavorite = false) }
     }
 
     @Test
     fun `onUndoClick - send error message on undo changes`() = testCoroutineRule.runBlockingTest {
-        coEvery { insertFavoriteCharacterUseCase(character) } throws SQLiteException()
+        coEvery { toggleFavoriteCharacterUseCase(Fixtures.character.id, isFavorite = false) } throws IOException()
 
         val detailViewModel = getViewModel()
 
@@ -128,10 +126,9 @@ class DetailViewModelTest : BaseUnitTest() {
 
     private fun getViewModel(): DetailViewModel {
         return DetailViewModel(
-            character,
+            savedStateHandle,
             getFavoriteCharacterByIdUseCase,
-            deleteFavoriteCharacterUseCase,
-            insertFavoriteCharacterUseCase
+            toggleFavoriteCharacterUseCase
         )
     }
 }

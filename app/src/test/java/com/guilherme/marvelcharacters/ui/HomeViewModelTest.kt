@@ -4,15 +4,12 @@ import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.core.model.Character
-import com.guilherme.marvelcharacters.core.model.Image
 import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
 import com.guilherme.marvelcharacters.infrastructure.BaseUnitTest
-import com.guilherme.marvelcharacters.mapper.CharacterMapper
-import com.guilherme.marvelcharacters.model.CharacterVO
-import com.guilherme.marvelcharacters.model.ImageVO
 import com.guilherme.marvelcharacters.ui.home.HomeEvent
 import com.guilherme.marvelcharacters.ui.home.HomeState
 import com.guilherme.marvelcharacters.ui.home.HomeViewModel
+import com.guilherme.marvelcharacters.util.Fixtures
 import io.mockk.coEvery
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,24 +27,18 @@ class HomeViewModelTest : BaseUnitTest() {
 
     override fun setUp() {
         super.setUp()
-        homeViewModel = HomeViewModel(
-            getCharactersUseCase,
-            mapper = CharacterMapper()
-        )
+        homeViewModel = HomeViewModel(getCharactersUseCase)
     }
 
     @Test
     fun `onSearchCharacter - send success state when list is loaded`() = testCoroutineRule.runBlockingTest {
-        val character = Character(0, "Spider-Man", "The Amazing Spider-Man", Image("", ""))
-        val characterVO = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
-        val characterList = listOf(character)
         val successState = HomeState(
             isLoading = false,
-            characters = listOf(characterVO),
+            characters = Fixtures.characterList,
             errorMessageId = null
         )
 
-        coEvery { getCharactersUseCase(any(), any(), any()) } returns characterList
+        coEvery { getCharactersUseCase(any(), any(), any()) } returns Fixtures.characterList
 
         homeViewModel.state.test {
             homeViewModel.onSearchCharacter("spider")
@@ -100,32 +91,11 @@ class HomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onSearchCharacter - send internet error state`() = testCoroutineRule.runBlockingTest {
-        val errorState = HomeState(
-            isLoading = false,
-            characters = emptyList(),
-            errorMessageId = R.string.network_error_message
-        )
-        coEvery { getCharactersUseCase(any(), any(), any()) } throws IOException()
-
-        homeViewModel.state.test {
-            homeViewModel.onSearchCharacter("spider")
-
-            assertThat(awaitItem()).isEqualTo(HomeState.initialState())
-            assertThat(awaitItem()).isEqualTo(errorState.copy(isLoading = true, errorMessageId = null))
-            assertThat(awaitItem()).isEqualTo(errorState)
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
-
-    @Test
     fun `onItemClick - send character to details screen`() = runBlockingTest {
-        val character = CharacterVO(0, "Spider-Man", "The Amazing Spider-Man", ImageVO("", ""))
-
-        homeViewModel.onItemClick(character)
+        homeViewModel.onItemClick(Fixtures.character)
 
         homeViewModel.event.test {
-            assertThat(awaitItem()).isEqualTo(HomeEvent.NavigateToDetails(character))
+            assertThat(awaitItem()).isEqualTo(HomeEvent.NavigateToDetails(Fixtures.character))
         }
     }
 }
