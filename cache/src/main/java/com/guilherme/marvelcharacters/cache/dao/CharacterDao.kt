@@ -13,7 +13,7 @@ internal interface CharacterDao {
     suspend fun getCharactersByName(name: String): List<CharacterEntity>
 
     @Query("SELECT * FROM characterentity WHERE id = :id")
-    suspend fun getCharacterById(id: Int): CharacterEntity?
+    suspend fun getCharacterById(id: Int): CharacterEntity
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(characters: List<CharacterEntity>)

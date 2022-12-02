@@ -11,8 +11,8 @@ internal class CharacterLocalDataSourceImpl @Inject constructor(
     private val dao: CharacterDao
 ) : CharacterLocalDataSource {
 
-    override suspend fun getCharacterById(id: Int): Character? {
-        return dao.getCharacterById(id)?.toExternalModel()
+    override suspend fun getCharacterById(id: Int): Character {
+        return dao.getCharacterById(id).toExternalModel()
     }
 
     override suspend fun getCharactersByName(name: String): List<Character> {

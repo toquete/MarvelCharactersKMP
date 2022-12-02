@@ -15,12 +15,4 @@ internal interface Api {
         @Query("apikey") apiKey: String,
         @Query("nameStartsWith") nameStartsWith: String
     ): Response<CharacterResponse>
-
-    @GET("characters/{id}")
-    suspend fun getCharacterById(
-        @Path("id") id: Int,
-        @Query("ts") ts: String,
-        @Query("hash") hash: String,
-        @Query("apikey") apiKey: String
-    ): Response<CharacterResponse>
 }

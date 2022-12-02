@@ -28,13 +28,7 @@ internal class CharacterRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getCharacterById(id: Int, key: String, privateKey: String): Character {
-        return withContext(dispatcher) {
-            localDataSource.getCharacterById(id) ?: remoteDataSource.getCharacterById(
-                id,
-                key,
-                privateKey
-            )
-        }
+        return localDataSource.getCharacterById(id)
     }
 
     override fun isCharacterFavorite(id: Int): Flow<Boolean> {

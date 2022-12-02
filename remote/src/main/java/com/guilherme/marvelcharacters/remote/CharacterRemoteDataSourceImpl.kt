@@ -26,16 +26,6 @@ internal class CharacterRemoteDataSourceImpl @Inject constructor(
             .map(CharacterResponse::toExternalModel)
     }
 
-    override suspend fun getCharacterById(id: Int, key: String, privateKey: String): Character {
-        val (ts, hash) = getKeys(privateKey, key)
-
-        return api.getCharacterById(id, ts, hash, key)
-            .container
-            .results
-            .first()
-            .toExternalModel()
-    }
-
     private fun getKeys(
         privateKey: String,
         key: String

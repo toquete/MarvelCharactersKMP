@@ -50,31 +50,4 @@ class ApiTest {
         assertThat(result).isEqualTo(expected)
         assertThat(request.path).isEqualTo("/characters?ts=ts&hash=hash&apikey=teste&nameStartsWith=spider")
     }
-
-    @Test
-    fun `getCharactersById should return parsed data class on success`() = runBlocking {
-        // Given
-        val expected = Response(
-            ContainerResponse(
-                listOf(
-                    CharacterResponse(
-                        id = 0,
-                        name = "Spider-Man",
-                        description = "The Amazing Spider-Man",
-                        thumbnail = ImageResponse(path = "", extension = "")
-                    )
-                )
-            )
-        )
-        val response = MockResponse().setBody(readFile("get_characters_200.json"))
-        mockWebServer.enqueue(response)
-
-        // When
-        val result = api.getCharacterById(id = 0, ts = "ts", hash = "hash", apiKey = "teste")
-
-        // Then
-        val request = mockWebServer.takeRequest()
-        assertThat(result).isEqualTo(expected)
-        assertThat(request.path).isEqualTo("/characters/0?ts=ts&hash=hash&apikey=teste")
-    }
 }

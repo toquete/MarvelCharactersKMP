@@ -4,7 +4,7 @@ import com.guilherme.marvelcharacters.core.model.Character
 
 interface CharacterLocalDataSource {
 
-    suspend fun getCharacterById(id: Int): Character?
+    suspend fun getCharacterById(id: Int): Character
 
     suspend fun getCharactersByName(name: String): List<Character>
 
