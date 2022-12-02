@@ -1,3 +1,0 @@
-package com.guilherme.marvelcharacters.infrastructure
-
-interface Event
