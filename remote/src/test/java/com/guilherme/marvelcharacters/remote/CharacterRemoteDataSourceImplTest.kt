@@ -9,6 +9,7 @@ import com.guilherme.marvelcharacters.remote.model.Response
 import com.guilherme.marvelcharacters.remote.service.Api
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -21,6 +22,7 @@ class CharacterRemoteDataSourceImplTest {
     @MockK
     private lateinit var api: Api
 
+    @InjectMockKs
     private lateinit var remoteDataSource: CharacterRemoteDataSourceImpl
 
     private val characterResponse = CharacterResponse(
@@ -45,7 +47,6 @@ class CharacterRemoteDataSourceImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        remoteDataSource = CharacterRemoteDataSourceImpl(api)
     }
 
     @Test
