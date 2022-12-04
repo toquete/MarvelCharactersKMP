@@ -1,23 +1,20 @@
 package com.guilherme.marvelcharacters.ui.favorites
 
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.intent.Intents
-import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.core.app.launchActivity
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.guilherme.marvelcharacters.MainActivity
-import com.guilherme.marvelcharacters.cache.dao.CharacterDatabase
-import com.guilherme.marvelcharacters.cache.model.CharacterEntity
-import com.guilherme.marvelcharacters.cache.model.ImageEntity
+import com.guilherme.marvelcharacters.core.model.Character
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import org.junit.After
+import io.mockk.every
+import io.mockk.mockk
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
@@ -26,31 +23,25 @@ class FavoritesFragmentTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
-    @get:Rule
-    val rule = ActivityScenarioRule(MainActivity::class.java)
+    @BindValue
+    val viewModel: FavoritesViewModel = mockk(relaxed = true)
 
-    @Inject
-    lateinit var db: CharacterDatabase
+    private val fakeState = MutableStateFlow<FavoritesUiState>(FavoritesUiState.Success())
 
     @Before
     fun setUp() {
-        hiltRule.inject()
-        Intents.init()
-    }
-
-    @After
-    fun tearDown() {
-        db.close()
-        Intents.release()
+        every { viewModel.uiState } returns fakeState
     }
 
     @Test
     fun checkScreenIsDisplayed() {
-        favorites {
-            clickBottomItem()
-            checkToolbarTitle()
-            checkOverflowMenuIsNotDisplayed()
-            checkBottomBarItemIsSelected()
+        launchActivity<MainActivity>().use {
+            favorites {
+                clickBottomItem()
+                checkToolbarTitle()
+                checkOverflowMenuIsNotDisplayed()
+                checkBottomBarItemIsSelected()
+            }
         }
     }
 
@@ -58,12 +49,14 @@ class FavoritesFragmentTest {
     fun checkCharacterDeletion() {
         mockFavoriteCharacter()
 
-        favorites {
-            clickBottomItem()
-            clickOverflowMenu(ApplicationProvider.getApplicationContext())
-            clickDeleteAllItem()
-            clickDialogDelete()
-            checkCharacterWasDeleted()
+        launchActivity<MainActivity>().use {
+            favorites {
+                clickBottomItem()
+                clickOverflowMenu(ApplicationProvider.getApplicationContext())
+                clickDeleteAllItem()
+                clickDialogDelete()
+                checkCharacterWasDeleted()
+            }
         }
     }
 
@@ -71,32 +64,24 @@ class FavoritesFragmentTest {
     fun checkCharacterDeletionConfirmationDialog() {
         mockFavoriteCharacter()
 
-        favorites {
-            clickBottomItem()
-            clickOverflowMenu(ApplicationProvider.getApplicationContext())
-            clickDeleteAllItem()
-            checkConfirmationDialog()
-        }
-    }
-
-    @Test
-    fun checkDetailScreenIsDisplayed() {
-        mockFavoriteCharacter()
-
-        favorites {
-            clickBottomItem()
-            clickItem("Spider-Man")
-            checkDetailScreenIsDisplayed()
+        launchActivity<MainActivity>().use {
+            favorites {
+                clickBottomItem()
+                clickOverflowMenu(ApplicationProvider.getApplicationContext())
+                clickDeleteAllItem()
+                checkConfirmationDialog()
+            }
         }
     }
 
     private fun mockFavoriteCharacter() {
-        val character = CharacterEntity(
+        val character = Character(
             id = 1,
             name = "Spider-Man",
             description = "xablau",
-            thumbnail = ImageEntity("", "")
+            thumbnail = "test.jpg"
         )
-        GlobalScope.launch { db.characterDao().insert(character) }
+
+        fakeState.value = FavoritesUiState.Success(listOf(character))
     }
 }

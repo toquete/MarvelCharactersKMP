@@ -1,24 +1,22 @@
 package com.guilherme.marvelcharacters.ui.detail
 
 import android.content.Intent
-import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.core.app.launchActivity
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.guilherme.marvelcharacters.cache.dao.CharacterDatabase
-import com.guilherme.marvelcharacters.cache.model.CharacterEntity
-import com.guilherme.marvelcharacters.cache.model.ImageEntity
-import com.guilherme.marvelcharacters.model.CharacterVO
-import com.guilherme.marvelcharacters.model.ImageVO
+import com.guilherme.marvelcharacters.R
+import com.guilherme.marvelcharacters.core.model.Character
+import com.guilherme.marvelcharacters.domain.model.FavoriteCharacter
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import org.junit.After
+import io.mockk.every
+import io.mockk.mockk
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
@@ -27,30 +25,28 @@ class DetailActivityTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
-    @Inject
-    lateinit var db: CharacterDatabase
+    @BindValue
+    val viewModel: DetailViewModel = mockk(relaxed = true)
 
-    private lateinit var scenario: ActivityScenario<DetailActivity>
+    private val fakeState = MutableStateFlow<DetailUiState>(DetailUiState.Loading)
+
+    private lateinit var intent: Intent
 
     @Before
     fun setUp() {
-        hiltRule.inject()
-    }
-
-    @After
-    fun tearDown() {
-        db.close()
-        scenario.close()
+        every { viewModel.uiState } returns fakeState
     }
 
     @Test
     fun checkScreenIsDisplayed() {
         mockCharacter()
 
-        detail {
-            checkToolbarTitle("Spider-Man")
-            checkFabIsNotActivated()
-            checkDescription("xablau")
+        launchActivity<DetailActivity>(intent).use {
+            detail {
+                checkToolbarTitle("Spider-Man")
+                checkFabIsNotActivated()
+                checkDescription("xablau")
+            }
         }
     }
 
@@ -58,10 +54,12 @@ class DetailActivityTest {
     fun checkScreenIsDisplayed_favoriteCharacter() {
         mockCharacter(isFavorite = true)
 
-        detail {
-            checkToolbarTitle("Spider-Man")
-            checkFabIsActivated()
-            checkDescription("xablau")
+        launchActivity<DetailActivity>(intent).use {
+            detail {
+                checkToolbarTitle("Spider-Man")
+                checkFabIsActivated()
+                checkDescription("xablau")
+            }
         }
     }
 
@@ -69,11 +67,13 @@ class DetailActivityTest {
     fun checkCharacterIsDeleted() {
         mockCharacter(isFavorite = true)
 
-        detail {
-            checkFabIsActivated()
-            clickFabButton()
-            checkCharacterWasDeleted()
-            checkFabIsNotActivated()
+        launchActivity<DetailActivity>(intent).use {
+            detail {
+                checkFabIsActivated()
+                clickFabButton()
+                checkCharacterWasDeleted()
+                checkFabIsNotActivated()
+            }
         }
     }
 
@@ -81,38 +81,36 @@ class DetailActivityTest {
     fun checkCharacterIsAdded() {
         mockCharacter()
 
-        detail {
-            checkFabIsNotActivated()
-            clickFabButton()
-            checkCharacterWasAdded()
-            checkFabIsActivated()
+        launchActivity<DetailActivity>(intent).use {
+            detail {
+                checkFabIsNotActivated()
+                clickFabButton()
+                checkCharacterWasAdded()
+                checkFabIsActivated()
+            }
         }
     }
 
     private fun mockCharacter(isFavorite: Boolean = false) {
-        val characterVO = CharacterVO(
+        val character = Character(
             id = 1,
             name = "Spider-Man",
             description = "xablau",
-            thumbnail = ImageVO("", "")
-        )
-        val character = CharacterEntity(
-            characterVO.id,
-            characterVO.name,
-            characterVO.description,
-            ImageEntity(
-                characterVO.thumbnail.path,
-                characterVO.thumbnail.extension
-            )
+            thumbnail = "test.jpg"
         )
 
-        if (isFavorite) {
-            GlobalScope.launch { db.characterDao().insert(character) }
+        val favoriteCharacter = FavoriteCharacter(character, isFavorite)
+
+        fakeState.value = DetailUiState.Success(favoriteCharacter)
+
+        intent = Intent(ApplicationProvider.getApplicationContext(), DetailActivity::class.java).apply {
+            putExtra("characterId", character.id)
         }
 
-        Intent(ApplicationProvider.getApplicationContext(), DetailActivity::class.java).apply {
-            putExtra("character", characterVO)
-            scenario = ActivityScenario.launch(this)
+        every { viewModel.onFabClick(isFavorite) } answers {
+            fakeState.value = DetailUiState.Success(favoriteCharacter.copy(isFavorite = !isFavorite))
+            val message = if (isFavorite) R.string.character_deleted else R.string.character_added
+            fakeState.value = DetailUiState.ShowSnackbar(message, isFavorite)
         }
     }
 }
