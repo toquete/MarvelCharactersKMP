@@ -1,68 +1,54 @@
 package com.guilherme.marvelcharacters.ui.home
 
-import androidx.test.espresso.intent.Intents
-import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.core.app.launchActivity
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.guilherme.marvelcharacters.MainActivity
-import com.guilherme.marvelcharacters.remote.model.CharacterResponse
-import com.guilherme.marvelcharacters.remote.model.ContainerResponse
-import com.guilherme.marvelcharacters.remote.model.ImageResponse
-import com.guilherme.marvelcharacters.remote.service.Api
+import com.guilherme.marvelcharacters.R
+import com.guilherme.marvelcharacters.core.model.Character
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import io.mockk.coEvery
-import okhttp3.ResponseBody
-import org.junit.After
+import io.mockk.every
+import io.mockk.mockk
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import retrofit2.HttpException
-import retrofit2.Response
-import javax.inject.Inject
-import com.guilherme.marvelcharacters.remote.model.Response as apiResponse
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class HomeFragmentTest {
 
     @get:Rule
-    val rule = ActivityScenarioRule(MainActivity::class.java)
-
-    @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
-    @Inject
-    lateinit var api: Api
+    @BindValue
+    val viewModel: HomeViewModel = mockk(relaxed = true)
 
-    private val character = CharacterResponse(
+    private val flow = MutableStateFlow<HomeUiState>(HomeUiState.Empty)
+
+    private val character = Character(
         id = 1,
         name = "Spider-Man",
         description = "xablau",
-        thumbnail = ImageResponse(
-            path = "",
-            extension = ""
-        )
+        thumbnail = "test.jpg"
     )
 
     @Before
     fun setUp() {
-        hiltRule.inject()
-        Intents.init()
-    }
-
-    @After
-    fun tearDown() {
-        Intents.release()
+        every { viewModel.uiState } returns flow
     }
 
     @Test
     fun checkScreenIsDisplayed() {
-        home {
-            checkToolbarTitle()
-            checkEditTextIsDisplayed()
-            checkButtonIsDisplayed()
-            checkBottomBarItemIsSelected()
+        launchActivity<MainActivity>().use {
+            home {
+                checkToolbarTitle()
+                checkEditTextIsDisplayed()
+                checkButtonIsDisplayed()
+                checkBottomBarItemIsSelected()
+            }
         }
     }
 
@@ -70,42 +56,27 @@ class HomeFragmentTest {
     fun searchCharacter() {
         mockApiSuccess()
 
-        home {
-            clickEditText()
-            typeEditText("spider")
-            clickSearchButton()
-            checkItemIsVisible("Spider-Man")
+        launchActivity<MainActivity>().use {
+            home {
+                clickEditText()
+                typeEditText("spider")
+                clickSearchButton()
+                checkItemIsVisible("Spider-Man")
+            }
         }
     }
 
     @Test
-    fun checkDetailScreenIsDisplayed() {
-        mockApiSuccess()
+    fun checkRequestErrorIsDisplayed() {
+        mockApiError()
 
-        home {
-            clickEditText()
-            typeEditText("spider")
-            clickSearchButton()
-            clickItem("Spider-Man")
-            checkDetailScreenIsDisplayed()
-        }
-    }
-
-    @Test
-    fun checkRequestkErrorIsDisplayed() {
-        val exception = HttpException(
-            Response.error<String>(
-                404,
-                ResponseBody.create(null, "error")
-            )
-        )
-        mockApiError(exception)
-
-        home {
-            clickEditText()
-            typeEditText("spider")
-            clickSearchButton()
-            checkMessage("There was an error with your request. Try again later!")
+        launchActivity<MainActivity>().use {
+            home {
+                clickEditText()
+                typeEditText("spider")
+                clickSearchButton()
+                checkMessage("There was an error with your request. Try again later!")
+            }
         }
     }
 
@@ -113,20 +84,29 @@ class HomeFragmentTest {
     fun checkEmptyStateMessageIsDisplayed() {
         mockApiSuccess(isEmpty = true)
 
-        home {
-            clickEditText()
-            typeEditText("spider")
-            clickSearchButton()
-            checkMessage("No characters with that name. Try again!")
+        launchActivity<MainActivity>().use {
+            home {
+                clickEditText()
+                typeEditText("spider")
+                clickSearchButton()
+                checkMessage("No characters with that name. Try again!")
+            }
         }
     }
 
     private fun mockApiSuccess(isEmpty: Boolean = false) {
-        val result = apiResponse(ContainerResponse(if (isEmpty) emptyList() else listOf(character)))
-        coEvery { api.getCharacters(any(), any(), any(), any()) } returns result
+        every { viewModel.onSearchCharacter(any()) } answers {
+            if (isEmpty) {
+                flow.value = HomeUiState.Error(R.string.empty_state_message)
+            } else {
+                flow.value = HomeUiState.Success(listOf(character))
+            }
+        }
     }
 
-    private fun mockApiError(exception: Exception) {
-        coEvery { api.getCharacters(any(), any(), any(), any()) } throws exception
+    private fun mockApiError() {
+        every { viewModel.onSearchCharacter(any()) } answers {
+            flow.value = HomeUiState.Error(R.string.request_error_message)
+        }
     }
 }

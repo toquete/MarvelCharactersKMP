@@ -118,4 +118,6 @@ dependencies {
     androidTestImplementation "io.mockk:mockk-android:$mockkAndroidVersion"
     androidTestImplementation "androidx.test:runner:$testRunnerVersion"
     androidTestUtil "androidx.test:orchestrator:$orchestratorVersion"
+    androidTestImplementation "androidx.test:core:$testRunnerVersion"
+    androidTestImplementation "androidx.test:core-ktx:$testRunnerVersion"
 }
