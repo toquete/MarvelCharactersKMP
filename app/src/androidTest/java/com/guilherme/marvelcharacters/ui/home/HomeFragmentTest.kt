@@ -26,7 +26,7 @@ class HomeFragmentTest {
     @BindValue
     val viewModel: HomeViewModel = mockk(relaxed = true)
 
-    private val flow = MutableStateFlow<HomeUiState>(HomeUiState.Empty)
+    private val fakeState = MutableStateFlow<HomeUiState>(HomeUiState.Empty)
 
     private val character = Character(
         id = 1,
@@ -37,7 +37,7 @@ class HomeFragmentTest {
 
     @Before
     fun setUp() {
-        every { viewModel.uiState } returns flow
+        every { viewModel.uiState } returns fakeState
     }
 
     @Test
@@ -97,16 +97,16 @@ class HomeFragmentTest {
     private fun mockApiSuccess(isEmpty: Boolean = false) {
         every { viewModel.onSearchCharacter(any()) } answers {
             if (isEmpty) {
-                flow.value = HomeUiState.Error(R.string.empty_state_message)
+                fakeState.value = HomeUiState.Error(R.string.empty_state_message)
             } else {
-                flow.value = HomeUiState.Success(listOf(character))
+                fakeState.value = HomeUiState.Success(listOf(character))
             }
         }
     }
 
     private fun mockApiError() {
         every { viewModel.onSearchCharacter(any()) } answers {
-            flow.value = HomeUiState.Error(R.string.request_error_message)
+            fakeState.value = HomeUiState.Error(R.string.request_error_message)
         }
     }
 }
