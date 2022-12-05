@@ -21,6 +21,7 @@ android {
     kotlinOptions {
         jvmTarget = jvmTargetVersion
     }
+    namespace 'com.guilherme.marvelcharacters.remote'
 }
 
 dependencies {

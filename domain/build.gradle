@@ -20,6 +20,7 @@ android {
     kotlinOptions {
         jvmTarget = jvmTargetVersion
     }
+    namespace 'com.guilherme.marvelcharacters.domain'
 }
 
 dependencies {

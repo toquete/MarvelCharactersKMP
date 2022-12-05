@@ -18,7 +18,7 @@
         android:id="@+id/favoritesFragment"
         android:name="com.guilherme.marvelcharacters.ui.favorites.FavoritesFragment"
         android:label="Favorites"
-        tools:layout="@layout/fragment_favorites" >
+        tools:layout="@layout/fragment_favorites">
         <action
             android:id="@+id/actionFavoritesToDetail"
             app:destination="@id/detailActivity" />
@@ -26,7 +26,8 @@
     <activity
         android:id="@+id/detailActivity"
         android:name="com.guilherme.marvelcharacters.ui.detail.DetailActivity"
-        android:label="DetailActivity" >
+        android:label="DetailActivity"
+        tools:layout="@layout/activity_detail">
         <argument
             android:name="characterId"
             app:argType="integer" />
