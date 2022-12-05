@@ -7,11 +7,6 @@ buildscript {
         navigationVersion = "2.3.5"
         hiltVersion = "2.40"
     }
-    repositories {
-        google()
-        mavenCentral()
-        jcenter()
-    }
     dependencies {
         classpath "com.android.tools.build:gradle:$gradlePluginVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
@@ -29,14 +24,6 @@ plugins {
     id "org.jlleitschuh.gradle.ktlint" version "9.2.1"
     id "io.gitlab.arturbosch.detekt" version "1.8.0"
     id 'com.github.kt3k.coveralls' version '2.12.0'
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        jcenter()
-    }
 }
 
 apply from: 'dependencies.gradle'
