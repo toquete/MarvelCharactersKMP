@@ -47,7 +47,7 @@ class CharacterRepositoryImplTest {
     }
 
     @Test
-    fun `getCharacters - returns character list from remote`() = runBlockingTest {
+    fun `getCharacters - returns character list from remote`() = testCoroutineRule.runBlockingTest {
         coEvery { remoteDataSource.getCharacters(name = "spider", any(), any()) } returns Fixtures.characterList
         coEvery { localDataSource.getCharactersByName(name = "spider") } returns emptyList()
 
@@ -58,7 +58,7 @@ class CharacterRepositoryImplTest {
     }
 
     @Test
-    fun `getCharacters - returns character list from local`() = runBlockingTest {
+    fun `getCharacters - returns character list from local`() = testCoroutineRule.runBlockingTest {
         coEvery { localDataSource.getCharactersByName(name = "spider") } returns Fixtures.characterList
 
         val list = characterRepository.getCharacters(name = "spider", key = "123", privateKey = "456")
