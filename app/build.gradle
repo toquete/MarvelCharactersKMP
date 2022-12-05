@@ -80,10 +80,7 @@ dependencies {
     implementation project(':domain')
     implementation project(':core:model')
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
-    implementation "androidx.appcompat:appcompat:$appCompatVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-    implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
+    implementation "androidx.core:core-ktx:$coreVersion"
     implementation "com.google.android.material:material:$materialDesignVersion"
 
     implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
@@ -107,6 +104,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
     androidTestImplementation "com.google.dagger:hilt-android-testing:$hiltTestingVersion"
+    androidTestImplementation "androidx.navigation:navigation-testing:$navigationVersion"
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hiltTestingVersion"
     androidTestImplementation "io.mockk:mockk-android:$mockkAndroidVersion"
     androidTestImplementation "androidx.test:runner:$testRunnerVersion"
