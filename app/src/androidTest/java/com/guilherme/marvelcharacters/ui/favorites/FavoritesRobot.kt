@@ -2,14 +2,17 @@ package com.guilherme.marvelcharacters.ui.favorites
 
 import android.content.Context
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItem
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isSelected
+import androidx.test.espresso.matcher.ViewMatchers.withClassName
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withParent
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.guilherme.marvelcharacters.R
 import org.hamcrest.CoreMatchers.endsWith
 import org.hamcrest.core.AllOf.allOf
@@ -37,11 +40,6 @@ class FavoritesRobot {
     fun checkOverflowMenuIsNotDisplayed() {
         onView(withClassName(endsWith("OverflowMenuButton")))
             .check(doesNotExist())
-    }
-
-    fun clickItem(text: String) {
-        onView(withId(R.id.recyclerViewFavorites))
-            .perform(actionOnItem<RecyclerView.ViewHolder>(withChild(withText(text)), click()))
     }
 
     fun clickOverflowMenu(context: Context) {

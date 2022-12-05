@@ -13,7 +13,9 @@ task jacocoFullTestReport(type: JacocoReport) {
     description = "Generate Jacoco coverage reports after running tests."
 
     def projects = subprojects.findAll {
-        it.getTasksByName("jacocoTestReport", false)
+        if (it.name != "model") {
+            it.getTasksByName("jacocoTestReport", false)
+        }
     }
 
     dependsOn(projects.jacocoTestReport)
