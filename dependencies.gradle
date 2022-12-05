@@ -27,7 +27,7 @@ ext {
     orchestratorVersion = "1.4.0"
     turbineVersion = "0.7.0"
     mockWebServerVersion = "4.9.3"
-    okHttpVersion = "4.9.3"
+    okHttpVersion = "4.10.0"
     kotlinSerializationVersion = "1.2.2"
     kotlinSerializationConverterVersion = "0.8.0"
 }

@@ -32,8 +32,8 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     kapt "com.google.dagger:hilt-compiler:$hiltVersion"
 
-    api "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    api "com.squareup.okhttp3:okhttp:$okHttpVersion"
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
     implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$kotlinSerializationConverterVersion"
     implementation "commons-codec:commons-codec:$commonsCodecVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
