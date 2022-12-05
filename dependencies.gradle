@@ -17,7 +17,6 @@ ext {
     constraintLayoutVersion = "2.1.1"
     recyclerViewVersion = "1.2.1"
     materialDesignVersion = "1.4.0"
-    legacySupportVersion = "1.0.0"
     lifecycleVersion = "2.4.0"
     lifecycleExtVersion = "2.2.0"
     glideVersion = "4.11.0"
