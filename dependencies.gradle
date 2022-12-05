@@ -8,7 +8,7 @@ ext {
 
     coreVersion = "1.9.0"
     appCompatVersion = "1.5.1"
-    roomVersion = "2.3.0"
+    roomVersion = "2.4.3"
     junitVersion = "4.13.2"
     retrofitVersion = "2.9.0"
     commonsCodecVersion = "1.11"
