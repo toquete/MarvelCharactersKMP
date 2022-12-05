@@ -17,7 +17,7 @@ import javax.inject.Inject
 class NightModeViewModel @Inject constructor(
     private val getDarkModeUseCase: GetDarkModeUseCase,
     private val toggleDarkModeUseCase: ToggleDarkModeUseCase,
-    private val isDarkModeEnabledUseCase: IsDarkModeEnabledUseCase,
+    private val isDarkModeEnabledUseCase: IsDarkModeEnabledUseCase
 ) : ViewModel() {
 
     private val _nightMode = MutableStateFlow(AppCompatDelegate.MODE_NIGHT_NO)
