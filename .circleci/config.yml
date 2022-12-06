@@ -37,6 +37,7 @@ references:
 jobs:
   build:
     <<: *android_config
+    resource_class: large
     steps:
       - checkout
       - *restore_cache
@@ -57,6 +58,7 @@ jobs:
 
   quality:
     <<: *android_config
+    resource_class: large
     steps:
       - *attach_workspace
       - *restore_cache
@@ -75,6 +77,7 @@ jobs:
 
   test_unit:
     <<: *android_config
+    resource_class: large
     steps:
       - *attach_workspace
       - *restore_cache
@@ -116,6 +119,7 @@ jobs:
 
   test_results:
     <<: *android_config
+    resource_class: large
     steps:
       - *attach_workspace
       - *restore_cache
@@ -132,6 +136,7 @@ jobs:
 
   report_coverage:
     <<: *android_config
+    resource_class: large
     steps:
       - *attach_workspace
       - *restore_cache
