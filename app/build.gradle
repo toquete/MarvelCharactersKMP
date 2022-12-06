@@ -16,7 +16,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "com.guilherme.marvelcharacters.infrastructure.CustomAndroidTestRunner"
+        testInstrumentationRunner "com.guilherme.marvelcharacters.core.testing.CustomAndroidTestRunner"
 
         buildConfigField("String", "MARVEL_KEY", "\"8f856183ec2966942d063a0a4b1401b0\"")
         buildConfigField("String", "MARVEL_PRIVATE_KEY", "\"d6d7e23b91bbecd81fc237c078b8177b476b4f91\"")
@@ -94,21 +94,13 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
 
-    testImplementation "io.mockk:mockk:$mockkVersion"
-    testImplementation "junit:junit:$junitVersion"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
-    testImplementation "com.google.truth:truth:$truthVersion"
-    testImplementation "app.cash.turbine:turbine:$turbineVersion"
-
-    androidTestImplementation "androidx.test:core:$testCoreVersion"
-    androidTestImplementation "androidx.test:core-ktx:$testCoreVersion"
-    androidTestImplementation "androidx.test:runner:$testRunnerVersion"
-    androidTestImplementation "androidx.test.ext:junit:$junitExtVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
-    androidTestImplementation "com.google.dagger:hilt-android-testing:$hiltTestingVersion"
-    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hiltTestingVersion"
-    androidTestImplementation "androidx.navigation:navigation-testing:$navigationVersion"
-    androidTestImplementation "io.mockk:mockk-android:$mockkAndroidVersion"
+    testImplementation project(':core:testing')
+    androidTestImplementation project(':core:testing')
     androidTestUtil "androidx.test:orchestrator:$orchestratorVersion"
+}
+
+configurations.all {
+    resolutionStrategy {
+        force "org.objenesis:objenesis:3.2"
+    }
 }

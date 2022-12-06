@@ -1,4 +1,4 @@
-package com.guilherme.marvelcharacters.infrastructure
+package com.guilherme.marvelcharacters.core.testing
 
 import android.app.Application
 import android.content.Context

@@ -1,4 +1,4 @@
-package com.guilherme.marvelcharacters.util
+package com.guilherme.marvelcharacters.core.testing.matcher
 
 import android.view.View
 import androidx.test.espresso.matcher.BoundedMatcher

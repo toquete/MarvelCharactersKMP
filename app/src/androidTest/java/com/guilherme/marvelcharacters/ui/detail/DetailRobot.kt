@@ -7,8 +7,8 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.guilherme.marvelcharacters.R
-import com.guilherme.marvelcharacters.util.CustomMatchers.isActivated
-import com.guilherme.marvelcharacters.util.CustomMatchers.withTitle
+import com.guilherme.marvelcharacters.core.testing.matcher.CustomMatchers.isActivated
+import com.guilherme.marvelcharacters.core.testing.matcher.CustomMatchers.withTitle
 import org.hamcrest.CoreMatchers.not
 
 fun detail(func: DetailRobot.() -> Unit) = DetailRobot().apply { func() }
