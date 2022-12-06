@@ -1,0 +1,42 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+}
+
+android {
+    namespace 'com.guilherme.marvelcharacters.core.testing'
+    compileSdk rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
+    }
+    compileOptions {
+        sourceCompatibility sourceCompatibilityVersion
+        targetCompatibility targetCompatibilityVersion
+    }
+    kotlinOptions {
+        jvmTarget = jvmTargetVersion
+    }
+}
+
+dependencies {
+
+    api "io.mockk:mockk:$mockkVersion"
+    api "junit:junit:$junitVersion"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+    api "com.google.truth:truth:$truthVersion"
+    api "app.cash.turbine:turbine:$turbineVersion"
+
+    api "androidx.test:core:$testCoreVersion"
+    api "androidx.test:core-ktx:$testCoreVersion"
+    api "androidx.test:runner:$testRunnerVersion"
+    api "androidx.test.ext:junit:$junitExtVersion"
+    api "androidx.test.espresso:espresso-core:$espressoVersion"
+    api "androidx.test.espresso:espresso-contrib:$espressoVersion"
+    api "com.google.dagger:hilt-android-testing:$hiltTestingVersion"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hiltTestingVersion"
+    api "androidx.navigation:navigation-testing:$navigationVersion"
+    api "io.mockk:mockk-android:$mockkAndroidVersion"
+}
