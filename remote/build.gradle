@@ -27,8 +27,6 @@ android {
 dependencies {
     implementation project(':core:model')
 
-    implementation "androidx.core:core-ktx:$coreVersion"
-
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     kapt "com.google.dagger:hilt-compiler:$hiltVersion"
 
@@ -36,12 +34,8 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
     implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$kotlinSerializationConverterVersion"
     implementation "commons-codec:commons-codec:$commonsCodecVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion"
 
-    testImplementation "junit:junit:$junitVersion"
-    testImplementation "io.mockk:mockk:$mockkVersion"
-    testImplementation "com.google.truth:truth:$truthVersion"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+    testImplementation project(':core:testing')
     testImplementation "com.squareup.okhttp3:mockwebserver:$mockWebServerVersion"
 }

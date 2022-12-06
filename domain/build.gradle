@@ -27,14 +27,8 @@ dependencies {
     implementation project(':data')
     implementation project(':core:model')
 
-    implementation "androidx.core:core-ktx:$coreVersion"
-
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     kapt "com.google.dagger:hilt-compiler:$hiltVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
 
-    testImplementation "junit:junit:$junitVersion"
-    testImplementation "io.mockk:mockk:$mockkVersion"
-    testImplementation "com.google.truth:truth:$truthVersion"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+    testImplementation project(':core:testing')
 }

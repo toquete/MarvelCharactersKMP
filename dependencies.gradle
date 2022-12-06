@@ -12,7 +12,7 @@ ext {
     junitVersion = "4.13.2"
     retrofitVersion = "2.9.0"
     commonsCodecVersion = "1.11"
-    coroutinesVersion = "1.5.2"
+    coroutinesVersion = "1.6.4"
     materialDesignVersion = "1.7.0"
     lifecycleVersion = "2.4.0"
     glideVersion = "4.11.0"
