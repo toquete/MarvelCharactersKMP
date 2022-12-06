@@ -1,5 +1,6 @@
 package com.guilherme.marvelcharacters.infrastructure
 
+import com.guilherme.marvelcharacters.core.testing.util.TestCoroutineRule
 import io.mockk.MockKAnnotations
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before

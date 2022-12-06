@@ -1,4 +1,4 @@
-package com.guilherme.marvelcharacters.data.repository.infrastructure
+package com.guilherme.marvelcharacters.core.testing.util
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,11 +17,11 @@ class TestCoroutineRule : TestRule {
     val testCoroutineDispatcher = TestCoroutineDispatcher()
     private val testCoroutinesScope = TestCoroutineScope(testCoroutineDispatcher)
 
-    override fun apply(base: Statement?, description: Description?) = object : Statement() {
+    override fun apply(base: Statement, description: Description): Statement = object : Statement() {
         override fun evaluate() {
             Dispatchers.setMain(testCoroutineDispatcher)
 
-            base?.evaluate()
+            base.evaluate()
 
             Dispatchers.resetMain()
             testCoroutineDispatcher.cleanupTestCoroutines()

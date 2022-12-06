@@ -3,7 +3,7 @@ package com.guilherme.marvelcharacters.data.repository
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.cache.CharacterLocalDataSource
 import com.guilherme.marvelcharacters.cache.FavoriteCharacterLocalDataSource
-import com.guilherme.marvelcharacters.data.repository.infrastructure.TestCoroutineRule
+import com.guilherme.marvelcharacters.core.testing.util.TestCoroutineRule
 import com.guilherme.marvelcharacters.data.repository.util.Fixtures
 import com.guilherme.marvelcharacters.remote.CharacterRemoteDataSource
 import io.mockk.MockKAnnotations
