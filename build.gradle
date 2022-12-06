@@ -2,7 +2,7 @@
 
 buildscript {
     ext {
-        kotlinVersion = "1.5.31"
+        kotlinVersion = "1.7.20"
         gradlePluginVersion = '7.3.1'
         navigationVersion = '2.5.3'
         hiltVersion = '2.44.2'
