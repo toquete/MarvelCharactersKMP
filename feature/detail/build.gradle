@@ -2,7 +2,6 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
-    id 'androidx.navigation.safeargs.kotlin'
     id 'dagger.hilt.android.plugin'
 }
 
@@ -47,15 +46,10 @@ dependencies {
     implementation project(':core:ui')
 
     implementation "androidx.core:core-ktx:$coreVersion"
-    debugImplementation ("androidx.fragment:fragment-testing:$fragmentVersion") {
-        exclude group:'androidx.test', module:'monitor'
-    }
-
-    implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
-    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
-
+    implementation "androidx.activity:activity-ktx:$activityVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
-
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycleVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
     implementation "com.google.dagger:hilt-android:$hiltVersion"

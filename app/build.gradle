@@ -97,9 +97,6 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     kapt "com.google.dagger:hilt-compiler:$hiltVersion"
 
-    implementation "com.github.bumptech.glide:glide:$glideVersion"
-    kapt "com.github.bumptech.glide:compiler:$glideVersion"
-
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hiltTestingVersion"
 
     testImplementation project(':core:testing')
