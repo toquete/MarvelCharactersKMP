@@ -1,17 +1,22 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'androidx.navigation.safeargs.kotlin'
+    id 'dagger.hilt.android.plugin'
 }
+
+apply from: "$rootDir/tools/jacoco/android.gradle"
 
 android {
     namespace 'com.guilherme.marvelcharacters.feature.detail'
-    compileSdk 32
+    compileSdk rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        minSdk 21
-        targetSdk 32
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.guilherme.marvelcharacters.core.testing.CustomAndroidTestRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
 
@@ -22,20 +27,52 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility sourceCompatibilityVersion
+        targetCompatibility targetCompatibilityVersion
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = jvmTargetVersion
+    }
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+    }
+    buildFeatures {
+        viewBinding true
     }
 }
 
 dependencies {
+    implementation project(':domain')
+    implementation project(':core:model')
 
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.7.0'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    implementation "androidx.core:core-ktx:$coreVersion"
+    implementation "com.google.android.material:material:$materialDesignVersion"
+    debugImplementation ("androidx.fragment:fragment-testing:$fragmentVersion") {
+        exclude group:'androidx.test', module:'monitor'
+    }
+
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
+
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+
+    implementation "com.google.dagger:hilt-android:$hiltVersion"
+    kapt "com.google.dagger:hilt-compiler:$hiltVersion"
+
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+    kapt "com.github.bumptech.glide:compiler:$glideVersion"
+
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hiltTestingVersion"
+
+    testImplementation project(':core:testing')
+    androidTestImplementation project(':core:testing')
+    androidTestUtil "androidx.test:orchestrator:$orchestratorVersion"
+}
+
+configurations.all {
+    resolutionStrategy {
+        force "org.objenesis:objenesis:3.2"
+    }
 }
