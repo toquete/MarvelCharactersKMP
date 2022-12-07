@@ -38,7 +38,5 @@ dependencies {
     api "androidx.test.espresso:espresso-contrib:$espressoVersion"
     api "androidx.navigation:navigation-testing:$navigationVersion"
     api "io.mockk:mockk-android:$mockkAndroidVersion"
-
     api "com.google.dagger:hilt-android-testing:$hiltTestingVersion"
-    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hiltTestingVersion"
 }

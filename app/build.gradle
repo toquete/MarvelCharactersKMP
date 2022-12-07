@@ -82,6 +82,9 @@ dependencies {
 
     implementation "androidx.core:core-ktx:$coreVersion"
     implementation "com.google.android.material:material:$materialDesignVersion"
+    debugImplementation ("androidx.fragment:fragment-testing:$fragmentVersion") {
+        exclude group:'androidx.test', module:'monitor'
+    }
 
     implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
@@ -95,6 +98,8 @@ dependencies {
 
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
+
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hiltTestingVersion"
 
     testImplementation project(':core:testing')
     androidTestImplementation project(':core:testing')

@@ -1,6 +1,5 @@
 package com.guilherme.marvelcharacters.ui.home
 
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -8,14 +7,11 @@ import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollTo
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.isSelected
 import androidx.test.espresso.matcher.ViewMatchers.withChild
 import androidx.test.espresso.matcher.ViewMatchers.withHint
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.guilherme.marvelcharacters.R
-import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.core.AllOf.allOf
 
 fun home(func: HomeRobot.() -> Unit) = HomeRobot().apply { func() }
@@ -45,11 +41,6 @@ class HomeRobot {
             .check(matches(isDisplayed()))
     }
 
-    fun checkToolbarTitle() {
-        onView(allOf(instanceOf(TextView::class.java), withParent(withId(R.id.mainToolbar))))
-            .check(matches(withText("Marvel Characters")))
-    }
-
     fun checkEditTextIsDisplayed() {
         onView(withId(R.id.searchEditText))
             .check(matches(allOf(isDisplayed(), withHint("Character"))))
@@ -58,11 +49,6 @@ class HomeRobot {
     fun checkButtonIsDisplayed() {
         onView(withId(R.id.button))
             .check(matches(allOf(isDisplayed(), withText("search"))))
-    }
-
-    fun checkBottomBarItemIsSelected() {
-        onView(withId(R.id.homeFragment))
-            .check(matches(isSelected()))
     }
 
     fun checkMessage(message: String) {

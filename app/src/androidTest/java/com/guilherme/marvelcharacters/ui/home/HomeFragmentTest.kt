@@ -1,10 +1,9 @@
 package com.guilherme.marvelcharacters.ui.home
 
-import androidx.test.core.app.launchActivity
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.guilherme.marvelcharacters.MainActivity
 import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.core.model.Character
+import com.guilherme.marvelcharacters.ui.launchFragmentInHiltContainer
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -42,13 +41,11 @@ class HomeFragmentTest {
 
     @Test
     fun checkScreenIsDisplayed() {
-        launchActivity<MainActivity>().use {
-            home {
-                checkToolbarTitle()
-                checkEditTextIsDisplayed()
-                checkButtonIsDisplayed()
-                checkBottomBarItemIsSelected()
-            }
+        launchFragmentInHiltContainer<HomeFragment>(themeResId = R.style.Theme_AppTheme)
+
+        home {
+            checkEditTextIsDisplayed()
+            checkButtonIsDisplayed()
         }
     }
 
@@ -56,13 +53,13 @@ class HomeFragmentTest {
     fun searchCharacter() {
         mockApiSuccess()
 
-        launchActivity<MainActivity>().use {
-            home {
-                clickEditText()
-                typeEditText("spider")
-                clickSearchButton()
-                checkItemIsVisible("Spider-Man")
-            }
+        launchFragmentInHiltContainer<HomeFragment>(themeResId = R.style.Theme_AppTheme)
+
+        home {
+            clickEditText()
+            typeEditText("spider")
+            clickSearchButton()
+            checkItemIsVisible("Spider-Man")
         }
     }
 
@@ -70,13 +67,13 @@ class HomeFragmentTest {
     fun checkRequestErrorIsDisplayed() {
         mockApiError()
 
-        launchActivity<MainActivity>().use {
-            home {
-                clickEditText()
-                typeEditText("spider")
-                clickSearchButton()
-                checkMessage("There was an error with your request. Try again later!")
-            }
+        launchFragmentInHiltContainer<HomeFragment>(themeResId = R.style.Theme_AppTheme)
+
+        home {
+            clickEditText()
+            typeEditText("spider")
+            clickSearchButton()
+            checkMessage("There was an error with your request. Try again later!")
         }
     }
 
@@ -84,13 +81,13 @@ class HomeFragmentTest {
     fun checkEmptyStateMessageIsDisplayed() {
         mockApiSuccess(isEmpty = true)
 
-        launchActivity<MainActivity>().use {
-            home {
-                clickEditText()
-                typeEditText("spider")
-                clickSearchButton()
-                checkMessage("No characters with that name. Try again!")
-            }
+        launchFragmentInHiltContainer<HomeFragment>(themeResId = R.style.Theme_AppTheme)
+
+        home {
+            clickEditText()
+            typeEditText("spider")
+            clickSearchButton()
+            checkMessage("No characters with that name. Try again!")
         }
     }
 
