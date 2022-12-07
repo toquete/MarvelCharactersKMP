@@ -1,10 +1,9 @@
 package com.guilherme.marvelcharacters.ui.favorites
 
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.core.app.launchActivity
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.guilherme.marvelcharacters.MainActivity
+import com.guilherme.marvelcharacters.R
 import com.guilherme.marvelcharacters.core.model.Character
+import com.guilherme.marvelcharacters.ui.launchFragmentInHiltContainer
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -34,43 +33,22 @@ class FavoritesFragmentTest {
     }
 
     @Test
-    fun checkScreenIsDisplayed() {
-        launchActivity<MainActivity>().use {
-            favorites {
-                clickBottomItem()
-                checkToolbarTitle()
-                checkOverflowMenuIsNotDisplayed()
-                checkBottomBarItemIsSelected()
-            }
+    fun checkEmptyScreenIsDisplayed() {
+        launchFragmentInHiltContainer<FavoritesFragment>(themeResId = R.style.Theme_AppTheme)
+
+        favorites {
+            checkItemIsNotVisible("Spider-Man")
         }
     }
 
     @Test
-    fun checkCharacterDeletion() {
+    fun checkListScreenIsDisplayed() {
         mockFavoriteCharacter()
 
-        launchActivity<MainActivity>().use {
-            favorites {
-                clickBottomItem()
-                clickOverflowMenu(ApplicationProvider.getApplicationContext())
-                clickDeleteAllItem()
-                clickDialogDelete()
-                checkCharacterWasDeleted()
-            }
-        }
-    }
+        launchFragmentInHiltContainer<FavoritesFragment>(themeResId = R.style.Theme_AppTheme)
 
-    @Test
-    fun checkCharacterDeletionConfirmationDialog() {
-        mockFavoriteCharacter()
-
-        launchActivity<MainActivity>().use {
-            favorites {
-                clickBottomItem()
-                clickOverflowMenu(ApplicationProvider.getApplicationContext())
-                clickDeleteAllItem()
-                checkConfirmationDialog()
-            }
+        favorites {
+            checkItemIsVisible("Spider-Man")
         }
     }
 
