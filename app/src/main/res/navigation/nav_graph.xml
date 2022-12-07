@@ -25,7 +25,7 @@
     </fragment>
     <activity
         android:id="@+id/detailActivity"
-        android:name="com.guilherme.marvelcharacters.ui.detail.DetailActivity"
+        android:name="com.guilherme.marvelcharacters.feature.detail.DetailActivity"
         android:label="DetailActivity"
         tools:layout="@layout/activity_detail">
         <argument

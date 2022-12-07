@@ -44,9 +44,9 @@ android {
 dependencies {
     implementation project(':domain')
     implementation project(':core:model')
+    implementation project(':core:ui')
 
     implementation "androidx.core:core-ktx:$coreVersion"
-    implementation "com.google.android.material:material:$materialDesignVersion"
     debugImplementation ("androidx.fragment:fragment-testing:$fragmentVersion") {
         exclude group:'androidx.test', module:'monitor'
     }
