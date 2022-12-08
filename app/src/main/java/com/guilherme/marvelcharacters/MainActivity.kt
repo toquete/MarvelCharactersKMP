@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
 
-    private val mainDestinations = setOf(R.id.homeFragment, R.id.favoritesFragment)
+    private val mainDestinations = setOf(R.id.homeFragment, R.id.navigation_favorites)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +34,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNavigationListener() {
-        navController.addOnDestinationChangedListener { _, destination, _ ->
+        navController.addOnDestinationChangedListener { _, _, arguments ->
             with(binding) {
-                val isMainDestination = destination.id in mainDestinations
+                val isMainDestination = arguments?.getBoolean("showAppBars", false) == true
                 mainToolbar.isVisible = isMainDestination
                 bottomNavigation.isVisible = isMainDestination
             }

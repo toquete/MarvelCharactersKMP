@@ -5,6 +5,7 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
+    <include app:graph="@navigation/navigation_favorites" />
     <include app:graph="@navigation/navigation_detail" />
 
     <fragment
@@ -12,17 +13,11 @@
         android:name="com.guilherme.marvelcharacters.ui.home.HomeFragment"
         android:label="Marvel Characters"
         tools:layout="@layout/fragment_home">
+        <argument
+            android:name="showAppBars"
+            android:defaultValue="true" />
         <action
             android:id="@+id/actionHomeToDetail"
-            app:destination="@id/detailFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/favoritesFragment"
-        android:name="com.guilherme.marvelcharacters.ui.favorites.FavoritesFragment"
-        android:label="Favorites"
-        tools:layout="@layout/fragment_favorites">
-        <action
-            android:id="@+id/actionFavoritesToDetail"
             app:destination="@id/detailFragment" />
     </fragment>
 </navigation>

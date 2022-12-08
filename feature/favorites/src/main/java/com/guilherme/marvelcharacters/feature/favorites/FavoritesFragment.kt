@@ -6,8 +6,10 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.annotation.StringRes
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -83,16 +85,14 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
     private fun showSnackbar(@StringRes stringId: Int?) {
         stringId?.let {
             Snackbar.make(favoritesBinding.recyclerViewFavorites, it, Snackbar.LENGTH_LONG)
-                //.setAnchorView(R.id.bottomNavigation)
                 .show()
             favoritesViewModel.onSnackbarShown()
         }
     }
 
     private fun navigateToDetail(character: Character) {
-//        FavoritesFragmentDirections.actionFavoritesToDetail(character.id).apply {
-//            findNavController().navigate(this)
-//        }
+        val deeplink = "marvelcharacters://character/${character.id}".toUri()
+        findNavController().navigate(deeplink)
     }
 
     private fun buildConfirmationDialog() {
