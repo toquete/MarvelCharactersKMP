@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_detail"
-    app:startDestination="@id/detailActivity">
+    app:startDestination="@id/detailFragment">
 
     <fragment
-        android:id="@+id/detailActivity"
+        android:id="@+id/detailFragment"
         android:name="com.guilherme.marvelcharacters.feature.detail.DetailFragment"
-        tools:layout="@layout/activity_detail">
+        tools:layout="@layout/fragment_detail">
         <argument
             android:name="characterId"
             app:argType="integer" />

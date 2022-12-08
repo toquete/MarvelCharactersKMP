@@ -1,8 +1,6 @@
 package com.guilherme.marvelcharacters.feature.detail
 
-import android.content.Intent
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.core.app.launchActivity
+import androidx.core.os.bundleOf
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.domain.model.FavoriteCharacter
@@ -19,7 +17,7 @@ import org.junit.runner.RunWith
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class DetailActivityTest {
+class DetailFragmentTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -29,7 +27,7 @@ class DetailActivityTest {
 
     private val fakeState = MutableStateFlow<DetailUiState>(DetailUiState.Loading)
 
-    private lateinit var intent: Intent
+    private val bundle = bundleOf("characterId" to 0)
 
     @Before
     fun setUp() {
@@ -40,12 +38,15 @@ class DetailActivityTest {
     fun checkScreenIsDisplayed() {
         mockCharacter()
 
-        launchActivity<DetailActivity>(intent).use {
-            detail {
-                checkToolbarTitle("Spider-Man")
-                checkFabIsNotActivated()
-                checkDescription("xablau")
-            }
+        launchFragmentInHiltContainer<DetailFragment>(
+            fragmentArgs = bundle,
+            themeResId = R.style.Theme_AppTheme
+        )
+
+        detail {
+            checkToolbarTitle("Spider-Man")
+            checkFabIsNotActivated()
+            checkDescription("xablau")
         }
     }
 
@@ -53,12 +54,15 @@ class DetailActivityTest {
     fun checkScreenIsDisplayed_favoriteCharacter() {
         mockCharacter(isFavorite = true)
 
-        launchActivity<DetailActivity>(intent).use {
-            detail {
-                checkToolbarTitle("Spider-Man")
-                checkFabIsActivated()
-                checkDescription("xablau")
-            }
+        launchFragmentInHiltContainer<DetailFragment>(
+            fragmentArgs = bundle,
+            themeResId = R.style.Theme_AppTheme
+        )
+
+        detail {
+            checkToolbarTitle("Spider-Man")
+            checkFabIsActivated()
+            checkDescription("xablau")
         }
     }
 
@@ -66,13 +70,16 @@ class DetailActivityTest {
     fun checkCharacterIsDeleted() {
         mockCharacter(isFavorite = true)
 
-        launchActivity<DetailActivity>(intent).use {
-            detail {
-                checkFabIsActivated()
-                clickFabButton()
-                checkCharacterWasDeleted()
-                checkFabIsNotActivated()
-            }
+        launchFragmentInHiltContainer<DetailFragment>(
+            fragmentArgs = bundle,
+            themeResId = R.style.Theme_AppTheme
+        )
+
+        detail {
+            checkFabIsActivated()
+            clickFabButton()
+            checkCharacterWasDeleted()
+            checkFabIsNotActivated()
         }
     }
 
@@ -80,13 +87,16 @@ class DetailActivityTest {
     fun checkCharacterIsAdded() {
         mockCharacter()
 
-        launchActivity<DetailActivity>(intent).use {
-            detail {
-                checkFabIsNotActivated()
-                clickFabButton()
-                checkCharacterWasAdded()
-                checkFabIsActivated()
-            }
+        launchFragmentInHiltContainer<DetailFragment>(
+            fragmentArgs = bundle,
+            themeResId = R.style.Theme_AppTheme
+        )
+
+        detail {
+            checkFabIsNotActivated()
+            clickFabButton()
+            checkCharacterWasAdded()
+            checkFabIsActivated()
         }
     }
 
@@ -102,12 +112,9 @@ class DetailActivityTest {
 
         fakeState.value = DetailUiState.Success(favoriteCharacter)
 
-        intent = Intent(ApplicationProvider.getApplicationContext(), DetailActivity::class.java).apply {
-            putExtra("characterId", character.id)
-        }
-
         every { viewModel.onFabClick(isFavorite) } answers {
-            fakeState.value = DetailUiState.Success(favoriteCharacter.copy(isFavorite = !isFavorite))
+            fakeState.value =
+                DetailUiState.Success(favoriteCharacter.copy(isFavorite = !isFavorite))
             val message = if (isFavorite) R.string.character_deleted else R.string.character_added
             fakeState.value = DetailUiState.ShowSnackbar(message, isFavorite)
         }

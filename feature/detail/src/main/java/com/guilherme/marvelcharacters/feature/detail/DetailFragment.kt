@@ -6,21 +6,21 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
-import com.guilherme.marvelcharacters.feature.detail.databinding.ActivityDetailBinding
+import com.guilherme.marvelcharacters.feature.detail.databinding.FragmentDetailBinding
 import com.guilherme.marvelcharacters.feature.detail.extension.observe
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DetailFragment : Fragment(R.layout.activity_detail) {
+class DetailFragment : Fragment(R.layout.fragment_detail) {
 
-    private var _detailBinding: ActivityDetailBinding? = null
+    private var _detailBinding: FragmentDetailBinding? = null
     private val detailBinding get() = _detailBinding!!
 
     private val detailViewModel: DetailViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _detailBinding = ActivityDetailBinding.bind(view)
+        _detailBinding = FragmentDetailBinding.bind(view)
 
         setupObservers()
     }

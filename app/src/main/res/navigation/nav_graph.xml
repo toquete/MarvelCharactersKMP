@@ -14,7 +14,7 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/actionHomeToDetail"
-            app:destination="@id/detailActivity" />
+            app:destination="@id/detailFragment" />
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
@@ -23,6 +23,6 @@
         tools:layout="@layout/fragment_favorites">
         <action
             android:id="@+id/actionFavoritesToDetail"
-            app:destination="@id/detailActivity" />
+            app:destination="@id/detailFragment" />
     </fragment>
 </navigation>
