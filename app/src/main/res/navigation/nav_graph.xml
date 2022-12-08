@@ -5,6 +5,8 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
+    <include app:graph="@navigation/navigation_detail" />
+
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.guilherme.marvelcharacters.ui.home.HomeFragment"
@@ -23,13 +25,4 @@
             android:id="@+id/actionFavoritesToDetail"
             app:destination="@id/detailActivity" />
     </fragment>
-    <activity
-        android:id="@+id/detailActivity"
-        android:name="com.guilherme.marvelcharacters.feature.detail.DetailActivity"
-        android:label="DetailActivity"
-        tools:layout="@layout/activity_detail">
-        <argument
-            android:name="characterId"
-            app:argType="integer" />
-    </activity>
 </navigation>

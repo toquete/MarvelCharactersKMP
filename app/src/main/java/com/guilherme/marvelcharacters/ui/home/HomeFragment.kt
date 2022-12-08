@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -152,8 +153,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun navigateToDetail(character: Character) {
-        HomeFragmentDirections.actionHomeToDetail(character.id).run {
-            findNavController().navigate(this)
-        }
+        val deeplink = "marvelcharacters://character/${character.id}".toUri()
+        findNavController().navigate(deeplink)
     }
 }

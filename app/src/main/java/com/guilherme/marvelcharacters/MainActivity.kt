@@ -2,6 +2,7 @@ package com.guilherme.marvelcharacters
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -14,6 +15,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
+
+    private val mainDestinations = setOf(R.id.homeFragment, R.id.favoritesFragment)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,19 +25,30 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.hostFragment) as NavHostFragment
-        val navController = navHostFragment.navController
+        navController = navHostFragment.navController
 
-        setupToolbar(navController)
-        setupBottomNavigationBar(navController)
+        setupNavigationListener()
+        setupToolbar()
+        setupBottomNavigationBar()
         setupNavigationBar()
     }
 
-    private fun setupBottomNavigationBar(navController: NavController) {
+    private fun setupNavigationListener() {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            with(binding) {
+                val isMainDestination = destination.id in mainDestinations
+                mainToolbar.isVisible = isMainDestination
+                bottomNavigation.isVisible = isMainDestination
+            }
+        }
+    }
+
+    private fun setupBottomNavigationBar() {
         binding.bottomNavigation.setupWithNavController(navController)
     }
 
-    private fun setupToolbar(navController: NavController) {
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.favoritesFragment))
+    private fun setupToolbar() {
+        val appBarConfiguration = AppBarConfiguration(mainDestinations)
         binding.mainToolbar.setupWithNavController(navController, appBarConfiguration)
         setSupportActionBar(binding.mainToolbar)
     }
