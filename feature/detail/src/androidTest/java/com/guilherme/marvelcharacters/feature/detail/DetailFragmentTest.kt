@@ -40,7 +40,7 @@ class DetailFragmentTest {
 
         launchFragmentInHiltContainer<DetailFragment>(
             fragmentArgs = bundle,
-            themeResId = R.style.Theme_AppTheme
+            themeResId = R.style.Theme_TestTheme
         )
 
         detail {
@@ -56,7 +56,7 @@ class DetailFragmentTest {
 
         launchFragmentInHiltContainer<DetailFragment>(
             fragmentArgs = bundle,
-            themeResId = R.style.Theme_AppTheme
+            themeResId = R.style.Theme_TestTheme
         )
 
         detail {
@@ -72,7 +72,7 @@ class DetailFragmentTest {
 
         launchFragmentInHiltContainer<DetailFragment>(
             fragmentArgs = bundle,
-            themeResId = R.style.Theme_AppTheme
+            themeResId = R.style.Theme_TestTheme
         )
 
         detail {
@@ -89,7 +89,7 @@ class DetailFragmentTest {
 
         launchFragmentInHiltContainer<DetailFragment>(
             fragmentArgs = bundle,
-            themeResId = R.style.Theme_AppTheme
+            themeResId = R.style.Theme_TestTheme
         )
 
         detail {

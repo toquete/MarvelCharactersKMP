@@ -64,3 +64,9 @@ dependencies {
     androidTestImplementation project(':core:testing')
     androidTestUtil "androidx.test:orchestrator:$orchestratorVersion"
 }
+
+configurations.all {
+    resolutionStrategy {
+        force "org.objenesis:objenesis:3.2"
+    }
+}

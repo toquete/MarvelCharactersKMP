@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.guilherme.marvelcharacters.ui'
+    namespace 'com.guilherme.marvelcharacters.core.ui'
     compileSdk rootProject.ext.compileSdkVersion
 
     defaultConfig {
