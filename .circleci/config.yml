@@ -34,6 +34,12 @@ references:
     attach_workspace:
       at: *workspace
 
+  create_keystore: &create_keystore
+    run:
+      name: Create keystore.properties
+      command: cd android && printf 'MARVEL_KEY=%s\nMARVEL_PRIVATE_KEY=%s' \
+      $MARVEL_KEY $MARVEL_PRIVATE_KEY > keystore.properties
+
 jobs:
   build:
     <<: *android_config
@@ -41,6 +47,7 @@ jobs:
     steps:
       - checkout
       - *restore_cache
+      - *create_keystore
       - *download_dependencies
       - *save_cache
       - run:
