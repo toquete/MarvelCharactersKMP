@@ -4,9 +4,5 @@ import com.guilherme.marvelcharacters.core.model.Character
 
 interface CharacterRemoteDataSource {
 
-    suspend fun getCharacters(
-        name: String,
-        key: String,
-        privateKey: String
-    ): List<Character>
+    suspend fun getCharacters(name: String): List<Character>
 }

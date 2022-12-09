@@ -48,10 +48,10 @@ class CharacterRepositoryImplTest {
 
     @Test
     fun `getCharacters - returns character list from remote`() = testCoroutineRule.runBlockingTest {
-        coEvery { remoteDataSource.getCharacters(name = "spider", any(), any()) } returns Fixtures.characterList
+        coEvery { remoteDataSource.getCharacters(name = "spider") } returns Fixtures.characterList
         coEvery { localDataSource.getCharactersByName(name = "spider") } returns emptyList()
 
-        val list = characterRepository.getCharacters(name = "spider", key = "123", privateKey = "456")
+        val list = characterRepository.getCharacters(name = "spider")
 
         assertThat(list).containsExactly(Fixtures.character)
         coVerify { localDataSource.insertAll(Fixtures.characterList) }
@@ -61,7 +61,7 @@ class CharacterRepositoryImplTest {
     fun `getCharacters - returns character list from local`() = testCoroutineRule.runBlockingTest {
         coEvery { localDataSource.getCharactersByName(name = "spider") } returns Fixtures.characterList
 
-        val list = characterRepository.getCharacters(name = "spider", key = "123", privateKey = "456")
+        val list = characterRepository.getCharacters(name = "spider")
 
         assertThat(list).containsExactly(Fixtures.character)
     }

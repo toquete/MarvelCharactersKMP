@@ -24,11 +24,7 @@ internal class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { HomeUiState.Loading }
             runCatching {
-                getCharactersUseCase(
-                    character,
-                    key = "8f856183ec2966942d063a0a4b1401b0",
-                    privateKey = "d6d7e23b91bbecd81fc237c078b8177b476b4f91"
-                )
+                getCharactersUseCase(character)
             }.onSuccess { list ->
                 _uiState.update {
                     if (list.isEmpty()) {

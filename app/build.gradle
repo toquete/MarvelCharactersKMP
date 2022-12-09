@@ -16,9 +16,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        buildConfigField("String", "MARVEL_KEY", "\"8f856183ec2966942d063a0a4b1401b0\"")
-        buildConfigField("String", "MARVEL_PRIVATE_KEY", "\"d6d7e23b91bbecd81fc237c078b8177b476b4f91\"")
     }
     buildTypes {
         debug {

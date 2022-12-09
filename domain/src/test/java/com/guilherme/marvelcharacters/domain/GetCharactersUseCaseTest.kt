@@ -31,14 +31,12 @@ class GetCharactersUseCaseTest {
     @Test
     fun `invoke - check list is returned`() = runBlockingTest {
         val name = "spider"
-        val key = "123"
-        val privateKey = "456"
 
-        coEvery { characterRepository.getCharacters(name, key, privateKey) } returns Fixtures.characterList
+        coEvery { characterRepository.getCharacters(name) } returns Fixtures.characterList
 
-        val result = getCharactersUseCase(name, key, privateKey)
+        val result = getCharactersUseCase(name)
 
-        coVerify { characterRepository.getCharacters(name, key, privateKey) }
+        coVerify { characterRepository.getCharacters(name) }
         assertThat(result).containsExactly(Fixtures.character)
     }
 }

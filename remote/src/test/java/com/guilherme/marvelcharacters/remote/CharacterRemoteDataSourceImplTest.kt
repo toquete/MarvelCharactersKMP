@@ -62,7 +62,7 @@ class CharacterRemoteDataSourceImplTest {
             )
         } returns response
 
-        val result = remoteDataSource.getCharacters(name = characterName, key = "123", privateKey = "456")
+        val result = remoteDataSource.getCharacters(name = characterName)
 
         assertThat(result).isEqualTo(listOf(character))
     }

@@ -13,6 +13,14 @@ android {
     defaultConfig {
         minSdk rootProject.ext.minSdkVersion
         targetSdk rootProject.ext.targetSdkVersion
+
+        def keystorePropertiesFile = rootProject.file("keystore.properties")
+        def keystoreProperties = new Properties()
+
+        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+        buildConfigField("String", "MARVEL_KEY", "\"${keystoreProperties["MARVEL_KEY"]}\"")
+        buildConfigField("String", "MARVEL_PRIVATE_KEY", "\"${keystoreProperties["MARVEL_PRIVATE_KEY"]}\"")
     }
     compileOptions {
         sourceCompatibility sourceCompatibilityVersion

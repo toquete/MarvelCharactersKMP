@@ -17,10 +17,10 @@ internal class CharacterRepositoryImpl @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : CharacterRepository {
 
-    override suspend fun getCharacters(name: String, key: String, privateKey: String): List<Character> {
+    override suspend fun getCharacters(name: String): List<Character> {
         return withContext(dispatcher) {
             localDataSource.getCharactersByName(name).ifEmpty {
-                remoteDataSource.getCharacters(name, key, privateKey).also {
+                remoteDataSource.getCharacters(name).also {
                     localDataSource.insertAll(it)
                 }
             }

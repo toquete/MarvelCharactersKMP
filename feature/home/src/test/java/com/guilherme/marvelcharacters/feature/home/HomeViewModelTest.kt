@@ -26,7 +26,7 @@ class HomeViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onSearchCharacter - send success state when list is loaded`() = testCoroutineRule.runBlockingTest {
-        coEvery { getCharactersUseCase(any(), any(), any()) } returns Fixtures.characterList
+        coEvery { getCharactersUseCase(any()) } returns Fixtures.characterList
 
         homeViewModel.uiState.test {
             homeViewModel.onSearchCharacter("spider")
@@ -39,7 +39,7 @@ class HomeViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onSearchCharacter - send empty state when list is empty`() = testCoroutineRule.runBlockingTest {
-        coEvery { getCharactersUseCase(any(), any(), any()) } returns emptyList()
+        coEvery { getCharactersUseCase(any()) } returns emptyList()
 
         homeViewModel.uiState.test {
             homeViewModel.onSearchCharacter("spider")
@@ -52,7 +52,7 @@ class HomeViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onSearchCharacter - send error state on request error`() = testCoroutineRule.runBlockingTest {
-        coEvery { getCharactersUseCase(any(), any(), any()) } throws IOException()
+        coEvery { getCharactersUseCase(any()) } throws IOException()
 
         homeViewModel.uiState.test {
             homeViewModel.onSearchCharacter("spider")

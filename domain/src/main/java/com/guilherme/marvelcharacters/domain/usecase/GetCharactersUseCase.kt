@@ -8,7 +8,7 @@ class GetCharactersUseCase @Inject constructor(
     private val characterRepository: CharacterRepository
 ) {
 
-    suspend operator fun invoke(name: String, key: String, privateKey: String): List<Character> {
-        return characterRepository.getCharacters(name, key, privateKey)
+    suspend operator fun invoke(name: String): List<Character> {
+        return characterRepository.getCharacters(name)
     }
 }
