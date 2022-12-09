@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: "org.jlleitschuh.gradle.ktlint"
 apply plugin: 'io.gitlab.arturbosch.detekt'
 apply plugin: 'dagger.hilt.android.plugin'
 apply from: "$rootDir/tools/jacoco/android.gradle"
 
 android {
+    namespace 'com.guilherme.marvelcharacters'
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.guilherme.marvelcharacters"
@@ -43,10 +43,6 @@ android {
         correctErrorTypes true
     }
 
-    testOptions {
-        execution 'ANDROIDX_TEST_ORCHESTRATOR'
-    }
-
     ktlint {
         disabledRules = ["final-newline", "import-ordering"]
         reporters {
@@ -70,44 +66,26 @@ android {
         }
     }
 
-    buildFeatures.viewBinding = true
-    namespace 'com.guilherme.marvelcharacters'
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':domain')
     implementation project(':feature:home')
     implementation project(':feature:favorites')
     implementation project(':feature:detail')
-    implementation project(':core:model')
     implementation project(':core:ui')
 
     implementation "androidx.core:core-ktx:$coreVersion"
-    implementation "com.google.android.material:material:$materialDesignVersion"
-    debugImplementation ("androidx.fragment:fragment-testing:$fragmentVersion") {
-        exclude group:'androidx.test', module:'monitor'
-    }
 
     implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
 
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
-
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
-
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     kapt "com.google.dagger:hilt-compiler:$hiltVersion"
 
-    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hiltTestingVersion"
-
     testImplementation project(':core:testing')
     androidTestImplementation project(':core:testing')
-    androidTestUtil "androidx.test:orchestrator:$orchestratorVersion"
-}
-
-configurations.all {
-    resolutionStrategy {
-        force "org.objenesis:objenesis:3.2"
-    }
 }
