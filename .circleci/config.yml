@@ -35,7 +35,6 @@ references:
       at: *workspace
 
   create_keystore: &create_keystore
-    working_directory: *workspace
     run:
       name: Create keystore.properties
       command: printf 'MARVEL_KEY=%s\nMARVEL_PRIVATE_KEY=%s' \ $MARVEL_KEY $MARVEL_PRIVATE_KEY > keystore.properties
