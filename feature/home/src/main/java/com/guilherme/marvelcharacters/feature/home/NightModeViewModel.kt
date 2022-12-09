@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class NightModeViewModel @Inject constructor(
+internal class NightModeViewModel @Inject constructor(
     private val getDarkModeUseCase: GetDarkModeUseCase,
     private val toggleDarkModeUseCase: ToggleDarkModeUseCase,
     private val isDarkModeEnabledUseCase: IsDarkModeEnabledUseCase

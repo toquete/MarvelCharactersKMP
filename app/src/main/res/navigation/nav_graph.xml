@@ -1,23 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/navigation_home">
 
+    <include app:graph="@navigation/navigation_home" />
     <include app:graph="@navigation/navigation_favorites" />
     <include app:graph="@navigation/navigation_detail" />
-
-    <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.guilherme.marvelcharacters.ui.home.HomeFragment"
-        android:label="Marvel Characters"
-        tools:layout="@layout/fragment_home">
-        <argument
-            android:name="showAppBars"
-            android:defaultValue="true" />
-        <action
-            android:id="@+id/actionHomeToDetail"
-            app:destination="@id/detailFragment" />
-    </fragment>
 </navigation>
