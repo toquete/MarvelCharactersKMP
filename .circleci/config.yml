@@ -48,7 +48,7 @@ jobs:
       name: android/android-machine
       tag: 2022.09.1
     steps:
-      - build
+      - checkout
 
   quality:
     <<: *android_config
@@ -139,6 +139,6 @@ jobs:
           command: ./gradlew coveralls
 
 workflows:
-  build:
+  android-workflow:
     jobs:
       - build
