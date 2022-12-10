@@ -48,7 +48,15 @@ jobs:
       name: android/android-machine
       tag: 2022.09.1
     steps:
-      - checkout
+      - android/restore-build-cache
+      - android/restore-gradle-cache
+      - *create_keystore
+      - run:
+          name: Build debug APK
+          command: |
+            ./gradlew :app:assembleDebug
+      - android/save-build-cache
+      - android/save-gradle-cache
 
   quality:
     <<: *android_config
@@ -141,4 +149,8 @@ jobs:
 workflows:
   android-workflow:
     jobs:
+      - android/build:
+          executor:
+            name: android/android-machine
+            tag: 2022.09.1
       - build
