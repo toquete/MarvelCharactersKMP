@@ -48,10 +48,8 @@ jobs:
       name: android/android-machine
       tag: 2022.09.1
     steps:
-      - android/build:
-          executor:
-            name: android/android-machine
-            tag: 2022.09.1
+      - checkout
+      - android/accept-licenses
       - android/restore-build-cache
       - android/restore-gradle-cache
       - *create_keystore
