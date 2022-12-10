@@ -11,18 +11,6 @@ references:
     restore_cache:
       <<: *cache_key
 
-  save_cache: &save_cache
-    save_cache:
-      <<: *cache_key
-      paths:
-        - ~/.gradle
-        - ~/.m2
-
-  download_dependencies: &download_dependencies
-    run:
-      name: Download Dependencies
-      command: ./gradlew androidDependencies
-
   workspace: &workspace
     ~/code
 
@@ -132,31 +120,9 @@ jobs:
           path: ~/test-results/junit
       - store_artifacts:
           path: ~/test-results/junit
-
-  test_instrumented:
-    <<: *android_config
-    steps:
-      - run:
-          name: Store Google Service Account
-          command: echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-      - run:
-          name: Authorize gcloud and set config defaults
-          command: |
-            sudo gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-            sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-      - run:
-          name: Configure environment
-          command: |
-            echo 'export APK_PATH=`find . -path "*.apk" ! -path "*unaligned.apk" ! -path "*Test*.apk" -print -quit`' >> $BASH_ENV
-            echo 'export TEST_APK_PATH=`find "." "-path" "*Test*.apk" -print -quit`' >> $BASH_ENV
-      - run:
-          name: Test with Firebase Test Lab
-          command: sudo gcloud firebase test android run --type instrumentation --app ${APK_PATH} --test ${TEST_APK_PATH} --results-bucket cloud-test-${GOOGLE_PROJECT_ID}
-#      - run:
-#          name: Install gsutil dependency and copy test results data
-#          command: |
-#            sudo pip install -U crcmod
-#            sudo gsutil -m cp -r -U `sudo gsutil ls gs://[BUCKET_NAME]/[OBJECT_NAME] | tail -1` ${CIRCLE_ARTIFACTS}/ | true
+      - store_artifacts:
+          path: build/reports
+          destination: reports
 
   report_coverage:
     <<: *android_config
