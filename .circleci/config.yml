@@ -59,6 +59,9 @@ jobs:
             ./gradlew :app:assembleDebug
       - android/save-build-cache
       - android/save-gradle-cache
+      - store_artifacts:
+          path: app/build/outputs/apk
+          destination: apk
 
   quality:
     <<: *android_config
