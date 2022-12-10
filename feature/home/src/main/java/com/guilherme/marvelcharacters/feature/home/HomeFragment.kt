@@ -17,9 +17,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.guilherme.marvelcharacters.core.common.observe
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.feature.home.databinding.FragmentHomeBinding
-import com.guilherme.marvelcharacters.feature.home.extension.observe
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

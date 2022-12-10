@@ -1,4 +1,4 @@
-package com.guilherme.marvelcharacters.feature.detail.extension
+package com.guilherme.marvelcharacters.core.common
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner

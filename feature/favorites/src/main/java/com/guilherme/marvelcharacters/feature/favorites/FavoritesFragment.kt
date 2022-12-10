@@ -13,9 +13,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.guilherme.marvelcharacters.core.common.observe
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.feature.favorites.databinding.FragmentFavoritesBinding
-import com.guilherme.marvelcharacters.feature.favorites.extension.observe
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
