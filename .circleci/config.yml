@@ -139,5 +139,6 @@ jobs:
           command: ./gradlew coveralls
 
 workflows:
-  jobs:
-    - build
+  build:
+    jobs:
+      - build
