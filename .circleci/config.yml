@@ -120,7 +120,7 @@ jobs:
       - android/restore-gradle-cache
       - *create_keystore
       - android/start-emulator-and-run-tests:
-          test-command: ./gradlew jacocoFullAndroidTestReport
+          test-command: ./gradlew connectedDebugAndroidTest
           system-image: system-images;android-30;google_apis;x86
       - android/save-build-cache
       - android/save-gradle-cache

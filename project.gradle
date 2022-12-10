@@ -60,11 +60,11 @@ task jacocoFullAndroidTestReport(type: JacocoReport) {
     reports {
         xml.enabled = true
         html.enabled = true
-        html.destination = file("${buildDir}/reports/jacoco")
+        html.destination = file("${buildDir}/reports/jacoco/androidTest")
     }
 
     doLast {
-        println "jacoco unit report has been generated to file://${reports.html.destination}/index.html"
+        println "jacoco android report has been generated to file://${reports.html.destination}/index.html"
     }
 }
 
