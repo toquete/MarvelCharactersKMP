@@ -49,7 +49,6 @@ jobs:
       tag: 2022.09.1
     steps:
       - checkout
-      - android/accept-licenses
       - android/restore-build-cache
       - android/restore-gradle-cache
       - *create_keystore
@@ -82,22 +81,32 @@ jobs:
           path: app/build/reports
           destination: reports
 
-  test_unit:
-    <<: *android_config
-    resource_class: large
+  unit_test:
+    executor:
+      name: android/android-machine
+      tag: 2022.09.1
     steps:
-      - *attach_workspace
-      - *restore_cache
+      - checkout
+      - android/restore-build-cache
+      - android/restore-gradle-cache
+      - *create_keystore
+      - android/run-tests:
+          test-command: ./gradlew jacocoFullTestReport
+      - android/save-build-cache
+      - android/save-gradle-cache
       - run:
-          name: Run Unit Tests
-          command: ./gradlew jacocoFullTestReport
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+      - store_test_results:
+          path: ~/test-results
+      - store_artifacts:
+          path: ~/test-results/junit
       - store_artifacts:
           path: build/reports
           destination: reports
-      - persist_to_workspace:
-          root: *workspace
-          paths:
-            - .
 
   test_instrumented:
     <<: *android_config
@@ -155,3 +164,6 @@ workflows:
   android-workflow:
     jobs:
       - build
+      - unit_test:
+          requires:
+            - build
