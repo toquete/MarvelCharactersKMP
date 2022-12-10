@@ -117,13 +117,11 @@ jobs:
     steps:
       - checkout
       - android/restore-build-cache
-      - android/restore-gradle-cache
       - *create_keystore
       - android/start-emulator-and-run-tests:
           test-command: ./gradlew connectedDebugAndroidTest
           system-image: system-images;android-30;google_apis;x86
       - android/save-build-cache
-      - android/save-gradle-cache
       - run:
           name: Save test results
           command: |
