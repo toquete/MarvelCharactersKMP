@@ -45,8 +45,9 @@ references:
 jobs:
   build:
     executor:
-      name: android/android-machine
-      tag: 2022.09.1
+      name: android/android-docker
+      resource-class: large
+      tag: 2022.09.2
     steps:
       - checkout
       - android/restore-build-cache
@@ -83,8 +84,9 @@ jobs:
 
   unit_test:
     executor:
-      name: android/android-machine
-      tag: 2022.09.1
+      name: android/android-docker
+      resource-class: large
+      tag: 2022.09.2
     steps:
       - checkout
       - android/restore-build-cache
@@ -146,7 +148,7 @@ jobs:
             find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
           when: always
       - store_test_results:
-         path: ~/test-results
+         path: ~/test-results/junit
       - store_artifacts:
          path: ~/test-results/junit
 
