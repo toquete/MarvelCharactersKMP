@@ -47,6 +47,8 @@ jobs:
     executor:
       name: android/android-machine
       tag: 2022.09.1
+    steps:
+      - android/build
 
   quality:
     <<: *android_config
