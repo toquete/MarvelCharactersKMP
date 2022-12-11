@@ -104,7 +104,6 @@ jobs:
       tag: 2022.09.1
     steps:
       - checkout
-      - android/restore-build-cache
       - *create_keystore
       - android/start-emulator-and-run-tests:
           test-command: ./gradlew connectedDebugAndroidTest
