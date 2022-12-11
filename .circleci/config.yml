@@ -112,6 +112,7 @@ jobs:
             - run:
                 name: Tap screen
                 command: |
+                  sleep 30
                   adb shell input keyevent 82
       - android/save-build-cache
       - run:
