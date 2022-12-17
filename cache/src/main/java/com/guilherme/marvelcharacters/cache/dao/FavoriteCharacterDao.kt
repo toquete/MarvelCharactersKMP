@@ -1,6 +1,7 @@
 package com.guilherme.marvelcharacters.cache.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Query
 import com.guilherme.marvelcharacters.cache.model.FavoriteCharacterEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -15,8 +16,8 @@ internal interface FavoriteCharacterDao {
 
     @Query(
         "INSERT INTO favoritecharacterentity " +
-        "SELECT * FROM characterentity " +
-        "WHERE id = :id"
+            "SELECT * FROM characterentity " +
+            "WHERE id = :id"
     )
     suspend fun copyFavoriteCharacter(id: Int)
 

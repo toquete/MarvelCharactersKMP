@@ -33,8 +33,6 @@ subprojects {
 
     ktlint {
         android = true
-        outputColorName = "RED"
-        disabledRules = ["final-newline", "import-ordering"]
         reporters {
             reporter "json"
         }

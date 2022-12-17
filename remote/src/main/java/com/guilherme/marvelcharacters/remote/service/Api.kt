@@ -3,7 +3,6 @@ package com.guilherme.marvelcharacters.remote.service
 import com.guilherme.marvelcharacters.remote.model.CharacterResponse
 import com.guilherme.marvelcharacters.remote.model.Response
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 internal interface Api {
