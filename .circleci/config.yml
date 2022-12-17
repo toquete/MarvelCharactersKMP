@@ -51,6 +51,49 @@ jobs:
           path: app/build/outputs/apk
           destination: apk
 
+  lint:
+    executor:
+      name: android/android-docker
+      resource-class: large
+      tag: 2022.09.2
+    steps:
+      - checkout
+      - android/restore-build-cache
+      - android/restore-gradle-cache
+      - *create_keystore
+      - run:
+          name: Run Android Lint
+          command: ./gradlew lint
+      - android/save-build-cache
+      - android/save-gradle-cache
+      - store_artifacts:
+          path: app/build/reports
+          destination: reports
+
+  ktlint:
+    executor:
+      name: android/android-docker
+      resource-class: large
+      tag: 2022.09.2
+    steps:
+      - checkout
+      - android/restore-build-cache
+      - android/restore-gradle-cache
+      - *create_keystore
+      - run:
+          name: Run ktlint check
+          command: ./gradlew ktlintCheck --continue
+      - android/save-build-cache
+      - android/save-gradle-cache
+      - run:
+          name: Save ktlint results
+          command: |
+            mkdir -p ~/ktlint-results/ktlint/
+            find . -type f -regex ".*/build/reports/ktlint/.*json" -exec cp {} ~/ktlint-results/ktlint/ \;
+          when: always
+      - store_artifacts:
+          path: ~/ktlint-results/ktlint/
+
   quality:
     <<: *android_config
     resource_class: large
@@ -140,12 +183,15 @@ jobs:
           command: ./gradlew coveralls
 
 workflows:
-  test:
-    jobs:
-      - unit_test
-  android:
+  main:
     jobs:
       - build
+      - lint:
+          requires:
+            - build
+      - ktlint:
+          requires:
+            - build
       - unit_test:
           requires:
             - build
