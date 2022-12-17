@@ -85,14 +85,6 @@ jobs:
           command: ./gradlew ktlintCheck --continue
       - android/save-build-cache
       - android/save-gradle-cache
-      - run:
-          name: Save ktlint results
-          command: |
-            mkdir -p ~/ktlint-results/ktlint/
-            find . -type f -regex ".*/build/reports/ktlint/.*json" -exec cp {} ~/ktlint-results/ktlint/ \;
-          when: always
-      - store_artifacts:
-          path: ~/ktlint-results/ktlint/
 
   quality:
     <<: *android_config
