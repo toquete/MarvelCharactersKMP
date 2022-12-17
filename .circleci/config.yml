@@ -86,24 +86,29 @@ jobs:
       - android/save-build-cache
       - android/save-gradle-cache
 
-  quality:
-    <<: *android_config
-    resource_class: large
+  detekt:
+    executor:
+      name: android/android-docker
+      resource-class: large
+      tag: 2022.09.2
     steps:
-      - *attach_workspace
-      - *restore_cache
+      - checkout
+      - android/restore-build-cache
+      - android/restore-gradle-cache
+      - *create_keystore
       - run:
-          name: Run Android Lint
-          command: ./gradlew lint
-      - run:
-          name: Run ktlint
-          command: ./gradlew ktlintCheck
-      - run:
-          name: Run detekt
+          name: Run detekt check
           command: ./gradlew detekt
+      - android/save-build-cache
+      - android/save-gradle-cache
+      - run:
+          name: Save detekt reports
+          command: |
+            mkdir -p ~/detekt-results/detekt/
+            find . -type f -regex ".*/build/reports/detekt/.*html" -exec cp {} ~/detekt-results/detekt/ \;
+          when: always
       - store_artifacts:
-          path: app/build/reports
-          destination: reports
+          path: ~/detekt-results/detekt/
 
   unit_test:
     executor:
@@ -182,6 +187,9 @@ workflows:
           requires:
             - build
       - ktlint:
+          requires:
+            - build
+      - detekt:
           requires:
             - build
       - unit_test:

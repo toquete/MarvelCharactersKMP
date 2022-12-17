@@ -30,11 +30,28 @@ apply from: 'project.gradle'
 
 subprojects {
     apply plugin: "org.jlleitschuh.gradle.ktlint"
+    apply plugin: 'io.gitlab.arturbosch.detekt'
 
     ktlint {
         android = true
         reporters {
             reporter "json"
+        }
+    }
+
+    detekt {
+        config = files("$rootProject.rootDir/tools/detekt/detekt.yml")
+        reports {
+            html {
+                enabled = true
+                destination = file("build/reports/detekt/detekt_${name}.html")
+            }
+            xml {
+                enabled = false
+            }
+            txt {
+                enabled = false
+            }
         }
     }
 }

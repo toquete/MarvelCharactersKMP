@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'io.gitlab.arturbosch.detekt'
 apply plugin: 'dagger.hilt.android.plugin'
 apply from: "$rootDir/tools/jacoco/android.gradle"
 
@@ -37,21 +36,6 @@ android {
 
     kapt {
         correctErrorTypes true
-    }
-
-    detekt {
-        config = files("../tools/detekt/detekt.yml")
-        reports {
-            html {
-                enabled = true
-            }
-            xml {
-                enabled = false
-            }
-            txt {
-                enabled = false
-            }
-        }
     }
 
     buildFeatures {
