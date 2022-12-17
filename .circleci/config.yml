@@ -140,7 +140,10 @@ jobs:
           command: ./gradlew coveralls
 
 workflows:
-  android-workflow:
+  test:
+    jobs:
+      - unit_test
+  android:
     jobs:
       - build
       - unit_test:
