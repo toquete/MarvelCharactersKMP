@@ -4,27 +4,6 @@ orbs:
   android: circleci/android@2.1.2
 
 references:
-  cache_key: &cache_key
-    key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-
-  restore_cache: &restore_cache
-    restore_cache:
-      <<: *cache_key
-
-  workspace: &workspace
-    ~/code
-
-  android_config: &android_config
-    working_directory: *workspace
-    docker:
-      - image: cimg/android:2022.09
-    environment:
-      JVM_OPTS: -Xmx3200m
-
-  attach_workspace: &attach_workspace
-    attach_workspace:
-      at: *workspace
-
   create_keystore: &create_keystore
     run:
       name: Create keystore.properties
@@ -130,6 +109,9 @@ jobs:
             mkdir -p ~/test-results/junit/
             find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
           when: always
+      - run:
+          name: Upload coverage report to Coveralls
+          command: ./gradlew coveralls
       - store_test_results:
           path: ~/test-results
       - store_artifacts:
@@ -168,16 +150,6 @@ jobs:
       - store_artifacts:
           path: build/reports
           destination: reports
-
-  report_coverage:
-    <<: *android_config
-    resource_class: large
-    steps:
-      - *attach_workspace
-      - *restore_cache
-      - run:
-          name: Upload coverage report to Coveralls
-          command: ./gradlew coveralls
 
 workflows:
   main:
