@@ -34,7 +34,7 @@ subprojects {
         reports {
             html {
                 enabled = true
-                destination = file("build/reports/detekt/detekt_${name}.html")
+                destination = file("build/reports/detekt/detekt_$name.html")
             }
             xml {
                 enabled = false
