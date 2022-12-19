@@ -1,9 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
-val navigationVersion by extra("2.5.3")
-val hiltVersion by extra("2.44.2")
-
 plugins {
     id("com.android.application") version "7.3.1" apply false
     id("com.google.dagger.hilt.android") version "2.44.2" apply false

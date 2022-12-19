@@ -11,6 +11,8 @@ ext {
     activityVersion = "1.6.1"
     fragmentVersion = "1.5.4"
     roomVersion = "2.4.3"
+    navigationVersion = "2.5.3"
+    hiltVersion = "2.44.2"
     junitVersion = "4.13.2"
     retrofitVersion = "2.9.0"
     commonsCodecVersion = "1.11"
