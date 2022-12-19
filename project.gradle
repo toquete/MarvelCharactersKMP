@@ -38,6 +38,36 @@ task jacocoFullTestReport(type: JacocoReport) {
     }
 }
 
+task jacocoFullAndroidTestReport(type: JacocoReport) {
+    group = 'coverage'
+    description = "Generate Jacoco Android coverage reports after running tests."
+
+    def projects = subprojects.findAll {
+        if (it.name != "model") {
+            it.getTasksByName("jacocoAndroidTestReport", false)
+        }
+    }
+
+    dependsOn(projects.jacocoAndroidTestReport)
+
+    final source = files(projects.jacocoAndroidTestReport.sourceDirectories)
+
+    additionalSourceDirs.from = source
+    sourceDirectories.from = source
+    classDirectories.from = files(projects.jacocoAndroidTestReport.classDirectories)
+    executionData.from = files(projects.jacocoAndroidTestReport.executionData)
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+        html.destination = file("${buildDir}/reports/jacoco/androidTest")
+    }
+
+    doLast {
+        println "jacoco android report has been generated to file://${reports.html.destination}/index.html"
+    }
+}
+
 coveralls {
     sourceDirs = files([mainSrc]).flatten()
     jacocoReportPath 'build/reports/jacoco/jacocoFullTestReport/jacocoFullTestReport.xml'
