@@ -43,7 +43,9 @@ dependencies {
 
     implementation("com.squareup.retrofit2:retrofit:${rootProject.extra["retrofitVersion"]}")
     implementation("com.squareup.okhttp3:okhttp:${rootProject.extra["okHttpVersion"]}")
-    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:${rootProject.extra["kotlinSerializationConverterVersion"]}")
+    implementation(
+        "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:${rootProject.extra["kotlinSerializationConverterVersion"]}"
+    )
     implementation("commons-codec:commons-codec:${rootProject.extra["commonsCodecVersion"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${rootProject.extra["kotlinSerializationVersion"]}")
 
