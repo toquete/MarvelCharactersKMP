@@ -12,9 +12,6 @@ plugins {
     id("com.github.kt3k.coveralls") version "2.12.0"
 }
 
-apply(from = "dependencies.gradle")
-apply(from = "project.gradle")
-
 subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
     apply(plugin = "io.gitlab.arturbosch.detekt")
@@ -42,6 +39,9 @@ subprojects {
         }
     }
 }
+
+apply(from = "dependencies.gradle")
+apply(from = "project.gradle")
 
 tasks.register<Delete>("clean") {
     delete(rootProject.buildDir)
