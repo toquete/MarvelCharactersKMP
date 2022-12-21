@@ -21,8 +21,9 @@ internal class HomeViewModel @Inject constructor(
     var query: String? = null
 
     fun onSearchCharacter(character: String) {
+        _uiState.update { HomeUiState.Loading }
+
         viewModelScope.launch {
-            _uiState.update { HomeUiState.Loading }
             runCatching {
                 getCharactersUseCase(character)
             }.onSuccess { list ->
