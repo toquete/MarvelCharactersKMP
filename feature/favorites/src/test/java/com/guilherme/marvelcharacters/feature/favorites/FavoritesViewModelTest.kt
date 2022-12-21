@@ -12,6 +12,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import java.io.IOException
 
@@ -35,7 +36,7 @@ class FavoritesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onDeleteAllClick - send success message`() = testCoroutineRule.runBlockingTest {
+    fun `onDeleteAllClick - send success message`() = runTest {
         favoritesViewModel.onDeleteAllClick()
 
         coVerify { deleteAllFavoriteCharactersUseCase() }
@@ -46,7 +47,7 @@ class FavoritesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onDeleteAllClick - send error message`() = testCoroutineRule.runBlockingTest {
+    fun `onDeleteAllClick - send error message`() = runTest {
         coEvery { deleteAllFavoriteCharactersUseCase() } throws IOException()
 
         favoritesViewModel.onDeleteAllClick()
@@ -57,7 +58,7 @@ class FavoritesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onSnackbarShown - send null message`() = testCoroutineRule.runBlockingTest {
+    fun `onSnackbarShown - send null message`() = runTest {
         favoritesViewModel.onSnackbarShown()
 
         favoritesViewModel.uiState.test {
@@ -66,7 +67,7 @@ class FavoritesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `init - send favorites list`() = testCoroutineRule.runBlockingTest {
+    fun `init - send favorites list`() = runTest {
         every { getFavoriteCharactersUseCase() } returns flowOf(Fixtures.characterList)
 
         val viewModel = FavoritesViewModel(
