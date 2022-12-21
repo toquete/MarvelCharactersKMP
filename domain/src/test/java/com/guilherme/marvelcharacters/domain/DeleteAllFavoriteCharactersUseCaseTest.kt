@@ -7,7 +7,7 @@ import io.mockk.coVerify
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
@@ -26,7 +26,7 @@ class DeleteAllFavoriteCharactersUseCaseTest {
     }
 
     @Test
-    fun `invoke - check repository was called`() = runBlockingTest {
+    fun `invoke - check repository was called`() = runTest {
         deleteAllFavoriteCharactersUseCase()
 
         coVerify { characterRepository.deleteAllFavoriteCharacters() }

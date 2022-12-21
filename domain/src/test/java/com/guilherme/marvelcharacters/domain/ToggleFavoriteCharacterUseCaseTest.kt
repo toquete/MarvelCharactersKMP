@@ -7,7 +7,7 @@ import io.mockk.coVerify
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
@@ -26,14 +26,14 @@ class ToggleFavoriteCharacterUseCaseTest {
     }
 
     @Test
-    fun `invoke - call deletion when character is favorite`() = runBlockingTest {
+    fun `invoke - call deletion when character is favorite`() = runTest {
         useCase(id = 0, isFavorite = true)
 
         coVerify { repository.deleteFavoriteCharacter(id = 0) }
     }
 
     @Test
-    fun `invoke - call insertion when character is not favorite`() = runBlockingTest {
+    fun `invoke - call insertion when character is not favorite`() = runTest {
         useCase(id = 0, isFavorite = false)
 
         coVerify { repository.insertFavoriteCharacter(id = 0) }

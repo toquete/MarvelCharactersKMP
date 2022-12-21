@@ -10,7 +10,7 @@ import io.mockk.coVerify
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
@@ -29,7 +29,7 @@ class GetCharactersUseCaseTest {
     }
 
     @Test
-    fun `invoke - check list is returned`() = runBlockingTest {
+    fun `invoke - check list is returned`() = runTest {
         val name = "spider"
 
         coEvery { characterRepository.getCharacters(name) } returns Fixtures.characterList

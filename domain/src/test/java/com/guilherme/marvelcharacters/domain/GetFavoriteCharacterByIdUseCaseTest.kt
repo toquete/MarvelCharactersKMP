@@ -14,7 +14,7 @@ import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
@@ -33,7 +33,7 @@ class GetFavoriteCharacterByIdUseCaseTest {
     }
 
     @Test
-    fun `invoke - check character is returned`() = runBlockingTest {
+    fun `invoke - check character is returned`() = runTest {
         val id = 0
         val expected = FavoriteCharacter(Fixtures.character, isFavorite = true)
 

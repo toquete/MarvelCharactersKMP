@@ -12,7 +12,7 @@ import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
@@ -31,7 +31,7 @@ class GetFavoriteCharactersUseCaseTest {
     }
 
     @Test
-    fun `invoke - check list is returned`() = runBlockingTest {
+    fun `invoke - check list is returned`() = runTest {
         every { characterRepository.getFavoriteCharacters() } returns flowOf(Fixtures.characterList)
 
         val result = getFavoriteCharactersUseCase()
