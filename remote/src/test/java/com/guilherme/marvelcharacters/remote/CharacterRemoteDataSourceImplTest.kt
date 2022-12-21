@@ -12,7 +12,7 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
@@ -50,7 +50,7 @@ class CharacterRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getCharacters - returns character list on success`() = runBlockingTest {
+    fun `getCharacters - returns character list on success`() = runTest {
         val characterName = "spider"
 
         coEvery {
