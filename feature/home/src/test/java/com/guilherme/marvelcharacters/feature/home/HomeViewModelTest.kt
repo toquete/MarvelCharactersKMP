@@ -8,6 +8,7 @@ import com.guilherme.marvelcharacters.feature.home.util.Fixtures
 import io.mockk.coEvery
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import java.io.IOException
 
@@ -25,7 +26,7 @@ class HomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onSearchCharacter - send success state when list is loaded`() = testCoroutineRule.runBlockingTest {
+    fun `onSearchCharacter - send success state when list is loaded`() = runTest {
         coEvery { getCharactersUseCase(any()) } returns Fixtures.characterList
 
         homeViewModel.uiState.test {
@@ -38,7 +39,7 @@ class HomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onSearchCharacter - send empty state when list is empty`() = testCoroutineRule.runBlockingTest {
+    fun `onSearchCharacter - send empty state when list is empty`() = runTest {
         coEvery { getCharactersUseCase(any()) } returns emptyList()
 
         homeViewModel.uiState.test {
@@ -51,7 +52,7 @@ class HomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onSearchCharacter - send error state on request error`() = testCoroutineRule.runBlockingTest {
+    fun `onSearchCharacter - send error state on request error`() = runTest {
         coEvery { getCharactersUseCase(any()) } throws IOException()
 
         homeViewModel.uiState.test {
