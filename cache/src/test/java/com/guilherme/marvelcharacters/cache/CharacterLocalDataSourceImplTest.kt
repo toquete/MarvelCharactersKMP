@@ -9,7 +9,7 @@ import io.mockk.coVerify
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
@@ -28,7 +28,7 @@ class CharacterLocalDataSourceImplTest {
     }
 
     @Test
-    fun `getCharacterById - returns character`() = runBlockingTest {
+    fun `getCharacterById - returns character`() = runTest {
         coEvery { dao.getCharacterById(any()) } returns Fixtures.characterEntity
 
         val result = localDataSource.getCharacterById(id = 0)
@@ -37,7 +37,7 @@ class CharacterLocalDataSourceImplTest {
     }
 
     @Test
-    fun `getCharactersByName - returns character list`() = runBlockingTest {
+    fun `getCharactersByName - returns character list`() = runTest {
         coEvery { dao.getCharactersByName(any()) } returns Fixtures.characterEntityList
 
         val result = localDataSource.getCharactersByName(name = "spider")
@@ -46,7 +46,7 @@ class CharacterLocalDataSourceImplTest {
     }
 
     @Test
-    fun `insertAll - check if characters are inserted`() = runBlockingTest {
+    fun `insertAll - check if characters are inserted`() = runTest {
         localDataSource.insertAll(Fixtures.characterList)
 
         coVerify { dao.insertAll(Fixtures.characterEntityList) }
