@@ -15,6 +15,7 @@ import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import java.io.IOException
 
@@ -30,7 +31,7 @@ class DetailViewModelTest : BaseUnitTest() {
     private val savedStateHandle = SavedStateHandle(mapOf("characterId" to Fixtures.character.id))
 
     @Test
-    fun `init - send character state`() = testCoroutineRule.runBlockingTest {
+    fun `init - send character state`() = runTest {
         val favoriteCharacter = FavoriteCharacter(Fixtures.character, isFavorite = true)
         every { getFavoriteCharacterByIdUseCase(Fixtures.character.id) } returns flowOf(favoriteCharacter)
 
@@ -42,7 +43,7 @@ class DetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onFabClick - send deleted character event`() = testCoroutineRule.runBlockingTest {
+    fun `onFabClick - send deleted character event`() = runTest {
         val favoriteCharacter = FavoriteCharacter(Fixtures.character, isFavorite = true)
         every { getFavoriteCharacterByIdUseCase(Fixtures.character.id) } returns flowOf(favoriteCharacter)
 
@@ -62,7 +63,7 @@ class DetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onFabClick - send added character event`() = testCoroutineRule.runBlockingTest {
+    fun `onFabClick - send added character event`() = runTest {
         val favoriteCharacter = FavoriteCharacter(Fixtures.character, isFavorite = false)
         every { getFavoriteCharacterByIdUseCase(Fixtures.character.id) } returns flowOf(favoriteCharacter)
 
@@ -82,7 +83,7 @@ class DetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onFabClick - send generic error event`() = testCoroutineRule.runBlockingTest {
+    fun `onFabClick - send generic error event`() = runTest {
         val favoriteCharacter = FavoriteCharacter(Fixtures.character, isFavorite = false)
         every { getFavoriteCharacterByIdUseCase(Fixtures.character.id) } returns flowOf(favoriteCharacter)
         coEvery { toggleFavoriteCharacterUseCase(Fixtures.character.id, isFavorite = false) } throws IOException()
@@ -99,7 +100,7 @@ class DetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onUndoClick - undo changes`() = testCoroutineRule.runBlockingTest {
+    fun `onUndoClick - undo changes`() = runTest {
         val detailViewModel = getViewModel()
 
         detailViewModel.onUndoClick()
@@ -108,7 +109,7 @@ class DetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onUndoClick - send error message on undo changes`() = testCoroutineRule.runBlockingTest {
+    fun `onUndoClick - send error message on undo changes`() = runTest {
         coEvery { toggleFavoriteCharacterUseCase(Fixtures.character.id, isFavorite = false) } throws IOException()
 
         val detailViewModel = getViewModel()
@@ -121,7 +122,7 @@ class DetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onSnackbarShown - send null message`() = testCoroutineRule.runBlockingTest {
+    fun `onSnackbarShown - send null message`() = runTest {
         val detailViewModel = getViewModel()
 
         detailViewModel.onSnackbarShown()
