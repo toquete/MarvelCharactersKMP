@@ -29,7 +29,7 @@ ext {
     testCoreVersion = "1.5.0"
     testRunnerVersion = "1.5.1"
     orchestratorVersion = "1.4.0"
-    turbineVersion = "0.7.0"
+    turbineVersion = "0.12.1"
     mockWebServerVersion = "4.9.3"
     okHttpVersion = "4.10.0"
     kotlinSerializationVersion = "1.2.2"
