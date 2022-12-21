@@ -6,13 +6,15 @@ import com.guilherme.marvelcharacters.remote.model.ContainerResponse
 import com.guilherme.marvelcharacters.remote.model.ImageResponse
 import com.guilherme.marvelcharacters.remote.model.Response
 import com.guilherme.marvelcharacters.remote.util.readFile
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.ExperimentalSerializationApi
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Test
 
+@ExperimentalCoroutinesApi
 @ExperimentalSerializationApi
 class ApiTest {
 
@@ -25,7 +27,7 @@ class ApiTest {
     }
 
     @Test
-    fun `getCharacters should return parsed data class on success`() = runBlocking {
+    fun `getCharacters should return parsed data class on success`() = runTest {
         // Given
         val expected = Response(
             ContainerResponse(
