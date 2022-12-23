@@ -29,6 +29,10 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = rootProject.extra["kotlinCompilerExtensionVersion"].toString()
     }
 }
 
