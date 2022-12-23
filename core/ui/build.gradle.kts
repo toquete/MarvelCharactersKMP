@@ -23,4 +23,5 @@ android {
 dependencies {
     implementation("androidx.core:core-ktx:${rootProject.extra["coreVersion"]}")
     api("com.google.android.material:material:${rootProject.extra["materialDesignVersion"]}")
+    api("com.google.accompanist:accompanist-themeadapter-material:${rootProject.extra["materialThemeAdapterVersion"]}")
 }

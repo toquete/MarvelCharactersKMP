@@ -18,6 +18,7 @@ ext {
     commonsCodecVersion = "1.11"
     coroutinesVersion = "1.6.4"
     materialDesignVersion = "1.7.0"
+    materialThemeAdapterVersion = "0.28.0"
     lifecycleVersion = "2.5.1"
     glideVersion = "4.11.0"
     mockkVersion = "1.11.0"
