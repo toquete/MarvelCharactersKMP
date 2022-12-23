@@ -1,22 +1,20 @@
 package com.guilherme.marvelcharacters.feature.favorites
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.accompanist.themeadapter.material.MdcTheme
 import com.guilherme.marvelcharacters.core.model.Character
-import com.guilherme.marvelcharacters.feature.favorites.databinding.ItemListBinding
+import com.guilherme.marvelcharacters.core.ui.CharacterListItem
 
 class FavoritesAdapter(
     private val onClickListener: (Character) -> Unit
 ) : ListAdapter<Character, FavoritesAdapter.BindingHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoritesAdapter.BindingHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false)
-
-        return BindingHolder(view)
+        return BindingHolder(ComposeView(parent.context))
     }
 
     override fun onBindViewHolder(holder: FavoritesAdapter.BindingHolder, position: Int) {
@@ -24,11 +22,13 @@ class FavoritesAdapter(
         holder.bind(character)
     }
 
-    inner class BindingHolder(item: View) : RecyclerView.ViewHolder(item) {
-        private val binding: ItemListBinding = ItemListBinding.bind(item)
-
+    inner class BindingHolder(private val item: ComposeView) : RecyclerView.ViewHolder(item) {
         fun bind(character: Character) {
-            binding.textviewCharacter.text = character.name
+            item.setContent {
+                MdcTheme {
+                    CharacterListItem(name = character.name)
+                }
+            }
             itemView.setOnClickListener { onClickListener(character) }
         }
     }
