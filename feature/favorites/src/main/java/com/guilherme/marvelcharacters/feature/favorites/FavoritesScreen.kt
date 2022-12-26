@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun FavoritesRoute(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    onCharacterClick: (Int) -> Unit
+    onCharacterClick: (Character) -> Unit
 ) {
     val viewModel: FavoritesViewModel = viewModel()
     val state by viewModel.uiState.collectAsState()
@@ -51,7 +51,7 @@ fun FavoritesRoute(
 internal fun FavoritesScreen(
     state: FavoritesUiState,
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    onCharacterClick: (Int) -> Unit = {},
+    onCharacterClick: (Character) -> Unit = {},
     onSnackbarShown: () -> Unit = {}
 ) {
     val scope = rememberCoroutineScope()
@@ -72,7 +72,7 @@ internal fun FavoritesScreen(
                     items(state.list) { character ->
                         CharacterListItem(
                             name = character.name,
-                            onCharacterClick = { onCharacterClick(character.id) }
+                            onCharacterClick = { onCharacterClick(character) }
                         )
                         Divider()
                     }
