@@ -36,6 +36,7 @@ dependencies {
     api("com.google.accompanist:accompanist-themeadapter-material:${rootProject.extra["materialThemeAdapterVersion"]}")
 
     api("androidx.compose.material:material")
+    api("androidx.compose.material:material-icons-extended")
     api("androidx.compose.ui:ui-tooling-preview")
     debugApi("androidx.compose.ui:ui-tooling")
     api("androidx.activity:activity-compose:${rootProject.extra["activityVersion"]}")

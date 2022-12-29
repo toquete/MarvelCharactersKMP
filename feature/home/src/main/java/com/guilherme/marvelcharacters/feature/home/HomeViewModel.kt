@@ -18,8 +18,6 @@ internal class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Empty)
     val uiState = _uiState.asStateFlow()
 
-    var query: String? = null
-
     fun onSearchCharacter(character: String) {
         _uiState.update { HomeUiState.Loading }
 
