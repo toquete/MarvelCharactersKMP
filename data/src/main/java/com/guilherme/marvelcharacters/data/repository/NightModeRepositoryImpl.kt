@@ -1,9 +1,8 @@
 package com.guilherme.marvelcharacters.data.repository
 
 import com.guilherme.marvelcharacters.cache.NightModeLocalDataSource
-import javax.inject.Inject
 
-internal class NightModeRepositoryImpl @Inject constructor(
+internal class NightModeRepositoryImpl(
     private val nightModeLocalDataSource: NightModeLocalDataSource
 ) : NightModeRepository {
 

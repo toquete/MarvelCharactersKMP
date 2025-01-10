@@ -6,9 +6,8 @@ import com.guilherme.marvelcharacters.remote.model.toExternalModel
 import com.guilherme.marvelcharacters.remote.service.Api
 import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.DigestUtils
-import javax.inject.Inject
 
-internal class CharacterRemoteDataSourceImpl @Inject constructor(
+internal class CharacterRemoteDataSourceImpl(
     private val api: Api
 ) : CharacterRemoteDataSource {
 

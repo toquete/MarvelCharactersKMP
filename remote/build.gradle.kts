@@ -37,9 +37,7 @@ android {
 
 dependencies {
     implementation(project(":core:model"))
-
-    implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
-    kapt("com.google.dagger:hilt-compiler:${rootProject.extra["hiltVersion"]}")
+    implementation(project(":core:common"))
 
     implementation("com.squareup.retrofit2:retrofit:${rootProject.extra["retrofitVersion"]}")
     implementation("com.squareup.okhttp3:okhttp:${rootProject.extra["okHttpVersion"]}")

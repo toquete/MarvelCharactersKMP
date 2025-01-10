@@ -1,6 +1,5 @@
 plugins {
     id("com.android.library")
-    id("dagger.hilt.android.plugin")
     kotlin("android")
     kotlin("kapt")
 }
@@ -48,9 +47,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:${rootProject.extra["lifecycleVersion"]}")
     implementation("androidx.navigation:navigation-fragment-ktx:${rootProject.extra["navigationVersion"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${rootProject.extra["coroutinesVersion"]}")
-
-    implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
-    kapt("com.google.dagger:hilt-compiler:${rootProject.extra["hiltVersion"]}")
 
     implementation("com.github.bumptech.glide:glide:${rootProject.extra["glideVersion"]}")
     kapt("com.github.bumptech.glide:compiler:${rootProject.extra["glideVersion"]}")

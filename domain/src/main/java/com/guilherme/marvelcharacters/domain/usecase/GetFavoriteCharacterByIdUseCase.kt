@@ -5,9 +5,8 @@ import com.guilherme.marvelcharacters.domain.model.FavoriteCharacter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
-class GetFavoriteCharacterByIdUseCase @Inject constructor(
+class GetFavoriteCharacterByIdUseCase(
     private val repository: CharacterRepository
 ) {
 

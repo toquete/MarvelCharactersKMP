@@ -1,9 +1,8 @@
 package com.guilherme.marvelcharacters.domain.usecase
 
 import com.guilherme.marvelcharacters.data.repository.NightModeRepository
-import javax.inject.Inject
 
-class GetDarkModeUseCase @Inject constructor(
+class GetDarkModeUseCase(
     private val nightModeRepository: NightModeRepository
 ) {
 

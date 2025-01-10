@@ -8,7 +8,6 @@ import android.view.View
 import androidx.annotation.StringRes
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -16,15 +15,14 @@ import com.google.android.material.snackbar.Snackbar
 import com.guilherme.marvelcharacters.core.common.observe
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.feature.favorites.databinding.FragmentFavoritesBinding
-import dagger.hilt.android.AndroidEntryPoint
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
-@AndroidEntryPoint
 class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
 
     private var _favoritesBinding: FragmentFavoritesBinding? = null
     private val favoritesBinding get() = _favoritesBinding!!
 
-    private val favoritesViewModel: FavoritesViewModel by activityViewModels()
+    private val favoritesViewModel: FavoritesViewModel by activityViewModel()
 
     private lateinit var favoritesAdapter: FavoritesAdapter
 

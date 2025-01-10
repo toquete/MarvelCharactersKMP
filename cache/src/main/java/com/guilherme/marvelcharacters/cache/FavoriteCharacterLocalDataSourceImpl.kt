@@ -6,9 +6,8 @@ import com.guilherme.marvelcharacters.cache.model.toExternalModel
 import com.guilherme.marvelcharacters.core.model.Character
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
-internal class FavoriteCharacterLocalDataSourceImpl @Inject constructor(
+internal class FavoriteCharacterLocalDataSourceImpl(
     private val dao: FavoriteCharacterDao
 ) : FavoriteCharacterLocalDataSource {
 

@@ -6,15 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.guilherme.marvelcharacters.domain.usecase.GetDarkModeUseCase
 import com.guilherme.marvelcharacters.domain.usecase.IsDarkModeEnabledUseCase
 import com.guilherme.marvelcharacters.domain.usecase.ToggleDarkModeUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-internal class NightModeViewModel @Inject constructor(
+internal class NightModeViewModel(
     private val getDarkModeUseCase: GetDarkModeUseCase,
     private val toggleDarkModeUseCase: ToggleDarkModeUseCase,
     private val isDarkModeEnabledUseCase: IsDarkModeEnabledUseCase

@@ -3,7 +3,6 @@ import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
     id("com.android.application") version "7.3.1" apply false
-    id("com.google.dagger.hilt.android") version "2.44.2" apply false
     kotlin("android") version "1.7.20" apply false
     kotlin("plugin.serialization") version "1.7.20" apply false
     id("jacoco")

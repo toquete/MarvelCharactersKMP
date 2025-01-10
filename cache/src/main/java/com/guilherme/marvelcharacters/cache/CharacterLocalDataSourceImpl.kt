@@ -5,9 +5,8 @@ import com.guilherme.marvelcharacters.cache.extension.toEntity
 import com.guilherme.marvelcharacters.cache.model.CharacterEntity
 import com.guilherme.marvelcharacters.cache.model.toExternalModel
 import com.guilherme.marvelcharacters.core.model.Character
-import javax.inject.Inject
 
-internal class CharacterLocalDataSourceImpl @Inject constructor(
+internal class CharacterLocalDataSourceImpl(
     private val dao: CharacterDao
 ) : CharacterLocalDataSource {
 

@@ -21,6 +21,7 @@ android {
 }
 
 dependencies {
+    api("io.insert-koin:koin-android:${rootProject.extra["koinVersion"]}")
     implementation("androidx.core:core-ktx:${rootProject.extra["coreVersion"]}")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.extra["lifecycleVersion"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${rootProject.extra["coroutinesVersion"]}")

@@ -25,11 +25,9 @@ android {
 
 dependencies {
     implementation(project(":core:model"))
+    implementation(project(":core:common"))
 
     implementation("androidx.appcompat:appcompat:${rootProject.extra["appCompatVersion"]}")
-
-    implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
-    kapt("com.google.dagger:hilt-compiler:${rootProject.extra["hiltVersion"]}")
 
     implementation("androidx.room:room-runtime:${rootProject.extra["roomVersion"]}")
     implementation("androidx.room:room-ktx:${rootProject.extra["roomVersion"]}")

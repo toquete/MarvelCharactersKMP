@@ -3,18 +3,16 @@ package com.guilherme.marvelcharacters.data.repository
 import com.guilherme.marvelcharacters.cache.CharacterLocalDataSource
 import com.guilherme.marvelcharacters.cache.FavoriteCharacterLocalDataSource
 import com.guilherme.marvelcharacters.core.model.Character
-import com.guilherme.marvelcharacters.data.infrastructure.annotation.IoDispatcher
 import com.guilherme.marvelcharacters.remote.CharacterRemoteDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
-internal class CharacterRepositoryImpl @Inject constructor(
+internal class CharacterRepositoryImpl(
     private val remoteDataSource: CharacterRemoteDataSource,
     private val localDataSource: CharacterLocalDataSource,
     private val favoriteLocalDataSource: FavoriteCharacterLocalDataSource,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher
+    private val dispatcher: CoroutineDispatcher
 ) : CharacterRepository {
 
     override suspend fun getCharacters(name: String): List<Character> {

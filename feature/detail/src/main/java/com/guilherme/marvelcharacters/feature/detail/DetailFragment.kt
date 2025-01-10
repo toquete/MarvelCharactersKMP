@@ -3,20 +3,18 @@ package com.guilherme.marvelcharacters.feature.detail
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.guilherme.marvelcharacters.core.common.observe
 import com.guilherme.marvelcharacters.feature.detail.databinding.FragmentDetailBinding
-import dagger.hilt.android.AndroidEntryPoint
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-@AndroidEntryPoint
 class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private var _detailBinding: FragmentDetailBinding? = null
     private val detailBinding get() = _detailBinding!!
 
-    private val detailViewModel: DetailViewModel by viewModels()
+    private val detailViewModel: DetailViewModel by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

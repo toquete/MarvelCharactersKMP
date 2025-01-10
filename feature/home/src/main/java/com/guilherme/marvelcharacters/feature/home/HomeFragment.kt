@@ -14,22 +14,20 @@ import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.guilherme.marvelcharacters.core.common.observe
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.feature.home.databinding.FragmentHomeBinding
-import dagger.hilt.android.AndroidEntryPoint
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
-@AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private var _homeBinding: FragmentHomeBinding? = null
     private val homeBinding get() = _homeBinding!!
 
-    private val homeViewModel: HomeViewModel by activityViewModels()
-    private val nightModeViewModel: NightModeViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by activityViewModel()
+    private val nightModeViewModel: NightModeViewModel by activityViewModel()
 
     private lateinit var homeAdapter: HomeAdapter
 

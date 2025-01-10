@@ -1,9 +1,8 @@
 package com.guilherme.marvelcharacters.domain.usecase
 
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
-import javax.inject.Inject
 
-class DeleteAllFavoriteCharactersUseCase @Inject constructor(
+class DeleteAllFavoriteCharactersUseCase(
     private val characterRepository: CharacterRepository
 ) {
 

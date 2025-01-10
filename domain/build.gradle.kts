@@ -26,9 +26,7 @@ android {
 dependencies {
     implementation(project(":data"))
     implementation(project(":core:model"))
-
-    implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
-    kapt("com.google.dagger:hilt-compiler:${rootProject.extra["hiltVersion"]}")
+    implementation(project(":core:common"))
 
     testImplementation(project(":core:testing"))
 }
