@@ -1,7 +1,7 @@
 plugins {
-    id("com.android.library")
-    kotlin("android")
-    kotlin("kapt")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kapt)
 }
 
 apply(from = "$rootDir/tools/jacoco/android.gradle")
@@ -37,25 +37,25 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:ui"))
 
-    implementation("androidx.core:core-ktx:${rootProject.extra["coreVersion"]}")
-    implementation("androidx.fragment:fragment-ktx:${rootProject.extra["fragmentVersion"]}")
-    debugImplementation("androidx.fragment:fragment-testing:${rootProject.extra["fragmentVersion"]}") {
+    implementation(libs.core.ktx)
+    implementation(libs.fragment.ktx)
+    debugImplementation(libs.fragment.testing) {
         exclude(group = "androidx.test", module = "monitor")
     }
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.extra["lifecycleVersion"]}")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.extra["lifecycleVersion"]}")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:${rootProject.extra["lifecycleVersion"]}")
-    implementation("androidx.navigation:navigation-fragment-ktx:${rootProject.extra["navigationVersion"]}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${rootProject.extra["coroutinesVersion"]}")
+    implementation(libs.lifecycle.viewmodel)
+    implementation(libs.lifecycle)
+    implementation(libs.lifecycle.viewmodel.savedstate)
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.coroutines.android)
 
-    implementation("com.github.bumptech.glide:glide:${rootProject.extra["glideVersion"]}")
-    kapt("com.github.bumptech.glide:compiler:${rootProject.extra["glideVersion"]}")
+    implementation(libs.glide)
+    kapt(libs.glide.compiler)
 
-    kaptAndroidTest("com.google.dagger:hilt-android-compiler:${rootProject.extra["hiltTestingVersion"]}")
+    kaptAndroidTest(libs.hilt.android.compiler)
 
     testImplementation(project(":core:testing"))
     androidTestImplementation(project(":core:testing"))
-    androidTestUtil("androidx.test:orchestrator:${rootProject.extra["orchestratorVersion"]}")
+    androidTestUtil(libs.orchestrator)
 }
 
 configurations.all {

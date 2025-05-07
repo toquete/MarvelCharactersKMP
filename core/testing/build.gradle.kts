@@ -1,7 +1,7 @@
 plugins {
-    id("com.android.library")
-    kotlin("android")
-    kotlin("kapt")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kapt)
 }
 
 android {
@@ -23,22 +23,22 @@ android {
 
 dependencies {
     // Test
-    api("io.mockk:mockk:${rootProject.extra["mockkVersion"]}")
-    api("junit:junit:${rootProject.extra["junitVersion"]}")
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-test:${rootProject.extra["coroutinesVersion"]}")
-    api("com.google.truth:truth:${rootProject.extra["truthVersion"]}")
-    api("app.cash.turbine:turbine:${rootProject.extra["turbineVersion"]}")
+    api(libs.mockk)
+    api(libs.junit)
+    api(libs.coroutines.test)
+    api(libs.truth)
+    api(libs.turbine)
 
     // Android Test
-    api("androidx.test:core:${rootProject.extra["testCoreVersion"]}")
-    api("androidx.test:core-ktx:${rootProject.extra["testCoreVersion"]}")
-    api("androidx.test:runner:${rootProject.extra["testRunnerVersion"]}")
-    api("androidx.test.ext:junit:${rootProject.extra["junitExtVersion"]}")
-    api("androidx.test.espresso:espresso-core:${rootProject.extra["espressoVersion"]}")
-    api("androidx.test.espresso:espresso-contrib:${rootProject.extra["espressoVersion"]}")
-    api("androidx.navigation:navigation-testing:${rootProject.extra["navigationVersion"]}")
-    api("io.mockk:mockk-android:${rootProject.extra["mockkAndroidVersion"]}")
-    api("com.google.dagger:hilt-android-testing:${rootProject.extra["hiltTestingVersion"]}")
+    api(libs.test.core)
+    api(libs.test.core.ktx)
+    api(libs.test.runner)
+    api(libs.junit.ext)
+    api(libs.espresso)
+    api(libs.espresso.contrib)
+    api(libs.navigation.testing)
+    api(libs.mockk.android)
+    api(libs.hilt.testing)
 }
 
 configurations.all {

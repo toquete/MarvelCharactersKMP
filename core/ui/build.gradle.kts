@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.library")
-    kotlin("android")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -21,6 +21,6 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:${rootProject.extra["coreVersion"]}")
-    api("com.google.android.material:material:${rootProject.extra["materialDesignVersion"]}")
+    implementation(libs.core.ktx)
+    api(libs.materialdesign)
 }

@@ -2,10 +2,10 @@ import java.util.Properties
 import java.io.FileInputStream
 
 plugins {
-    id("com.android.library")
-    kotlin("android")
-    kotlin("kapt")
-    kotlin("plugin.serialization")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kapt)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 apply(from = "$rootDir/tools/jacoco/android.gradle")
@@ -39,14 +39,12 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:common"))
 
-    implementation("com.squareup.retrofit2:retrofit:${rootProject.extra["retrofitVersion"]}")
-    implementation("com.squareup.okhttp3:okhttp:${rootProject.extra["okHttpVersion"]}")
-    implementation(
-        "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:${rootProject.extra["kotlinSerializationConverterVersion"]}"
-    )
-    implementation("commons-codec:commons-codec:${rootProject.extra["commonsCodecVersion"]}")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${rootProject.extra["kotlinSerializationVersion"]}")
+    implementation(libs.retrofit)
+    implementation(libs.okHttp)
+    implementation(libs.kotlin.serialization.converter)
+    implementation(libs.commons.codec)
+    implementation(libs.kotlin.serialization)
 
     testImplementation(project(":core:testing"))
-    testImplementation("com.squareup.okhttp3:mockwebserver:${rootProject.extra["mockWebServerVersion"]}")
+    testImplementation(libs.mockwebserver)
 }

@@ -2,13 +2,14 @@
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
-    id("com.android.application") version "7.3.1" apply false
-    kotlin("android") version "1.7.20" apply false
-    kotlin("plugin.serialization") version "1.7.20" apply false
-    id("jacoco")
-    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
-    id("io.gitlab.arturbosch.detekt") version "1.8.0"
-    id("com.github.kt3k.coveralls") version "2.12.0"
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.kapt) apply false
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.coveralls)
 }
 
 subprojects {

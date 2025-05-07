@@ -1,7 +1,6 @@
 plugins {
-    id("com.android.application")
-    kotlin("android")
-    kotlin("kapt")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
 }
 
 apply(from = "$rootDir/tools/jacoco/android.gradle")
@@ -36,17 +35,12 @@ android {
         jvmTarget = rootProject.extra["jvmTargetVersion"].toString()
     }
 
-    kapt {
-        correctErrorTypes = true
-    }
-
     buildFeatures {
         viewBinding = true
     }
 }
 
 dependencies {
-    implementation(fileTree(baseDir = "libs") { include("*.jar") })
     implementation(project(":cache"))
     implementation(project(":data"))
     implementation(project(":domain"))
@@ -57,8 +51,7 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:common"))
 
-    implementation("androidx.core:core-ktx:${rootProject.extra["coreVersion"]}")
-
-    implementation("androidx.navigation:navigation-fragment-ktx:${rootProject.extra["navigationVersion"]}")
-    implementation("androidx.navigation:navigation-ui-ktx:${rootProject.extra["navigationVersion"]}")
+    implementation(libs.core.ktx)
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
 }

@@ -1,7 +1,7 @@
 plugins {
-    id("com.android.library")
-    kotlin("android")
-    kotlin("kapt")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kapt)
 }
 
 apply(from = "$rootDir/tools/jacoco/android.gradle")
@@ -27,11 +27,11 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:common"))
 
-    implementation("androidx.appcompat:appcompat:${rootProject.extra["appCompatVersion"]}")
+    implementation(libs.appcompat)
 
-    implementation("androidx.room:room-runtime:${rootProject.extra["roomVersion"]}")
-    implementation("androidx.room:room-ktx:${rootProject.extra["roomVersion"]}")
-    kapt("androidx.room:room-compiler:${rootProject.extra["roomVersion"]}")
+    implementation(libs.room)
+    implementation(libs.room.ktx)
+    kapt(libs.room.compiler)
 
     testImplementation(project(":core:testing"))
 }
