@@ -17,7 +17,7 @@ jobs:
       tag: default
     steps:
       - checkout
-      - change_java_version:
+      - android/change_java_version:
           java-version: 17
       - android/restore-build-cache
       - android/restore-gradle-cache
@@ -39,7 +39,7 @@ jobs:
       tag: default
     steps:
       - checkout
-      - change_java_version:
+      - android/change_java_version:
           java-version: 17
       - android/restore-build-cache
       - android/restore-gradle-cache
@@ -60,7 +60,7 @@ jobs:
       tag: default
     steps:
       - checkout
-      - change_java_version:
+      - android/change_java_version:
           java-version: 17
       - android/restore-build-cache
       - android/restore-gradle-cache
@@ -78,7 +78,7 @@ jobs:
       tag: default
     steps:
       - checkout
-      - change_java_version:
+      - android/change_java_version:
           java-version: 17
       - android/restore-build-cache
       - android/restore-gradle-cache
@@ -104,7 +104,7 @@ jobs:
       tag: default
     steps:
       - checkout
-      - change_java_version:
+      - android/change_java_version:
           java-version: 17
       - android/restore-build-cache
       - android/restore-gradle-cache
@@ -137,7 +137,7 @@ jobs:
       tag: default
     steps:
       - checkout
-      - change_java_version:
+      - android/change_java_version:
           java-version: 17
       - *create_keystore
       - android/start-emulator-and-run-tests:
