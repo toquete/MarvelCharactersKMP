@@ -13,7 +13,7 @@ jobs:
   build:
     executor:
       name: android/android_docker
-      resource-class: large
+      resource_class: large
       tag: default
     steps:
       - checkout
@@ -35,7 +35,7 @@ jobs:
   lint:
     executor:
       name: android/android_docker
-      resource-class: large
+      resource_class: large
       tag: default
     steps:
       - checkout
@@ -56,7 +56,7 @@ jobs:
   ktlint:
     executor:
       name: android/android_docker
-      resource-class: large
+      resource_class: large
       tag: default
     steps:
       - checkout
@@ -74,7 +74,7 @@ jobs:
   detekt:
     executor:
       name: android/android_docker
-      resource-class: large
+      resource_class: large
       tag: default
     steps:
       - checkout
@@ -100,7 +100,7 @@ jobs:
   unit_test:
     executor:
       name: android/android_docker
-      resource-class: large
+      resource_class: large
       tag: default
     steps:
       - checkout
@@ -133,7 +133,7 @@ jobs:
   android_test:
     executor:
       name: android/android_machine
-      resource-class: large
+      resource_class: large
       tag: default
     steps:
       - checkout
