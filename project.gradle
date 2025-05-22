@@ -26,13 +26,13 @@ task jacocoFullTestReport(type: JacocoReport) {
     executionData.from = files(projects.jacocoTestReport.executionData)
 
     reports {
-        xml.enabled = true
-        html.enabled = true
-        html.destination = file("${buildDir}/reports/jacoco")
+        xml.required.set(true)
+        html.required.set(true)
+        html.outputLocation.set(file("${buildDir}/reports/jacoco"))
     }
 
     doLast {
-        println "jacoco unit report has been generated to file://${reports.html.destination}/index.html"
+        println "jacoco unit report has been generated to file://${reports.html.outputLocation.asFile}/index.html"
     }
 }
 
@@ -56,13 +56,13 @@ task jacocoFullAndroidTestReport(type: JacocoReport) {
     executionData.from = files(projects.jacocoAndroidTestReport.executionData)
 
     reports {
-        xml.enabled = true
-        html.enabled = true
-        html.destination = file("${buildDir}/reports/jacoco/androidTest")
+        xml.required.set(true)
+        html.required.set(true)
+        html.outputLocation.set(file("${buildDir}/reports/jacoco/androidTest"))
     }
 
     doLast {
-        println "jacoco android report has been generated to file://${reports.html.destination}/index.html"
+        println "jacoco android report has been generated to file://${reports.html.outputLocation.asFile}/index.html"
     }
 }
 

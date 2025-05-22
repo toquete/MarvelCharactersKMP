@@ -65,9 +65,9 @@ project.afterEvaluate {
         group = 'coverage'
         description = "Generate Jacoco coverage reports after running tests."
         reports {
-            xml.enabled = true
-            html.enabled = true
-            html.destination = file("${buildDir}/reports/jacoco")
+            xml.required.set(true)
+            html.required.set(true)
+            html.outputLocation.set(file("${buildDir}/reports/jacoco"))
         }
 
         sourceDirectories.from = files([mainSrc])
@@ -75,17 +75,17 @@ project.afterEvaluate {
         executionData.from = fileTree(dir: "$buildDir", includes: ["jacoco/test${testBuildType.capitalize()}UnitTest.exec"])
 
         doLast {
-            println "jacoco unit report has been generated to file://${reports.html.destination}/index.html"
+            println "jacoco unit report has been generated to file://${reports.html.outputLocation.asFile}/index.html"
         }
     }
 
     tasks.create(name: "jacocoAndroidTestReport", type: JacocoReport, dependsOn: "create${testBuildType.capitalize()}CoverageReport") {
         group = 'coverage'
         reports {
-            xml.enabled = true
-            html.enabled = true
-            html.setDestination(file("${buildDir}/reports/jacoco/androidTest"))
-            xml.setDestination(file("${buildDir}/reports/jacoco/androidTest/androidTest.xml"))
+            xml.required.set(true)
+            html.required.set(true)
+            html.outputLocation.set(file("${buildDir}/reports/jacoco/androidTest"))
+            xml.outputLocation.set(file("${buildDir}/reports/jacoco/androidTest/androidTest.xml"))
         }
 
         sourceDirectories.from = files([mainSrc])
@@ -93,17 +93,17 @@ project.afterEvaluate {
         executionData.from = fileTree(dir: "$buildDir", includes: ['**/*.ec'])
 
         doLast {
-            println "jacoco android report has been generated to file://${reports.html.destination}/index.html"
+            println "jacoco android report has been generated to file://${reports.html.outputLocation.asFile}/index.html"
         }
     }
 
     tasks.create(name: "jacocoMergedTestReport", type: JacocoReport, dependsOn: ["jacocoTestReport", "jacocoAndroidTestReport"]) {
         group = 'coverage'
         reports {
-            xml.enabled = true
-            html.enabled = true
-            html.setDestination(file("${buildDir}/reports/jacoco/mergedTest"))
-            xml.setDestination(file("${buildDir}/reports/jacoco/mergedTest/mergedTest.xml"))
+            xml.required.set(true)
+            html.required.set(true)
+            html.outputLocation.set(file("${buildDir}/reports/jacoco/mergedTest"))
+            xml.outputLocation.set(file("${buildDir}/reports/jacoco/mergedTest/mergedTest.xml"))
         }
 
         sourceDirectories.from = files([mainSrc])
@@ -111,7 +111,7 @@ project.afterEvaluate {
         executionData.from = fileTree(dir: "$buildDir", includes: ["jacoco/test${testBuildType.capitalize()}UnitTest.exec", '**/*.ec'])
 
         doLast {
-            println "jacoco full report has been generated to file://${reports.html.destination}/index.html"
+            println "jacoco full report has been generated to file://${reports.html.outputLocation.asFile}/index.html"
         }
     }
 }
