@@ -12,82 +12,82 @@ references:
 jobs:
   build:
     executor:
-      name: android/android_machine
+      name: android/android_docker
       resource-class: large
       tag: default
     steps:
       - checkout
       - android/change_java_version:
           java_version: 17
-      - android/restore-build-cache
-      - android/restore-gradle-cache
+      - android/restore_build_cache
+      - android/restore_gradle_cache
       - *create_keystore
       - run:
           name: Build debug APK
           command: |
             ./gradlew :app:assembleDebug
-      - android/save-build-cache
-      - android/save-gradle-cache
+      - android/save_build_cache
+      - android/save_gradle_cache
       - store_artifacts:
           path: app/build/outputs/apk
           destination: apk
 
   lint:
     executor:
-      name: android/android_machine
+      name: android/android_docker
       resource-class: large
       tag: default
     steps:
       - checkout
       - android/change_java_version:
           java_version: 17
-      - android/restore-build-cache
-      - android/restore-gradle-cache
+      - android/restore_build_cache
+      - android/restore_gradle_cache
       - *create_keystore
       - run:
           name: Run Android Lint
           command: ./gradlew lint
-      - android/save-build-cache
-      - android/save-gradle-cache
+      - android/save_build_cache
+      - android/save_gradle_cache
       - store_artifacts:
           path: app/build/reports
           destination: reports
 
   ktlint:
     executor:
-      name: android/android_machine
+      name: android/android_docker
       resource-class: large
       tag: default
     steps:
       - checkout
       - android/change_java_version:
           java_version: 17
-      - android/restore-build-cache
-      - android/restore-gradle-cache
+      - android/restore_build_cache
+      - android/restore_gradle_cache
       - *create_keystore
       - run:
           name: Run ktlint check
           command: ./gradlew ktlintCheck --continue
-      - android/save-build-cache
-      - android/save-gradle-cache
+      - android/save_build_cache
+      - android/save_gradle_cache
 
   detekt:
     executor:
-      name: android/android_machine
+      name: android/android_docker
       resource-class: large
       tag: default
     steps:
       - checkout
       - android/change_java_version:
           java_version: 17
-      - android/restore-build-cache
-      - android/restore-gradle-cache
+      - android/restore_build_cache
+      - android/restore_gradle_cache
       - *create_keystore
       - run:
           name: Run detekt check
           command: ./gradlew detekt
-      - android/save-build-cache
-      - android/save-gradle-cache
+      - android/save_build_cache
+      - android/save_gradle_cache
       - run:
           name: Save detekt reports
           command: |
@@ -99,20 +99,20 @@ jobs:
 
   unit_test:
     executor:
-      name: android/android_machine
+      name: android/android_docker
       resource-class: large
       tag: default
     steps:
       - checkout
       - android/change_java_version:
           java_version: 17
-      - android/restore-build-cache
-      - android/restore-gradle-cache
+      - android/restore_build_cache
+      - android/restore_gradle_cache
       - *create_keystore
-      - android/run-tests:
-          test-command: ./gradlew jacocoFullTestReport
-      - android/save-build-cache
-      - android/save-gradle-cache
+      - android/run_tests:
+          test_command: ./gradlew jacocoFullTestReport
+      - android/save_build_cache
+      - android/save_gradle_cache
       - run:
           name: Save test results
           command: |
@@ -149,7 +149,7 @@ jobs:
                 command: |
                   sleep 30
                   adb shell input keyevent 82
-      - android/save-build-cache
+      - android/save_build_cache
       - run:
           name: Save test results
           command: |
