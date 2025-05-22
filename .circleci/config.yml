@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  android: circleci/android@2.1.2
+  android: circleci/android@3.1.0
 
 references:
   create_keystore: &create_keystore
@@ -12,11 +12,13 @@ references:
 jobs:
   build:
     executor:
-      name: android/android-docker
+      name: android/android_machine
       resource-class: large
-      tag: 2022.09.2
+      tag: default
     steps:
       - checkout
+      - change_java_version:
+          java-version: 17
       - android/restore-build-cache
       - android/restore-gradle-cache
       - *create_keystore
@@ -32,11 +34,13 @@ jobs:
 
   lint:
     executor:
-      name: android/android-docker
+      name: android/android_machine
       resource-class: large
-      tag: 2022.09.2
+      tag: default
     steps:
       - checkout
+      - change_java_version:
+          java-version: 17
       - android/restore-build-cache
       - android/restore-gradle-cache
       - *create_keystore
@@ -51,11 +55,13 @@ jobs:
 
   ktlint:
     executor:
-      name: android/android-docker
+      name: android/android_machine
       resource-class: large
-      tag: 2022.09.2
+      tag: default
     steps:
       - checkout
+      - change_java_version:
+          java-version: 17
       - android/restore-build-cache
       - android/restore-gradle-cache
       - *create_keystore
@@ -67,11 +73,13 @@ jobs:
 
   detekt:
     executor:
-      name: android/android-docker
+      name: android/android_machine
       resource-class: large
-      tag: 2022.09.2
+      tag: default
     steps:
       - checkout
+      - change_java_version:
+          java-version: 17
       - android/restore-build-cache
       - android/restore-gradle-cache
       - *create_keystore
@@ -91,11 +99,13 @@ jobs:
 
   unit_test:
     executor:
-      name: android/android-docker
+      name: android/android_machine
       resource-class: large
-      tag: 2022.09.2
+      tag: default
     steps:
       - checkout
+      - change_java_version:
+          java-version: 17
       - android/restore-build-cache
       - android/restore-gradle-cache
       - *create_keystore
@@ -122,10 +132,13 @@ jobs:
 
   android_test:
     executor:
-      name: android/android-machine
-      tag: 2022.09.1
+      name: android/android_machine
+      resource-class: large
+      tag: default
     steps:
       - checkout
+      - change_java_version:
+          java-version: 17
       - *create_keystore
       - android/start-emulator-and-run-tests:
           test-command: ./gradlew connectedDebugAndroidTest
