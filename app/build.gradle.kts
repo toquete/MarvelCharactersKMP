@@ -52,6 +52,7 @@ dependencies {
     implementation(project(":core:common"))
 
     implementation(libs.core.ktx)
+    implementation(libs.activity.ktx)
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
 }

@@ -44,5 +44,5 @@ apply(from = "dependencies.gradle")
 apply(from = "project.gradle")
 
 tasks.register<Delete>("clean") {
-    delete(rootProject.buildDir)
+    delete(rootProject.layout.buildDirectory)
 }
