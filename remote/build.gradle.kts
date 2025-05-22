@@ -1,5 +1,5 @@
-import java.util.Properties
 import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.library)
@@ -41,9 +41,9 @@ dependencies {
 
     implementation(libs.retrofit)
     implementation(libs.okHttp)
-    implementation(libs.kotlin.serialization.converter)
+    implementation(libs.retrofit.kotlinx.serialization.converter)
     implementation(libs.commons.codec)
-    implementation(libs.kotlin.serialization)
+    implementation(libs.kotlinx.serialization.json)
 
     testImplementation(project(":core:testing"))
     testImplementation(libs.mockwebserver)

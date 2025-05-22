@@ -21,8 +21,8 @@ android {
 }
 
 dependencies {
-    api(libs.koin)
+    api(libs.koin.android)
     implementation(libs.core.ktx)
-    implementation(libs.lifecycle)
-    implementation(libs.coroutines)
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.kotlinx.coroutines.core)
 }

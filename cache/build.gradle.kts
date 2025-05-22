@@ -29,7 +29,7 @@ dependencies {
 
     implementation(libs.appcompat)
 
-    implementation(libs.room)
+    implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     kapt(libs.room.compiler)
 

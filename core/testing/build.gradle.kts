@@ -25,7 +25,7 @@ dependencies {
     // Test
     api(libs.mockk)
     api(libs.junit)
-    api(libs.coroutines.test)
+    api(libs.kotlinx.coroutines.test)
     api(libs.truth)
     api(libs.turbine)
 
@@ -34,11 +34,11 @@ dependencies {
     api(libs.test.core.ktx)
     api(libs.test.runner)
     api(libs.junit.ext)
-    api(libs.espresso)
+    api(libs.espresso.core)
     api(libs.espresso.contrib)
     api(libs.navigation.testing)
     api(libs.mockk.android)
-    api(libs.hilt.testing)
+    api(libs.hilt.android.testing)
 }
 
 configurations.all {

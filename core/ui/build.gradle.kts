@@ -22,5 +22,5 @@ android {
 
 dependencies {
     implementation(libs.core.ktx)
-    api(libs.materialdesign)
+    api(libs.material)
 }

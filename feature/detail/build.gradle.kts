@@ -42,11 +42,11 @@ dependencies {
     debugImplementation(libs.fragment.testing) {
         exclude(group = "androidx.test", module = "monitor")
     }
-    implementation(libs.lifecycle.viewmodel)
-    implementation(libs.lifecycle)
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.lifecycle.viewmodel.savedstate)
     implementation(libs.navigation.fragment.ktx)
-    implementation(libs.coroutines.android)
+    implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.glide)
     kapt(libs.glide.compiler)
