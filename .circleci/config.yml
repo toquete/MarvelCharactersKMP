@@ -14,7 +14,7 @@ jobs:
     executor:
       name: android/android_docker
       resource_class: large
-      tag: default
+      tag: 2025.03.1
     steps:
       - checkout
       - android/change_java_version:
@@ -36,7 +36,7 @@ jobs:
     executor:
       name: android/android_docker
       resource_class: large
-      tag: default
+      tag: 2025.03.1
     steps:
       - checkout
       - android/change_java_version:
@@ -57,7 +57,7 @@ jobs:
     executor:
       name: android/android_docker
       resource_class: large
-      tag: default
+      tag: 2025.03.1
     steps:
       - checkout
       - android/change_java_version:
@@ -75,7 +75,7 @@ jobs:
     executor:
       name: android/android_docker
       resource_class: large
-      tag: default
+      tag: 2025.03.1
     steps:
       - checkout
       - android/change_java_version:
@@ -101,7 +101,7 @@ jobs:
     executor:
       name: android/android_docker
       resource_class: large
-      tag: default
+      tag: 2025.03.1
     steps:
       - checkout
       - android/change_java_version:
@@ -134,7 +134,7 @@ jobs:
     executor:
       name: android/android_machine
       resource_class: large
-      tag: default
+      tag: 2025.03.1
     steps:
       - checkout
       - android/change_java_version:
