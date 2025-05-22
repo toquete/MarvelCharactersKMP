@@ -1,10 +1,10 @@
 ext {
-    compileSdkVersion = 33
-    targetSdkVersion = 33
+    compileSdkVersion = 34
+    targetSdkVersion = 34
     minSdkVersion = 24
-    sourceCompatibilityVersion = JavaVersion.VERSION_1_8
-    targetCompatibilityVersion = JavaVersion.VERSION_1_8
-    jvmTargetVersion = JavaVersion.VERSION_1_8
+    sourceCompatibilityVersion = JavaVersion.VERSION_17
+    targetCompatibilityVersion = JavaVersion.VERSION_17
+    jvmTargetVersion = JavaVersion.VERSION_17
 
     coreVersion = "1.9.0"
     appCompatVersion = "1.5.1"
