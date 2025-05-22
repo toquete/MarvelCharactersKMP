@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kapt)
+    alias(libs.plugins.ksp)
 }
 
 apply(from = "$rootDir/tools/jacoco/android.gradle")
@@ -49,9 +49,9 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.glide)
-    kapt(libs.glide.compiler)
+    ksp(libs.glide.compiler)
 
-    kaptAndroidTest(libs.hilt.android.compiler)
+    kspAndroidTest(libs.hilt.android.compiler)
 
     testImplementation(project(":core:testing"))
     androidTestImplementation(project(":core:testing"))
