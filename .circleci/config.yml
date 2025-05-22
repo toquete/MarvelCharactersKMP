@@ -18,7 +18,7 @@ jobs:
     steps:
       - checkout
       - android/change_java_version:
-          java-version: 17
+          java_version: 17
       - android/restore-build-cache
       - android/restore-gradle-cache
       - *create_keystore
@@ -40,7 +40,7 @@ jobs:
     steps:
       - checkout
       - android/change_java_version:
-          java-version: 17
+          java_version: 17
       - android/restore-build-cache
       - android/restore-gradle-cache
       - *create_keystore
@@ -61,7 +61,7 @@ jobs:
     steps:
       - checkout
       - android/change_java_version:
-          java-version: 17
+          java_version: 17
       - android/restore-build-cache
       - android/restore-gradle-cache
       - *create_keystore
@@ -79,7 +79,7 @@ jobs:
     steps:
       - checkout
       - android/change_java_version:
-          java-version: 17
+          java_version: 17
       - android/restore-build-cache
       - android/restore-gradle-cache
       - *create_keystore
@@ -105,7 +105,7 @@ jobs:
     steps:
       - checkout
       - android/change_java_version:
-          java-version: 17
+          java_version: 17
       - android/restore-build-cache
       - android/restore-gradle-cache
       - *create_keystore
@@ -138,7 +138,7 @@ jobs:
     steps:
       - checkout
       - android/change_java_version:
-          java-version: 17
+          java_version: 17
       - *create_keystore
       - android/start-emulator-and-run-tests:
           test-command: ./gradlew connectedDebugAndroidTest
