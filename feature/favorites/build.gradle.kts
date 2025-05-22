@@ -12,7 +12,6 @@ android {
 
     defaultConfig {
         minSdk = rootProject.extra["minSdkVersion"] as Int
-        targetSdk = rootProject.extra["targetSdkVersion"] as Int
 
         testInstrumentationRunner = "com.guilherme.marvelcharacters.core.testing.CustomAndroidTestRunner"
     }

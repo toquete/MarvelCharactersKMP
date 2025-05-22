@@ -15,7 +15,6 @@ android {
 
     defaultConfig {
         minSdk = rootProject.extra["minSdkVersion"] as Int
-        targetSdk = rootProject.extra["targetSdkVersion"] as Int
 
         val keystorePropertiesFile = rootProject.file("keystore.properties")
         val keystoreProperties = Properties()
@@ -31,6 +30,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = rootProject.extra["jvmTargetVersion"].toString()
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }
 
