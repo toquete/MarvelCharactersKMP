@@ -38,27 +38,13 @@ dependencies {
 
     implementation(libs.core.ktx)
     implementation(libs.fragment.ktx)
-    debugImplementation(libs.fragment.testing) {
-        exclude(group = "androidx.test", module = "monitor")
-    }
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.lifecycle.viewmodel.savedstate)
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.kotlinx.coroutines.android)
 
-    implementation(libs.glide)
-    ksp(libs.glide.compiler)
-
-    kspAndroidTest(libs.hilt.android.compiler)
-
     testImplementation(project(":core:testing"))
     androidTestImplementation(project(":core:testing"))
     androidTestUtil(libs.orchestrator)
-}
-
-configurations.all {
-    resolutionStrategy {
-        force("org.objenesis:objenesis:3.2")
-    }
 }

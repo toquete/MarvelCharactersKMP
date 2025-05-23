@@ -27,7 +27,7 @@ android {
         execution = "ANDROIDX_TEST_ORCHESTRATOR"
     }
     buildFeatures {
-        viewBinding = true
+        compose = true
     }
 }
 
