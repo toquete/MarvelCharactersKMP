@@ -29,12 +29,12 @@ class HomeViewModelTest : BaseUnitTest() {
     fun `onSearchCharacter - send success state when list is loaded`() = runTest {
         coEvery { getCharactersUseCase(any()) } returns Fixtures.characterList
 
-        homeViewModel.uiState.test {
+        homeViewModel.state.test {
             homeViewModel.onSearchCharacter("spider")
 
-            assertThat(awaitItem()).isEqualTo(HomeUiState.Empty)
-            assertThat(awaitItem()).isEqualTo(HomeUiState.Loading)
-            assertThat(awaitItem()).isEqualTo(HomeUiState.Success(Fixtures.characterList))
+            assertThat(awaitItem()).isEqualTo(HomeState())
+            assertThat(awaitItem()).isEqualTo(HomeState(isLoading = true))
+            assertThat(awaitItem()).isEqualTo(HomeState(characters = Fixtures.characterList, isLoading = false))
         }
     }
 
@@ -42,12 +42,12 @@ class HomeViewModelTest : BaseUnitTest() {
     fun `onSearchCharacter - send empty state when list is empty`() = runTest {
         coEvery { getCharactersUseCase(any()) } returns emptyList()
 
-        homeViewModel.uiState.test {
+        homeViewModel.state.test {
             homeViewModel.onSearchCharacter("spider")
 
-            assertThat(awaitItem()).isEqualTo(HomeUiState.Empty)
-            assertThat(awaitItem()).isEqualTo(HomeUiState.Loading)
-            assertThat(awaitItem()).isEqualTo(HomeUiState.Error(R.string.empty_state_message))
+            assertThat(awaitItem()).isEqualTo(HomeState())
+            assertThat(awaitItem()).isEqualTo(HomeState(isLoading = true))
+            assertThat(awaitItem()).isEqualTo(HomeState(errorMessageId = R.string.empty_state_message, isLoading = false))
         }
     }
 
@@ -55,12 +55,12 @@ class HomeViewModelTest : BaseUnitTest() {
     fun `onSearchCharacter - send error state on request error`() = runTest {
         coEvery { getCharactersUseCase(any()) } throws IOException()
 
-        homeViewModel.uiState.test {
+        homeViewModel.state.test {
             homeViewModel.onSearchCharacter("spider")
 
-            assertThat(awaitItem()).isEqualTo(HomeUiState.Empty)
-            assertThat(awaitItem()).isEqualTo(HomeUiState.Loading)
-            assertThat(awaitItem()).isEqualTo(HomeUiState.Error(R.string.request_error_message))
+            assertThat(awaitItem()).isEqualTo(HomeState())
+            assertThat(awaitItem()).isEqualTo(HomeState(isLoading = true))
+            assertThat(awaitItem()).isEqualTo(HomeState(errorMessageId = R.string.request_error_message, isLoading = false))
         }
     }
 }
