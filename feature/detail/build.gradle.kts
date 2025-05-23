@@ -61,6 +61,8 @@ dependencies {
 
     kspAndroidTest(libs.hilt.android.compiler)
 
+    implementation(libs.koin.androidx.compose)
+
     testImplementation(project(":core:testing"))
     androidTestImplementation(project(":core:testing"))
     androidTestUtil(libs.orchestrator)
