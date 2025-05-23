@@ -1,42 +1,37 @@
 package com.guilherme.marvelcharacters.feature.favorites
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.annotation.StringRes
+import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
-import com.guilherme.marvelcharacters.core.common.observe
 import com.guilherme.marvelcharacters.core.model.Character
-import com.guilherme.marvelcharacters.feature.favorites.databinding.FragmentFavoritesBinding
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
-class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
-
-    private var _favoritesBinding: FragmentFavoritesBinding? = null
-    private val favoritesBinding get() = _favoritesBinding!!
+class FavoritesFragment : Fragment() {
 
     private val favoritesViewModel: FavoritesViewModel by activityViewModel()
 
-    private lateinit var favoritesAdapter: FavoritesAdapter
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        _favoritesBinding = FragmentFavoritesBinding.bind(view)
-
-        setupView()
-        setupObservers()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _favoritesBinding = null
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
+        return inflater.inflate(R.layout.fragment_favorites, container, false).apply {
+            findViewById<ComposeView>(R.id.compose_view).apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    FavoritesRoute(
+                        onCharacterClick = ::navigateToDetail
+                    )
+                }
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -50,39 +45,6 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
             true
         } else {
             super.onOptionsItemSelected(item)
-        }
-    }
-
-    private fun setupView() = with(favoritesBinding) {
-        favoritesAdapter = FavoritesAdapter { character ->
-            navigateToDetail(character)
-        }
-        recyclerViewFavorites.adapter = favoritesAdapter
-        recyclerViewFavorites.addItemDecoration(
-            DividerItemDecoration(
-                context,
-                DividerItemDecoration.VERTICAL
-            )
-        )
-    }
-
-    private fun setupObservers() {
-        favoritesViewModel.state.observe(viewLifecycleOwner) { state ->
-            setupSuccess(state.characters)
-            showSnackbar(state.messageId)
-        }
-    }
-
-    private fun setupSuccess(characters: List<Character>) {
-        favoritesAdapter.submitList(characters)
-        setHasOptionsMenu(characters.isNotEmpty())
-    }
-
-    private fun showSnackbar(@StringRes stringId: Int?) {
-        stringId?.let {
-            Snackbar.make(favoritesBinding.recyclerViewFavorites, it, Snackbar.LENGTH_LONG)
-                .show()
-            favoritesViewModel.onSnackbarShown()
         }
     }
 
