@@ -44,6 +44,9 @@ class FavoritesViewModelTest : BaseUnitTest() {
         favoritesViewModel.uiState.test {
             assertThat(awaitItem()).isEqualTo(FavoritesUiState.ShowSnackbar(R.string.character_deleted))
         }
+        favoritesViewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(FavoritesState(messageId = R.string.character_deleted))
+        }
     }
 
     @Test
@@ -55,6 +58,9 @@ class FavoritesViewModelTest : BaseUnitTest() {
         favoritesViewModel.uiState.test {
             assertThat(awaitItem()).isEqualTo(FavoritesUiState.ShowSnackbar(R.string.error_message))
         }
+        favoritesViewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(FavoritesState(messageId = R.string.error_message))
+        }
     }
 
     @Test
@@ -63,6 +69,9 @@ class FavoritesViewModelTest : BaseUnitTest() {
 
         favoritesViewModel.uiState.test {
             assertThat(awaitItem()).isEqualTo(FavoritesUiState.ShowSnackbar(messageId = null))
+        }
+        favoritesViewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(FavoritesState(messageId = null))
         }
     }
 
@@ -77,6 +86,9 @@ class FavoritesViewModelTest : BaseUnitTest() {
 
         viewModel.uiState.test {
             assertThat(awaitItem()).isEqualTo(FavoritesUiState.Success(Fixtures.characterList))
+        }
+        viewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(FavoritesState(Fixtures.characterList))
         }
     }
 }
