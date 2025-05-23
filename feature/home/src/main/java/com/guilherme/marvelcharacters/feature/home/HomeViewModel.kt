@@ -12,39 +12,40 @@ internal class HomeViewModel(
     private val getCharactersUseCase: GetCharactersUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Empty)
-    val uiState = _uiState.asStateFlow()
-
     private val _state = MutableStateFlow(HomeState())
     val state = _state.asStateFlow()
 
     var query: String? = null
 
     fun onSearchCharacter(character: String) {
-        _uiState.update { HomeUiState.Loading }
-        _state.update { it.copy(isLoading = true) }
+        _state.update {
+            it.copy(
+                characters = emptyList(),
+                errorMessageId = null,
+                isLoading = true
+            )
+        }
 
         viewModelScope.launch {
             runCatching {
                 getCharactersUseCase(character)
             }.onSuccess { list ->
-                _uiState.update {
-                    if (list.isEmpty()) {
-                        HomeUiState.Error(R.string.empty_state_message)
-                    } else {
-                        HomeUiState.Success(list)
-                    }
-                }
                 _state.update {
                     if (list.isEmpty()) {
-                        it.copy(errorMessageId = R.string.empty_state_message, isLoading = false)
+                        it.copy(
+                            errorMessageId = R.string.empty_state_message,
+                            isLoading = false
+                        )
                     } else {
-                        it.copy(characters = list, isLoading = false)
+                        it.copy(
+                            characters = list,
+                            errorMessageId = null,
+                            isLoading = false
+                        )
                     }
                 }
             }.onFailure {
                 // TODO: melhorar tratativa de erro
-                _uiState.update { HomeUiState.Error(R.string.request_error_message) }
                 _state.update { it.copy(errorMessageId = R.string.request_error_message, isLoading = false) }
             }
         }

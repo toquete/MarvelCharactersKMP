@@ -8,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
@@ -103,12 +102,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun setupObservers() {
-        homeViewModel.uiState.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                HomeUiState.Empty -> setupEmptyState()
-                is HomeUiState.Error -> setupError(state.errorMessageId)
-                HomeUiState.Loading -> setupLoading()
-                is HomeUiState.Success -> setupSuccess(state.characters)
+        homeViewModel.state.observe(viewLifecycleOwner) { state ->
+            with(homeBinding) {
+                progressBar.isVisible = state.isLoading
+                recyclerviewCharacters.isVisible = !state.isLoading && state.characters.isNotEmpty()
+                textviewMessage.isVisible = !state.isLoading && state.errorMessageId != null
+                state.errorMessageId?.let { textviewMessage.setText(it) }
+                homeAdapter.submitList(state.characters)
             }
         }
         nightModeViewModel.nightMode.observe(viewLifecycleOwner) { mode ->
@@ -120,33 +120,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         (activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).run {
             hideSoftInputFromWindow(homeBinding.button.windowToken, 0)
         }
-    }
-
-    private fun setupEmptyState() = with(homeBinding) {
-        progressBar.isVisible = false
-        recyclerviewCharacters.isVisible = true
-        textviewMessage.isVisible = false
-    }
-
-    private fun setupError(@StringRes messageId: Int) = with(homeBinding) {
-        progressBar.isVisible = false
-        recyclerviewCharacters.isVisible = false
-        textviewMessage.isVisible = true
-        textviewMessage.setText(messageId)
-    }
-
-    private fun setupLoading() = with(homeBinding) {
-        progressBar.isVisible = true
-        recyclerviewCharacters.isVisible = false
-        textviewMessage.isVisible = false
-    }
-
-    private fun setupSuccess(list: List<Character>) = with(homeBinding) {
-        homeAdapter.submitList(list)
-
-        progressBar.isVisible = false
-        recyclerviewCharacters.isVisible = true
-        textviewMessage.isVisible = false
     }
 
     private fun navigateToDetail(character: Character) {
