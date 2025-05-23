@@ -67,11 +67,9 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
     }
 
     private fun setupObservers() {
-        favoritesViewModel.uiState.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is FavoritesUiState.ShowSnackbar -> showSnackbar(state.messageId)
-                is FavoritesUiState.Success -> setupSuccess(state.list)
-            }
+        favoritesViewModel.state.observe(viewLifecycleOwner) { state ->
+            setupSuccess(state.characters)
+            showSnackbar(state.messageId)
         }
     }
 

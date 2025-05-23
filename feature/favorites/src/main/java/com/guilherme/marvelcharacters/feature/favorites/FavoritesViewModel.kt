@@ -14,9 +14,6 @@ internal class FavoritesViewModel(
     private val deleteAllFavoriteCharactersUseCase: DeleteAllFavoriteCharactersUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<FavoritesUiState>(FavoritesUiState.Success())
-    val uiState = _uiState.asStateFlow()
-
     private val _state = MutableStateFlow(FavoritesState())
     val state = _state.asStateFlow()
 
@@ -24,7 +21,6 @@ internal class FavoritesViewModel(
         viewModelScope.launch {
             getFavoriteCharactersUseCase()
                 .collect { list ->
-                    _uiState.update { FavoritesUiState.Success(list) }
                     _state.update { it.copy(characters = list) }
                 }
         }
@@ -34,17 +30,14 @@ internal class FavoritesViewModel(
         viewModelScope.launch {
             runCatching {
                 deleteAllFavoriteCharactersUseCase()
-                _uiState.update { FavoritesUiState.ShowSnackbar(R.string.character_deleted) }
                 _state.update { it.copy(messageId = R.string.character_deleted) }
             }.onFailure {
-                _uiState.update { FavoritesUiState.ShowSnackbar(R.string.error_message) }
                 _state.update { it.copy(messageId = R.string.error_message) }
             }
         }
     }
 
     fun onSnackbarShown() {
-        _uiState.update { FavoritesUiState.ShowSnackbar(messageId = null) }
         _state.update { it.copy(messageId = null) }
     }
 }

@@ -41,9 +41,6 @@ class FavoritesViewModelTest : BaseUnitTest() {
 
         coVerify { deleteAllFavoriteCharactersUseCase() }
 
-        favoritesViewModel.uiState.test {
-            assertThat(awaitItem()).isEqualTo(FavoritesUiState.ShowSnackbar(R.string.character_deleted))
-        }
         favoritesViewModel.state.test {
             assertThat(awaitItem()).isEqualTo(FavoritesState(messageId = R.string.character_deleted))
         }
@@ -55,9 +52,6 @@ class FavoritesViewModelTest : BaseUnitTest() {
 
         favoritesViewModel.onDeleteAllClick()
 
-        favoritesViewModel.uiState.test {
-            assertThat(awaitItem()).isEqualTo(FavoritesUiState.ShowSnackbar(R.string.error_message))
-        }
         favoritesViewModel.state.test {
             assertThat(awaitItem()).isEqualTo(FavoritesState(messageId = R.string.error_message))
         }
@@ -67,9 +61,6 @@ class FavoritesViewModelTest : BaseUnitTest() {
     fun `onSnackbarShown - send null message`() = runTest {
         favoritesViewModel.onSnackbarShown()
 
-        favoritesViewModel.uiState.test {
-            assertThat(awaitItem()).isEqualTo(FavoritesUiState.ShowSnackbar(messageId = null))
-        }
         favoritesViewModel.state.test {
             assertThat(awaitItem()).isEqualTo(FavoritesState(messageId = null))
         }
@@ -84,9 +75,6 @@ class FavoritesViewModelTest : BaseUnitTest() {
             deleteAllFavoriteCharactersUseCase
         )
 
-        viewModel.uiState.test {
-            assertThat(awaitItem()).isEqualTo(FavoritesUiState.Success(Fixtures.characterList))
-        }
         viewModel.state.test {
             assertThat(awaitItem()).isEqualTo(FavoritesState(Fixtures.characterList))
         }
