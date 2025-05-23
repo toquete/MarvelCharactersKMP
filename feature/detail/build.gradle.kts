@@ -58,9 +58,3 @@ dependencies {
     androidTestImplementation(project(":core:testing"))
     androidTestUtil(libs.orchestrator)
 }
-
-configurations.all {
-    resolutionStrategy {
-        force("org.objenesis:objenesis:3.2")
-    }
-}
