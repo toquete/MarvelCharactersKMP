@@ -27,7 +27,6 @@ android {
         execution = "ANDROIDX_TEST_ORCHESTRATOR"
     }
     buildFeatures {
-        viewBinding = true
         compose = true
     }
 }
@@ -40,9 +39,6 @@ dependencies {
 
     implementation(libs.core.ktx)
     implementation(libs.fragment.ktx)
-    debugImplementation(libs.fragment.testing) {
-        exclude(group = "androidx.test", module = "monitor")
-    }
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.lifecycle.viewmodel.savedstate)
@@ -55,11 +51,6 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)
-
-    implementation(libs.glide)
-    ksp(libs.glide.compiler)
-
-    kspAndroidTest(libs.hilt.android.compiler)
 
     implementation(libs.koin.androidx.compose)
 
