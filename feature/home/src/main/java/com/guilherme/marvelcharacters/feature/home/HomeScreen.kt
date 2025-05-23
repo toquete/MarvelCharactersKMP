@@ -29,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.guilherme.marvelcharacters.core.model.Character
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -64,7 +66,9 @@ internal fun HomeScreen(
     var isSearchButtonEnabled by remember { mutableStateOf(false) }
 
     LaunchedEffect(textFieldState) {
-        isSearchButtonEnabled = textFieldState.text.isNotEmpty()
+        snapshotFlow { textFieldState.text }.collectLatest {
+            isSearchButtonEnabled = it.isNotEmpty()
+        }
     }
 
     Column(modifier = Modifier.fillMaxSize()) {

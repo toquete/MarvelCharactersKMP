@@ -15,8 +15,6 @@ internal class HomeViewModel(
     private val _state = MutableStateFlow(HomeState())
     val state = _state.asStateFlow()
 
-    var query: String? = null
-
     fun onSearchCharacter(character: String) {
         _state.update {
             it.copy(
