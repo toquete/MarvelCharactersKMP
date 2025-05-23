@@ -30,7 +30,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 internal fun FavoritesRoute(
     viewModel: FavoritesViewModel = koinViewModel(),
-    onCharacterClick: (character: Character) -> Unit = {},
+    onCharacterClick: (character: Character) -> Unit = {}
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     FavoritesScreen(
