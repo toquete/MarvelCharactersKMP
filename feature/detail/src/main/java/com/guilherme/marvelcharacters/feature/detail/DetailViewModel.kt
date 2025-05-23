@@ -18,14 +18,14 @@ internal class DetailViewModel(
 
     private val characterId: Int = checkNotNull(savedStateHandle["characterId"])
 
-    private val _uiState = MutableStateFlow<DetailUiState>(DetailUiState.Loading)
-    val uiState = _uiState.asStateFlow()
+    private val _state = MutableStateFlow(DetailState())
+    val state = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
             getFavoriteCharacterByIdUseCase(characterId)
                 .collect { favoriteCharacter ->
-                    _uiState.update { DetailUiState.Success(favoriteCharacter) }
+                    _state.update { it.copy(character = favoriteCharacter) }
                 }
         }
     }
@@ -37,9 +37,9 @@ internal class DetailViewModel(
             runCatching {
                 toggleFavoriteCharacterUseCase(characterId, isFavorite)
             }.onSuccess {
-                _uiState.update { DetailUiState.ShowSnackbar(message, showAction = isFavorite) }
+                _state.update { it.copy(messageId = message, showAction = isFavorite) }
             }.onFailure {
-                _uiState.update { DetailUiState.ShowSnackbar(R.string.error_message, showAction = false) }
+                _state.update { it.copy(messageId = R.string.error_message, showAction = false) }
             }
         }
     }
@@ -49,12 +49,12 @@ internal class DetailViewModel(
             runCatching {
                 toggleFavoriteCharacterUseCase(characterId, isFavorite = false)
             }.onFailure {
-                _uiState.update { DetailUiState.ShowSnackbar(R.string.error_message, showAction = false) }
+                _state.update { it.copy(messageId = R.string.error_message, showAction = false) }
             }
         }
     }
 
     fun onSnackbarShown() {
-        _uiState.update { DetailUiState.ShowSnackbar(messageId = null, showAction = false) }
+        _state.update { it.copy(messageId = null, showAction = false) }
     }
 }

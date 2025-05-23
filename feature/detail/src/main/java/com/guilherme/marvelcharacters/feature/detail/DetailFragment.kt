@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.guilherme.marvelcharacters.core.common.observe
+import com.guilherme.marvelcharacters.domain.model.FavoriteCharacter
 import com.guilherme.marvelcharacters.feature.detail.databinding.FragmentDetailBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -29,11 +30,12 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     }
 
     private fun setupObservers() {
-        detailViewModel.uiState.observe(this) { state ->
-            when (state) {
-                is DetailUiState.ShowSnackbar -> showSnackbar(state.messageId, state.showAction)
-                DetailUiState.Loading -> {}
-                is DetailUiState.Success -> setupViewBindings(state)
+        detailViewModel.state.observe(this) { state ->
+            if (state.character != null) {
+                setupViewBindings(state.character)
+            }
+            if (state.messageId != null) {
+                showSnackbar(state.messageId, state.showAction)
             }
         }
     }
@@ -49,17 +51,17 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         }
     }
 
-    private fun setupViewBindings(state: DetailUiState.Success) {
-        detailBinding.fab.isActivated = state.character.isFavorite
-        detailBinding.collapsingToolbarLayout.title = state.character.character.name
-        detailBinding.description.text = state.character.character.description.ifEmpty {
+    private fun setupViewBindings(character: FavoriteCharacter) {
+        detailBinding.fab.isActivated = character.isFavorite
+        detailBinding.collapsingToolbarLayout.title = character.character.name
+        detailBinding.description.text = character.character.description.ifEmpty {
             getString(R.string.no_description_available)
         }
         Glide.with(this)
-            .load(state.character.character.thumbnail)
+            .load(character.character.thumbnail)
             .centerCrop()
             .into(detailBinding.imageView)
 
-        detailBinding.fab.setOnClickListener { detailViewModel.onFabClick(state.character.isFavorite) }
+        detailBinding.fab.setOnClickListener { detailViewModel.onFabClick(character.isFavorite) }
     }
 }
