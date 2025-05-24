@@ -14,7 +14,7 @@ fun NavController.navigateToHome() {
     navigate(HomeRoute)
 }
 
-fun NavGraphBuilder.navigateToHome(onCharacterClick: (character: Character) -> Unit) {
+fun NavGraphBuilder.homeScreen(onCharacterClick: (character: Character) -> Unit) {
     composable<HomeRoute> {
         HomeScreen(onCharacterClick = onCharacterClick)
     }
