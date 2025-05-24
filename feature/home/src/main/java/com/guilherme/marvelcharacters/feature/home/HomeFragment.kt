@@ -27,7 +27,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             findViewById<ComposeView>(R.id.compose_view).apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    HomeRoute(onCharacterClick = ::navigateToDetail)
+                    HomeScreen(onCharacterClick = ::navigateToDetail)
                 }
             }
         }

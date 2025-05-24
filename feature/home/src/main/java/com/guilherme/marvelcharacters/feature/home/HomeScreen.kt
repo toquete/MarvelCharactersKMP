@@ -10,26 +10,24 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.TextFieldLineLimits
-import androidx.compose.foundation.text.input.clearText
-import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -40,16 +38,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.guilherme.marvelcharacters.core.model.Character
-import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-internal fun HomeRoute(
+internal fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel(),
     onCharacterClick: (character: Character) -> Unit = {}
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    HomeScreen(
+    HomeContent(
         state = state,
         onCharacterClick = onCharacterClick,
         onSearchButtonClick = viewModel::onSearchCharacter
@@ -57,17 +54,15 @@ internal fun HomeRoute(
 }
 
 @Composable
-internal fun HomeScreen(
+internal fun HomeContent(
     state: HomeState,
     onCharacterClick: (character: Character) -> Unit = {},
     onSearchButtonClick: (query: String) -> Unit = {},
 ) {
-    val textFieldState = rememberTextFieldState("")
-    var isSearchButtonEnabled by remember { mutableStateOf(false) }
-
-    LaunchedEffect(textFieldState) {
-        snapshotFlow { textFieldState.text }.collectLatest {
-            isSearchButtonEnabled = it.isNotEmpty()
+    var characterText by rememberSaveable { mutableStateOf("") }
+    val isSearchButtonEnabled by remember {
+        derivedStateOf {
+            characterText.isNotEmpty()
         }
     }
 
@@ -80,11 +75,13 @@ internal fun HomeScreen(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OutlinedTextField(
-                state = textFieldState,
+                modifier = Modifier.weight(0.7f),
+                value = characterText,
+                onValueChange = { characterText = it },
                 label = { Text("Character") },
                 trailingIcon = {
-                    if (textFieldState.text.isNotEmpty()) {
-                        IconButton(onClick = { textFieldState.clearText() }) {
+                    if (characterText.isNotEmpty()) {
+                        IconButton(onClick = { characterText = "" }) {
                             Icon(
                                 imageVector = Icons.Default.Clear,
                                 contentDescription = null
@@ -92,19 +89,19 @@ internal fun HomeScreen(
                         }
                     }
                 },
-                lineLimits = TextFieldLineLimits.SingleLine,
+                maxLines = 1,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
                     showKeyboardOnFocus = true,
                     imeAction = ImeAction.Search,
                 ),
-                onKeyboardAction = {
-                    onSearchButtonClick.invoke(textFieldState.text.toString())
+                keyboardActions = KeyboardActions {
+                    onSearchButtonClick.invoke(characterText)
                 }
             )
             Button(
-                modifier = Modifier.weight(0.2f),
-                onClick = { onSearchButtonClick.invoke(textFieldState.text.toString()) },
+                modifier = Modifier.weight(0.3f),
+                onClick = { onSearchButtonClick.invoke(characterText) },
                 enabled = isSearchButtonEnabled
             ) {
                 Text(stringResource(R.string.search))
@@ -142,8 +139,8 @@ internal fun HomeScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun HomeScreenPreview() {
-    HomeScreen(
+fun HomeContentPreview() {
+    HomeContent(
         state = HomeState(
             characters = listOf(
                 Character(
