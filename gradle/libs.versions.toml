@@ -49,6 +49,7 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
 navigation-testing = { module = "androidx.navigation:navigation-testing", version.ref = "navigation" }
+navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose" }
