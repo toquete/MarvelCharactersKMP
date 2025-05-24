@@ -9,6 +9,6 @@
         android:id="@+id/compose_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:composableName="com.guilherme.marvelcharacters.feature.detail.DetailScreenKt.DetailScreenPreview" />
+        tools:composableName="com.guilherme.marvelcharacters.feature.detail.DetailScreenKt.DetailContentPreview" />
 
 </LinearLayout>

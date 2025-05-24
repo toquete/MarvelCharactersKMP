@@ -15,7 +15,7 @@ class DetailFragment : Fragment() {
             findViewById<ComposeView>(R.id.compose_view).apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    DetailRoute(onNavigateUp = { requireActivity().onBackPressedDispatcher.onBackPressed() })
+                    DetailScreen(onNavigateUp = { requireActivity().onBackPressedDispatcher.onBackPressed() })
                 }
             }
         }

@@ -4,18 +4,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.SnackbarResult
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,17 +29,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.guilherme.marvelcharacters.core.model.Character
+import com.guilherme.marvelcharacters.core.ui.theme.AppTheme
 import com.guilherme.marvelcharacters.domain.model.FavoriteCharacter
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-internal fun DetailRoute(
+internal fun DetailScreen(
     onNavigateUp: () -> Unit = {},
     viewModel: DetailViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    DetailScreen(
+    DetailContent(
         state = state,
         onNavigateUp = onNavigateUp,
         onFabClick = viewModel::onFabClick,
@@ -47,8 +49,9 @@ internal fun DetailRoute(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun DetailScreen(
+internal fun DetailContent(
     state: DetailState,
     onNavigateUp: () -> Unit = {},
     onFabClick: (isFavorite: Boolean) -> Unit = {},
@@ -115,18 +118,20 @@ internal fun DetailScreen(
 
 @Preview(showBackground = true)
 @Composable
-private fun DetailScreenPreview() {
-    DetailScreen(
-        state = DetailState(
-            character = FavoriteCharacter(
-                character = Character(
-                    id = 1,
-                    name = "Spider-Man",
-                    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                    thumbnail = ""
-                ),
-                isFavorite = false
+private fun DetailContentPreview() {
+    AppTheme {
+        DetailContent(
+            state = DetailState(
+                character = FavoriteCharacter(
+                    character = Character(
+                        id = 1,
+                        name = "Spider-Man",
+                        description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                        thumbnail = ""
+                    ),
+                    isFavorite = false
+                )
             )
         )
-    )
+    }
 }
