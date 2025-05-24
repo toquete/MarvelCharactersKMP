@@ -26,7 +26,7 @@ class FavoritesFragment : Fragment() {
             findViewById<ComposeView>(R.id.compose_view).apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    FavoritesRoute(
+                    FavoritesScreen(
                         onCharacterClick = ::navigateToDetail
                     )
                 }

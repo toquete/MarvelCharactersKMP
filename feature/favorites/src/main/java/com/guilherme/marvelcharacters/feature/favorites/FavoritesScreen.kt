@@ -7,11 +7,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Divider
-import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.Text
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,16 +24,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.guilherme.marvelcharacters.core.model.Character
+import com.guilherme.marvelcharacters.core.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-internal fun FavoritesRoute(
+internal fun FavoritesScreen(
     viewModel: FavoritesViewModel = koinViewModel(),
     onCharacterClick: (character: Character) -> Unit = {}
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    FavoritesScreen(
+    FavoritesContent(
         state = state,
         onCharacterClick = onCharacterClick,
         onSnackbarShown = viewModel::onSnackbarShown
@@ -41,7 +42,7 @@ internal fun FavoritesRoute(
 }
 
 @Composable
-internal fun FavoritesScreen(
+internal fun FavoritesContent(
     state: FavoritesState,
     onCharacterClick: (character: Character) -> Unit = {},
     onSnackbarShown: () -> Unit = {}
@@ -69,7 +70,7 @@ internal fun FavoritesScreen(
                         text = it.name,
                         fontSize = 16.sp
                     )
-                    Divider()
+                    HorizontalDivider()
                 }
             }
         }
@@ -86,23 +87,25 @@ internal fun FavoritesScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun FavoritesPreview() {
-    FavoritesScreen(
-        state = FavoritesState(
-            characters = listOf(
-                Character(
-                    id = 1,
-                    name = "Spider-Man",
-                    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                    thumbnail = ""
-                ),
-                Character(
-                    id = 2,
-                    name = "Hulk",
-                    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                    thumbnail = ""
+fun FavoritesContentPreview() {
+    AppTheme {
+        FavoritesContent(
+            state = FavoritesState(
+                characters = listOf(
+                    Character(
+                        id = 1,
+                        name = "Spider-Man",
+                        description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                        thumbnail = ""
+                    ),
+                    Character(
+                        id = 2,
+                        name = "Hulk",
+                        description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                        thumbnail = ""
+                    )
                 )
             )
         )
-    )
+    }
 }
