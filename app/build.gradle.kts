@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 apply(from = "$rootDir/tools/jacoco/android.gradle")
@@ -52,6 +53,7 @@ dependencies {
     implementation(project(":feature:detail"))
     implementation(project(":core:ui"))
     implementation(project(":core:common"))
+    implementation(project(":core:model"))
 
     implementation(libs.core.ktx)
     implementation(libs.activity.ktx)
@@ -65,4 +67,6 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation(libs.navigation.compose)
+
+    implementation(libs.kotlinx.serialization.json)
 }

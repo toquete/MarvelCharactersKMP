@@ -55,6 +55,8 @@ dependencies {
 
     implementation(libs.koin.androidx.compose)
 
+    implementation(libs.kotlinx.serialization.json)
+
     testImplementation(project(":core:testing"))
     androidTestImplementation(project(":core:testing"))
     androidTestUtil(libs.orchestrator)

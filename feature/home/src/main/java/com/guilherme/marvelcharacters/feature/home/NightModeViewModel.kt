@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-internal class NightModeViewModel(
+class NightModeViewModel(
     private val getDarkModeUseCase: GetDarkModeUseCase,
     private val toggleDarkModeUseCase: ToggleDarkModeUseCase,
     private val isDarkModeEnabledUseCase: IsDarkModeEnabledUseCase

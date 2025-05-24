@@ -3,8 +3,10 @@ package com.guilherme.marvelcharacters.feature.detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharacterByIdUseCase
 import com.guilherme.marvelcharacters.domain.usecase.ToggleFavoriteCharacterUseCase
+import com.guilherme.marvelcharacters.feature.detail.navigation.DetailRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -16,7 +18,7 @@ internal class DetailViewModel(
     private val toggleFavoriteCharacterUseCase: ToggleFavoriteCharacterUseCase
 ) : ViewModel() {
 
-    private val characterId: Int = checkNotNull(savedStateHandle["characterId"])
+    private val characterId: Int = savedStateHandle.toRoute<DetailRoute>().id
 
     private val _state = MutableStateFlow(DetailState())
     val state = _state.asStateFlow()

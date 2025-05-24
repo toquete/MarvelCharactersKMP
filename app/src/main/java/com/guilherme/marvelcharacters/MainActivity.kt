@@ -1,79 +1,83 @@
 package com.guilherme.marvelcharacters
 
+import android.graphics.Color
 import android.os.Bundle
-import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.elevation.ElevationOverlayProvider
-import com.guilherme.marvelcharacters.databinding.ActivityMainBinding
+import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.guilherme.marvelcharacters.core.ui.theme.AppTheme
+import com.guilherme.marvelcharacters.feature.home.NightModeViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var navController: NavController
-
-    private val mainDestinations = setOf(R.id.navigation_home, R.id.navigation_favorites)
+    private val nightModeViewModel: NightModeViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.hostFragment) as NavHostFragment
-        navController = navHostFragment.navController
-
-        setupInsets()
-        setupNavigationListener()
-        setupToolbar()
-        setupBottomNavigationBar()
-        setupNavigationBar()
-    }
-
-    private fun setupInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                leftMargin = insets.left
-                bottomMargin = insets.bottom
-                rightMargin = insets.right
-                topMargin = insets.top
-            }
-            WindowInsetsCompat.CONSUMED
-        }
-    }
-
-    private fun setupNavigationListener() {
-        navController.addOnDestinationChangedListener { _, _, arguments ->
-            with(binding) {
-                val isMainDestination = arguments?.getBoolean("showAppBars", false) == true
-                mainToolbar.isVisible = isMainDestination
-                bottomNavigation.isVisible = isMainDestination
+        var nightMode: Int by mutableIntStateOf(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                nightModeViewModel.nightMode.onEach {
+                    nightMode = it
+                }.collect()
             }
         }
-    }
 
-    private fun setupBottomNavigationBar() {
-        binding.bottomNavigation.setupWithNavController(navController)
-    }
+        enableEdgeToEdge()
 
-    private fun setupToolbar() {
-        val appBarConfiguration = AppBarConfiguration(mainDestinations)
-        binding.mainToolbar.setupWithNavController(navController, appBarConfiguration)
-        setSupportActionBar(binding.mainToolbar)
-    }
+        setContent {
+            val isDarkTheme = shouldUseDarkTheme(nightMode)
 
-    private fun setupNavigationBar() {
-        with(ElevationOverlayProvider(this)) {
-            if (isThemeElevationOverlayEnabled) {
-                window.navigationBarColor = compositeOverlayWithThemeSurfaceColorIfNeeded(binding.bottomNavigation.elevation)
+            LaunchedEffect(isDarkTheme) {
+                enableEdgeToEdge(
+                    statusBarStyle = SystemBarStyle.auto(
+                        Color.TRANSPARENT,
+                        Color.TRANSPARENT
+                    ) { isDarkTheme },
+                    navigationBarStyle = SystemBarStyle.auto(
+                        DefaultLightScrim,
+                        DefaultDarkScrim
+                    ) { isDarkTheme }
+                )
+            }
+
+            AppTheme(
+                darkTheme = isDarkTheme,
+                dynamicColor = false
+            ) {
+                App(
+                    onNightModeButtonClick = nightModeViewModel::toggleDarkMode
+                )
             }
         }
     }
 }
+
+@Composable
+private fun shouldUseDarkTheme(nighMode: Int): Boolean {
+    return when (nighMode) {
+        AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM -> isSystemInDarkTheme()
+        AppCompatDelegate.MODE_NIGHT_NO -> false
+        AppCompatDelegate.MODE_NIGHT_YES -> true
+        else -> false
+    }
+}
+
+private val DefaultLightScrim = Color.argb(0xe6, 0xFF, 0xFF, 0xFF)
+private val DefaultDarkScrim = Color.argb(0x80, 0x1b, 0x1b, 0x1b)
