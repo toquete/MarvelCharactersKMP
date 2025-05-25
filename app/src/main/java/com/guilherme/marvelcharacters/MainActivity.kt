@@ -61,7 +61,9 @@ class MainActivity : ComponentActivity() {
                 darkTheme = isDarkTheme,
                 dynamicColor = false
             ) {
-                App()
+                App(
+                    onNightModeButtonClick = nightModeViewModel::toggleDarkMode
+                )
             }
         }
     }

@@ -61,7 +61,7 @@ enum class TopLevelDestination(
 }
 
 @Composable
-fun App() {
+fun App(onNightModeButtonClick: () -> Unit = {}) {
     val navController = rememberNavController()
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
     val currentTopLevelDestination = TopLevelDestination.entries.firstOrNull {
@@ -70,7 +70,8 @@ fun App() {
     AppContent(
         currentTopLevelDestination,
         currentDestination,
-        navController
+        navController,
+        onNightModeButtonClick
     )
 }
 
@@ -78,7 +79,8 @@ fun App() {
 private fun AppContent(
     currentTopLevelDestination: TopLevelDestination?,
     currentDestination: NavDestination? = null,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    onNightModeButtonClick: () -> Unit = {}
 ) {
     val showAppBars = currentTopLevelDestination != null
 
@@ -93,7 +95,8 @@ private fun AppContent(
         ) {
             AppNavHost(
                 navHostController = navController,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                onNightModeButtonClick = onNightModeButtonClick
             )
 
             if (showAppBars) {

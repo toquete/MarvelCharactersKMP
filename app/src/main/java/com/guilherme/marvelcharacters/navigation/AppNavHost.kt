@@ -13,14 +13,18 @@ import com.guilherme.marvelcharacters.feature.home.navigation.homeScreen
 @Composable
 fun AppNavHost(
     navHostController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onNightModeButtonClick: () -> Unit = {}
 ) {
     NavHost(
         navController = navHostController,
         startDestination = HomeRoute,
         modifier = modifier
     ) {
-        homeScreen { navHostController.navigateToDetail(it.id) }
+        homeScreen(
+            onCharacterClick = { navHostController.navigateToDetail(it.id) },
+            onNightModeButtonClick = onNightModeButtonClick
+        )
         favoritesScreen { navHostController.navigateToDetail(it.id) }
         detailScreen { navHostController.navigateUp() }
     }

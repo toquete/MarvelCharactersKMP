@@ -15,8 +15,14 @@ fun NavController.navigateToHome(navOptions: NavOptions) {
     navigate(HomeRoute, navOptions)
 }
 
-fun NavGraphBuilder.homeScreen(onCharacterClick: (character: Character) -> Unit) {
+fun NavGraphBuilder.homeScreen(
+    onCharacterClick: (character: Character) -> Unit,
+    onNightModeButtonClick: () -> Unit
+) {
     composable<HomeRoute> {
-        HomeScreen(onCharacterClick = onCharacterClick)
+        HomeScreen(
+            onCharacterClick = onCharacterClick,
+            onNightModeButtonClick = onNightModeButtonClick
+        )
     }
 }

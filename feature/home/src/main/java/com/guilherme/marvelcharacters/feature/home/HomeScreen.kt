@@ -46,15 +46,15 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 internal fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel(),
-    nightViewModel: NightModeViewModel = koinViewModel(),
-    onCharacterClick: (character: Character) -> Unit = {}
+    onCharacterClick: (character: Character) -> Unit = {},
+    onNightModeButtonClick: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     HomeContent(
         state = state,
         onCharacterClick = onCharacterClick,
         onSearchButtonClick = viewModel::onSearchCharacter,
-        onNightModeButtonClick = nightViewModel::toggleDarkMode
+        onNightModeButtonClick = onNightModeButtonClick
     )
 }
 
