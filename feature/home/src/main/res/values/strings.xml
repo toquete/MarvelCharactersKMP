@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_name">Marvel Characters</string>
     <string name="search_hint">Search Marvel characters</string>
     <string name="start_message">Use the search box above!</string>
     <string name="empty_state_message">No characters with that name. Try again!</string>

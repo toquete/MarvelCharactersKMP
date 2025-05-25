@@ -7,20 +7,15 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Brightness4
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.EmojiEvents
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -66,9 +61,7 @@ enum class TopLevelDestination(
 }
 
 @Composable
-fun App(
-    onNightModeButtonClick: () -> Unit = {}
-) {
+fun App() {
     val navController = rememberNavController()
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
     val currentTopLevelDestination = TopLevelDestination.entries.firstOrNull {
@@ -77,18 +70,15 @@ fun App(
     AppContent(
         currentTopLevelDestination,
         currentDestination,
-        navController,
-        onNightModeButtonClick
+        navController
     )
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 private fun AppContent(
     currentTopLevelDestination: TopLevelDestination?,
     currentDestination: NavDestination? = null,
-    navController: NavHostController = rememberNavController(),
-    onNightModeButtonClick: () -> Unit = {}
+    navController: NavHostController = rememberNavController()
 ) {
     val showAppBars = currentTopLevelDestination != null
 
@@ -101,50 +91,13 @@ private fun AppContent(
                 .consumeWindowInsets(contentPadding)
                 .fillMaxSize()
         ) {
-            if (showAppBars) {
-                TopAppBar(
-                    title = {
-                        Text(
-                            currentTopLevelDestination?.titleTextId?.let {
-                                stringResource(it)
-                            }.orEmpty()
-                        )
-                    },
-                    actions = {
-                        when (currentTopLevelDestination) {
-                            TopLevelDestination.HOME -> {
-                                IconButton(onClick = { onNightModeButtonClick.invoke() }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Brightness4,
-                                        contentDescription = null
-                                    )
-                                }
-                            }
-
-                            TopLevelDestination.FAVORITES -> {
-                                IconButton(onClick = { /*TODO*/ }) {
-                                    Icon(
-                                        imageVector = Icons.Default.MoreVert,
-                                        contentDescription = null
-                                    )
-                                }
-                            }
-
-                            else -> Unit
-                        }
-                    }
-                )
-            }
-
             AppNavHost(
                 navHostController = navController,
                 modifier = Modifier.weight(1f)
             )
 
             if (showAppBars) {
-                NavigationBar(
-                    modifier = Modifier.consumeWindowInsets(contentPadding)
-                ) {
+                NavigationBar {
                     TopLevelDestination.entries.forEach { route ->
                         val isSelected = currentDestination?.hierarchy?.any { it.hasRoute(route.route) } == true
                         NavigationBarItem(

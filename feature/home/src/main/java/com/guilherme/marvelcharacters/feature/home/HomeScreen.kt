@@ -13,14 +13,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Brightness4
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -43,21 +46,25 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 internal fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel(),
+    nightViewModel: NightModeViewModel = koinViewModel(),
     onCharacterClick: (character: Character) -> Unit = {}
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     HomeContent(
         state = state,
         onCharacterClick = onCharacterClick,
-        onSearchButtonClick = viewModel::onSearchCharacter
+        onSearchButtonClick = viewModel::onSearchCharacter,
+        onNightModeButtonClick = nightViewModel::toggleDarkMode
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun HomeContent(
     state: HomeState,
     onCharacterClick: (character: Character) -> Unit = {},
     onSearchButtonClick: (query: String) -> Unit = {},
+    onNightModeButtonClick: () -> Unit = {}
 ) {
     var characterText by rememberSaveable { mutableStateOf("") }
     val isSearchButtonEnabled by remember {
@@ -67,6 +74,17 @@ internal fun HomeContent(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
+        TopAppBar(
+            title = { Text(stringResource(R.string.app_name)) },
+            actions = {
+                IconButton(onClick = onNightModeButtonClick) {
+                    Icon(
+                        imageVector = Icons.Default.Brightness4,
+                        contentDescription = null
+                    )
+                }
+            }
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
