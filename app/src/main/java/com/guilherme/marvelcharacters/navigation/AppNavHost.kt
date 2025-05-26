@@ -27,7 +27,10 @@ fun AppNavHost(
             onCharacterClick = { navHostController.navigateToDetail(it.id) },
             onNightModeButtonClick = onNightModeButtonClick
         )
-        favoritesScreen { navHostController.navigateToDetail(it.id) }
+        favoritesScreen(
+            onCharacterClick = { navHostController.navigateToDetail(it.id) },
+            onShowSnackbar = onShowSnackbar
+        )
         detailScreen(
             onNavigateUp = { navHostController.navigateUp() },
             onShowSnackbar = onShowSnackbar

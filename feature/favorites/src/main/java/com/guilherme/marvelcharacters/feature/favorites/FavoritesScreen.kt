@@ -20,30 +20,36 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.guilherme.marvelcharacters.core.model.Character
+import com.guilherme.marvelcharacters.core.ui.SnackbarMessage
 import com.guilherme.marvelcharacters.core.ui.theme.AppTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun FavoritesScreen(
     viewModel: FavoritesViewModel = koinViewModel(),
-    onCharacterClick: (character: Character) -> Unit = {}
+    onCharacterClick: (character: Character) -> Unit = {},
+    onShowSnackbar: suspend (SnackbarMessage) -> Boolean = { _ -> false }
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     FavoritesContent(
         state = state,
         onCharacterClick = onCharacterClick,
-        onDeleteAllClick = viewModel::onDeleteAllClick
+        onDeleteAllClick = viewModel::onDeleteAllClick,
+        onShowSnackbar = onShowSnackbar,
+        onSnackbarShown = viewModel::onSnackbarShown
     )
 }
 
@@ -52,10 +58,20 @@ internal fun FavoritesScreen(
 internal fun FavoritesContent(
     state: FavoritesState,
     onCharacterClick: (character: Character) -> Unit = {},
-    onDeleteAllClick: () -> Unit = {}
+    onDeleteAllClick: () -> Unit = {},
+    onShowSnackbar: suspend (SnackbarMessage) -> Boolean = { _ -> false },
+    onSnackbarShown: () -> Unit = {}
 ) {
     var isDialogOpen by rememberSaveable { mutableStateOf(false) }
     var isDropDownExpanded by rememberSaveable { mutableStateOf(false) }
+    val resources = LocalContext.current.resources
+
+    LaunchedEffect(state.messageId) {
+        state.messageId?.let {
+            onShowSnackbar.invoke(SnackbarMessage(resources.getText(it).toString()))
+            onSnackbarShown.invoke()
+        }
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
