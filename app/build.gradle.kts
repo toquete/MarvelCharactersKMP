@@ -57,8 +57,6 @@ dependencies {
 
     implementation(libs.core.ktx)
     implementation(libs.activity.ktx)
-    implementation(libs.navigation.fragment.ktx)
-    implementation(libs.navigation.ui.ktx)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.activity.compose)

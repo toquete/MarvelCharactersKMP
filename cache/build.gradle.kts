@@ -26,7 +26,7 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:common"))
 
-    implementation(libs.appcompat)
+    implementation(libs.core.ktx)
 
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)

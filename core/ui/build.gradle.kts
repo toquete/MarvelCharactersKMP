@@ -22,7 +22,6 @@ android {
 
 dependencies {
     implementation(libs.core.ktx)
-    api(libs.material)
     api(libs.material3)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.material)

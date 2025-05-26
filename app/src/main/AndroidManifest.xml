@@ -9,7 +9,7 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/Theme.AppTheme"
+            android:theme="@android:style/Theme.Material.NoActionBar"
             android:name=".CustomApplication"
             android:usesCleartextTraffic="true">
         <activity

@@ -6,9 +6,7 @@ ktlint = "11.0.0"
 detekt = "1.23.8"
 coveralls = "2.12.0"
 core = "1.16.0"
-appCompat = "1.7.0"
 activity = "1.10.1"
-fragment = "1.8.7"
 room = "2.7.1"
 navigation = "2.9.0"
 koin = "4.0.3"
@@ -16,15 +14,12 @@ junit = "4.13.2"
 retrofit = "2.11.0"
 commonsCodec = "1.17.0"
 coroutines = "1.10.2"
-materialDesign = "1.12.0"
 material3 = "1.3.2"
 lifecycle = "2.9.0"
-glide = "4.14.2"
 mockk = "1.14.2"
 truth = "1.1.3"
 junitExt = "1.2.1"
 espresso = "3.6.1"
-hiltTesting = "2.56.2"
 mockkAndroid = "1.13.13"
 testCore = "1.6.1"
 testRunner = "1.6.2"
@@ -38,16 +33,11 @@ compose = "2025.05.01"
 
 [libraries]
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "core" }
-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appCompat" }
 activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity" }
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragment" }
-fragment-testing = { module = "androidx.fragment:fragment-testing", version.ref = "fragment" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }
-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
 navigation-testing = { module = "androidx.navigation:navigation-testing", version.ref = "navigation" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
@@ -60,16 +50,11 @@ commons-codec = { module = "commons-codec:commons-codec", version.ref = "commons
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines"}
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
-material = { module = "com.google.android.material:material", version.ref = "materialDesign" }
 material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
 lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "lifecycle" }
 lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltTesting" }
-hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltTesting" }
-glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
-glide-compiler = { module = "com.github.bumptech.glide:ksp", version.ref = "glide" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockkAndroid" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }

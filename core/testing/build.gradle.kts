@@ -36,11 +36,4 @@ dependencies {
     api(libs.espresso.contrib)
     api(libs.navigation.testing)
     api(libs.mockk.android)
-    api(libs.hilt.android.testing)
-}
-
-configurations.all {
-    resolutionStrategy {
-        force("org.objenesis:objenesis:3.2")
-    }
 }
