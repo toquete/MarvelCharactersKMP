@@ -2,7 +2,6 @@ package com.guilherme.marvelcharacters.feature.favorites
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,18 +13,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,7 +25,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.core.ui.theme.AppTheme
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -45,7 +36,7 @@ internal fun FavoritesScreen(
     FavoritesContent(
         state = state,
         onCharacterClick = onCharacterClick,
-        onSnackbarShown = viewModel::onSnackbarShown
+        onDeleteAllClick = viewModel::onDeleteAllClick
     )
 }
 
@@ -54,55 +45,34 @@ internal fun FavoritesScreen(
 internal fun FavoritesContent(
     state: FavoritesState,
     onCharacterClick: (character: Character) -> Unit = {},
-    onSnackbarShown: () -> Unit = {}
+    onDeleteAllClick: () -> Unit = {}
 ) {
-    val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
-    val resources = LocalContext.current.resources
-    Scaffold (
-        modifier = Modifier.fillMaxSize(),
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { contentPadding ->
-        Column {
-            TopAppBar(
-                title = { Text(stringResource(R.string.favorites)) },
-                actions = {
-                    IconButton(onClick = {}) {
-                        Icon(
-                            imageVector = Icons.Default.MoreVert,
-                            contentDescription = null
-                        )
-                    }
-                }
-            )
-            LazyColumn(
-                modifier = Modifier
-                    .padding(contentPadding)
-                    .fillMaxSize()
-            ) {
-                items(state.characters) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onCharacterClick.invoke(it) }
-                    ) {
-                        Text(
-                            modifier = Modifier.padding(16.dp),
-                            text = it.name,
-                            fontSize = 16.sp
-                        )
-                        HorizontalDivider()
-                    }
+    Column(modifier = Modifier.fillMaxSize()) {
+        TopAppBar(
+            title = { Text(stringResource(R.string.favorites)) },
+            actions = {
+                IconButton(onClick = onDeleteAllClick) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = null
+                    )
                 }
             }
-        }
-        LaunchedEffect(state.messageId) {
-            scope.launch {
-                state.messageId?.let {
-                    snackbarHostState.showSnackbar(message = resources.getText(it).toString())
+        )
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            items(state.characters) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onCharacterClick.invoke(it) }
+                ) {
+                    Text(
+                        modifier = Modifier.padding(16.dp),
+                        text = it.name,
+                        fontSize = 16.sp
+                    )
+                    HorizontalDivider()
                 }
-                onSnackbarShown.invoke()
             }
         }
     }
