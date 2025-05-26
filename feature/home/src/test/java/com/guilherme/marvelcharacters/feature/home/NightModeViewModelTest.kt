@@ -6,9 +6,9 @@ import com.guilherme.marvelcharacters.core.testing.util.BaseUnitTest
 import com.guilherme.marvelcharacters.domain.usecase.GetDarkModeUseCase
 import com.guilherme.marvelcharacters.domain.usecase.IsDarkModeEnabledUseCase
 import com.guilherme.marvelcharacters.domain.usecase.ToggleDarkModeUseCase
-import io.mockk.every
+import io.mockk.coEvery
+import io.mockk.coVerifyOrder
 import io.mockk.impl.annotations.RelaxedMockK
-import io.mockk.verifyOrder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Test
 
@@ -28,7 +28,7 @@ class NightModeViewModelTest : BaseUnitTest() {
 
     @Test
     fun `init - get night mode`() {
-        every { getDarkModeUseCase() } returns AppCompatDelegate.MODE_NIGHT_YES
+        coEvery { getDarkModeUseCase() } returns AppCompatDelegate.MODE_NIGHT_YES
 
         nightModeViewModel = getViewModel()
 
@@ -37,13 +37,13 @@ class NightModeViewModelTest : BaseUnitTest() {
 
     @Test
     fun `toggleDarkMode - change dark mode`() {
-        every { isDarkModeEnabledUseCase() } returns true
+        coEvery { isDarkModeEnabledUseCase() } returns true
 
         nightModeViewModel = getViewModel()
 
         nightModeViewModel.toggleDarkMode()
 
-        verifyOrder {
+        coVerifyOrder {
             isDarkModeEnabledUseCase()
             toggleDarkModeUseCase(isEnabled = false)
             getDarkModeUseCase()

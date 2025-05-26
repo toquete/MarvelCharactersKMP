@@ -4,11 +4,12 @@ import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.data.repository.NightModeRepository
 import com.guilherme.marvelcharacters.domain.usecase.GetDarkModeUseCase
 import io.mockk.MockKAnnotations
-import io.mockk.every
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK
-import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
@@ -27,13 +28,13 @@ class GetDarkModeUseCaseTest {
     }
 
     @Test
-    fun `invoke - check mode is returned`() {
+    fun `invoke - check mode is returned`() = runTest {
         val mode = 1
-        every { nightModeRepository.getDarkMode() } returns mode
+        coEvery { nightModeRepository.getDarkMode() } returns mode
 
         val result = getDarkModeUseCase()
 
-        verify { nightModeRepository.getDarkMode() }
+        coVerify { nightModeRepository.getDarkMode() }
         assertThat(result).isEqualTo(mode)
     }
 }
