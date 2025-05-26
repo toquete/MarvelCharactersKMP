@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.guilherme.marvelcharacters.core.ui.SnackbarMessage
 import com.guilherme.marvelcharacters.feature.detail.navigation.detailScreen
 import com.guilherme.marvelcharacters.feature.detail.navigation.navigateToDetail
 import com.guilherme.marvelcharacters.feature.favorites.navigation.favoritesScreen
@@ -13,6 +14,7 @@ import com.guilherme.marvelcharacters.feature.home.navigation.homeScreen
 @Composable
 fun AppNavHost(
     navHostController: NavHostController,
+    onShowSnackbar: suspend (SnackbarMessage) -> Boolean,
     modifier: Modifier = Modifier,
     onNightModeButtonClick: () -> Unit = {}
 ) {
@@ -26,6 +28,9 @@ fun AppNavHost(
             onNightModeButtonClick = onNightModeButtonClick
         )
         favoritesScreen { navHostController.navigateToDetail(it.id) }
-        detailScreen { navHostController.navigateUp() }
+        detailScreen(
+            onNavigateUp = { navHostController.navigateUp() },
+            onShowSnackbar = onShowSnackbar
+        )
     }
 }

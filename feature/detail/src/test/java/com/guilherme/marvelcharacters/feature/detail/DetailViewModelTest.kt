@@ -76,7 +76,7 @@ class DetailViewModelTest : BaseUnitTest() {
         coVerify { toggleFavoriteCharacterUseCase(Fixtures.character.id, isFavorite = true) }
 
         detailViewModel.state.test {
-            assertThat(awaitItem()).isEqualTo(DetailState(favoriteCharacter, R.string.character_deleted, showAction = true))
+            assertThat(awaitItem()).isEqualTo(DetailState(favoriteCharacter, R.string.characters_deleted, showAction = true))
             job.cancel()
         }
     }

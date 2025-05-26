@@ -34,7 +34,7 @@ internal class DetailViewModel(
 
     fun onFabClick(isFavorite: Boolean) {
         viewModelScope.launch {
-            val message = if (isFavorite) R.string.character_deleted else R.string.character_added
+            val message = if (isFavorite) R.string.characters_deleted else R.string.character_added
 
             runCatching {
                 toggleFavoriteCharacterUseCase(characterId, isFavorite)

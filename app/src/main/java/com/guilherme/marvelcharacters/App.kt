@@ -3,6 +3,7 @@ package com.guilherme.marvelcharacters
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EmojiEvents
@@ -15,6 +16,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -106,7 +108,7 @@ private fun AppContent(
     val showAppBars = currentTopLevelDestination != null
 
     Scaffold(
-        contentWindowInsets = WindowInsets(left = 0, top = 0, right = 0, bottom = 0),
+        contentWindowInsets = WindowInsets.navigationBars,
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         bottomBar = {
             if (!showAppBars) return@Scaffold
@@ -152,7 +154,15 @@ private fun AppContent(
                 .padding(contentPadding)
                 .fillMaxSize(),
             navHostController = navController,
-            onNightModeButtonClick = onNightModeButtonClick
+            onNightModeButtonClick = onNightModeButtonClick,
+            onShowSnackbar = { message ->
+                snackbarHostState.showSnackbar(
+                    message.text,
+                    message.actionLabel,
+                    message.withDismissAction,
+                    message.duration
+                ) == SnackbarResult.ActionPerformed
+            }
         )
     }
 }

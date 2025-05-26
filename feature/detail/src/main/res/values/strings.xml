@@ -1,7 +1,7 @@
 <resources>
     <string name="no_description_available">No description available</string>
     <string name="character_added">Character added!</string>
-    <string name="character_deleted">Character deleted!</string>
+    <string name="characters_deleted">Character deleted!</string>
     <string name="undo">Undo</string>
     <string name="error_message">An error occurred!</string>
 </resources>
