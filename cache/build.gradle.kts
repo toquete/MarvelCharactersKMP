@@ -27,6 +27,7 @@ dependencies {
     implementation(project(":core:common"))
 
     implementation(libs.core.ktx)
+    implementation(libs.datastore.preferences)
 
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)

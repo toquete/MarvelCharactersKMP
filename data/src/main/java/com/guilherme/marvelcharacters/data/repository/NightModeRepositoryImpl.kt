@@ -6,11 +6,11 @@ internal class NightModeRepositoryImpl(
     private val nightModeLocalDataSource: NightModeLocalDataSource
 ) : NightModeRepository {
 
-    override fun isDarkModeEnabled(): Boolean = nightModeLocalDataSource.isDarkModeEnabled()
+    override suspend fun isDarkModeEnabled(): Boolean = nightModeLocalDataSource.isDarkModeEnabled()
 
-    override fun setDarkModeEnabled(isEnabled: Boolean) {
+    override suspend fun setDarkModeEnabled(isEnabled: Boolean) {
         nightModeLocalDataSource.setDarkModeEnabled(isEnabled)
     }
 
-    override fun getDarkMode(): Int = nightModeLocalDataSource.getDarkMode()
+    override suspend fun getDarkMode(): Int = nightModeLocalDataSource.getDarkMode()
 }

@@ -6,5 +6,5 @@ class ToggleDarkModeUseCase(
     private val nightModeRepository: NightModeRepository
 ) {
 
-    operator fun invoke(isEnabled: Boolean) = nightModeRepository.setDarkModeEnabled(isEnabled)
+    suspend operator fun invoke(isEnabled: Boolean) = nightModeRepository.setDarkModeEnabled(isEnabled)
 }

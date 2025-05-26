@@ -6,5 +6,5 @@ class GetDarkModeUseCase(
     private val nightModeRepository: NightModeRepository
 ) {
 
-    operator fun invoke(): Int = nightModeRepository.getDarkMode()
+    suspend operator fun invoke(): Int = nightModeRepository.getDarkMode()
 }

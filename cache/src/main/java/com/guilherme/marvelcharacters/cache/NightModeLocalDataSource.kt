@@ -2,9 +2,9 @@ package com.guilherme.marvelcharacters.cache
 
 interface NightModeLocalDataSource {
 
-    fun isDarkModeEnabled(): Boolean
+    suspend fun isDarkModeEnabled(): Boolean
 
-    fun setDarkModeEnabled(isEnabled: Boolean)
+    suspend fun setDarkModeEnabled(isEnabled: Boolean)
 
-    fun getDarkMode(): Int
+    suspend fun getDarkMode(): Int
 }

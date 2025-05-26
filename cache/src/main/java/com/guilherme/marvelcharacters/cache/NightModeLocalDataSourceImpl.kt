@@ -11,11 +11,11 @@ internal class NightModeLocalDataSourceImpl(
     private val sharedPreferences: SharedPreferences
 ) : NightModeLocalDataSource {
 
-    override fun isDarkModeEnabled(): Boolean {
+    override suspend fun isDarkModeEnabled(): Boolean {
         return getDarkMode() == AppCompatDelegate.MODE_NIGHT_YES
     }
 
-    override fun setDarkModeEnabled(isEnabled: Boolean) {
+    override suspend fun setDarkModeEnabled(isEnabled: Boolean) {
         sharedPreferences.edit {
             val mode = if (isEnabled) {
                 AppCompatDelegate.MODE_NIGHT_YES
@@ -27,7 +27,7 @@ internal class NightModeLocalDataSourceImpl(
         }
     }
 
-    override fun getDarkMode(): Int {
+    override suspend fun getDarkMode(): Int {
         return sharedPreferences.getInt(
             PREFERENCE_NIGHT_MODE,
             PREFERENCE_NIGHT_MODE_DEFAULT
