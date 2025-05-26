@@ -19,14 +19,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -35,7 +31,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.guilherme.marvelcharacters.core.ui.SnackbarManager
 import com.guilherme.marvelcharacters.feature.favorites.navigation.FavoritesRoute
 import com.guilherme.marvelcharacters.feature.favorites.navigation.navigateToFavorites
 import com.guilherme.marvelcharacters.feature.home.navigation.HomeRoute
@@ -70,24 +65,8 @@ fun App(onNightModeButtonClick: () -> Unit = {}) {
     val currentTopLevelDestination = TopLevelDestination.entries.firstOrNull {
         currentDestination?.hasRoute(route = it.route) == true
     }
-    val snackbarMessages by SnackbarManager.messages.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-    val resources = LocalContext.current.resources
 
-    LaunchedEffect(snackbarMessages) {
-        if (snackbarMessages.isNotEmpty()) {
-            val message = snackbarMessages.first()
-            val text = resources.getText(message.messageId)
-
-            snackbarHostState.showSnackbar(
-                message = text.toString(),
-                duration = message.duration,
-                withDismissAction = message.withDismissAction
-            )
-
-            SnackbarManager.setMessageShown(message.id)
-        }
-    }
     AppContent(
         currentTopLevelDestination,
         currentDestination,
