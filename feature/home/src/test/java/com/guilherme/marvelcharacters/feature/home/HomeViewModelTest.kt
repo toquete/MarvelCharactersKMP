@@ -33,8 +33,8 @@ class HomeViewModelTest : BaseUnitTest() {
             homeViewModel.onSearchCharacter("spider")
 
             assertThat(awaitItem()).isEqualTo(HomeState())
-            assertThat(awaitItem()).isEqualTo(HomeState(isLoading = true))
-            assertThat(awaitItem()).isEqualTo(HomeState(characters = Fixtures.characterList, isLoading = false))
+            assertThat(awaitItem()).isEqualTo(HomeState(errorMessageId = null, isLoading = true))
+            assertThat(awaitItem()).isEqualTo(HomeState(characters = Fixtures.characterList, errorMessageId = null, isLoading = false))
         }
     }
 
@@ -46,7 +46,7 @@ class HomeViewModelTest : BaseUnitTest() {
             homeViewModel.onSearchCharacter("spider")
 
             assertThat(awaitItem()).isEqualTo(HomeState())
-            assertThat(awaitItem()).isEqualTo(HomeState(isLoading = true))
+            assertThat(awaitItem()).isEqualTo(HomeState(errorMessageId = null, isLoading = true))
             assertThat(awaitItem()).isEqualTo(HomeState(errorMessageId = R.string.empty_state_message, isLoading = false))
         }
     }
@@ -59,7 +59,7 @@ class HomeViewModelTest : BaseUnitTest() {
             homeViewModel.onSearchCharacter("spider")
 
             assertThat(awaitItem()).isEqualTo(HomeState())
-            assertThat(awaitItem()).isEqualTo(HomeState(isLoading = true))
+            assertThat(awaitItem()).isEqualTo(HomeState(errorMessageId = null, isLoading = true))
             assertThat(awaitItem()).isEqualTo(HomeState(errorMessageId = R.string.request_error_message, isLoading = false))
         }
     }

@@ -1,21 +1,27 @@
 package com.guilherme.marvelcharacters.feature.detail
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.toRoute
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.core.testing.util.BaseUnitTest
 import com.guilherme.marvelcharacters.domain.model.FavoriteCharacter
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharacterByIdUseCase
 import com.guilherme.marvelcharacters.domain.usecase.ToggleFavoriteCharacterUseCase
+import com.guilherme.marvelcharacters.feature.detail.navigation.DetailRoute
 import com.guilherme.marvelcharacters.feature.detail.util.Fixtures
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.mockkStatic
+import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.test.runTest
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import java.io.IOException
 
@@ -28,7 +34,20 @@ class DetailViewModelTest : BaseUnitTest() {
     @RelaxedMockK
     private lateinit var toggleFavoriteCharacterUseCase: ToggleFavoriteCharacterUseCase
 
-    private val savedStateHandle = SavedStateHandle(mapOf("characterId" to Fixtures.character.id))
+    @RelaxedMockK
+    private lateinit var savedStateHandle: SavedStateHandle
+
+    @Before
+    override fun setUp() {
+        super.setUp()
+        mockkStatic("androidx.navigation.SavedStateHandleKt")
+        every { savedStateHandle.toRoute<Any>(any(), any()) } returns DetailRoute(id = Fixtures.character.id)
+    }
+
+    @After
+    fun tearDown() {
+        unmockkAll()
+    }
 
     @Test
     fun `init - send character state`() = runTest {
