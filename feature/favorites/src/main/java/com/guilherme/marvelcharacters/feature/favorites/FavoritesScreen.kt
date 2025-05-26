@@ -10,6 +10,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -53,16 +55,29 @@ internal fun FavoritesContent(
     onDeleteAllClick: () -> Unit = {}
 ) {
     var isDialogOpen by rememberSaveable { mutableStateOf(false) }
+    var isDropDownExpanded by rememberSaveable { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
             title = { Text(stringResource(R.string.favorites)) },
             actions = {
                 if (state.characters.isEmpty()) return@TopAppBar
-                IconButton(onClick = { isDialogOpen = true }) {
+                IconButton(onClick = { isDropDownExpanded = !isDropDownExpanded }) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,
                         contentDescription = null
+                    )
+                }
+                DropdownMenu(
+                    expanded = isDropDownExpanded,
+                    onDismissRequest = { isDropDownExpanded = !isDropDownExpanded }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.delete_dialog_title)) },
+                        onClick = {
+                            isDialogOpen = !isDialogOpen
+                            isDropDownExpanded = !isDropDownExpanded
+                        }
                     )
                 }
             }
