@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.core.ui.SnackbarMessage
-import com.guilherme.marvelcharacters.core.ui.UiText
 import com.guilherme.marvelcharacters.core.ui.theme.AppTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -65,9 +64,9 @@ internal fun FavoritesContent(
     var isDialogOpen by rememberSaveable { mutableStateOf(false) }
     var isDropDownExpanded by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(state.messageId) {
-        state.messageId?.let {
-            onShowSnackbar.invoke(SnackbarMessage(UiText.ResourceString(it)))
+    LaunchedEffect(state.snackbarMessage) {
+        state.snackbarMessage?.let {
+            onShowSnackbar.invoke(it)
             onSnackbarShown.invoke()
         }
     }
