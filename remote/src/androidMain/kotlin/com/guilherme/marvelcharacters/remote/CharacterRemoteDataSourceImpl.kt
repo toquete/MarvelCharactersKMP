@@ -20,7 +20,7 @@ internal class CharacterRemoteDataSourceImpl(
     }
 
     private fun getKeys(): Pair<String, String> {
-        val ts = System.currentTimeMillis().toString()
+        val ts = currentTimestamp()
         val input = ts + BuildKonfig.MARVEL_PRIVATE_KEY + BuildKonfig.MARVEL_KEY
         val hash = input.encodeUtf8().md5().hex()
         return ts to hash
