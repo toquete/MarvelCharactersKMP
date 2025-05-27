@@ -3,6 +3,8 @@ package com.guilherme.marvelcharacters.feature.favorites
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.core.testing.util.BaseUnitTest
+import com.guilherme.marvelcharacters.core.ui.SnackbarMessage
+import com.guilherme.marvelcharacters.core.ui.UiText
 import com.guilherme.marvelcharacters.domain.usecase.DeleteAllFavoriteCharactersUseCase
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharactersUseCase
 import com.guilherme.marvelcharacters.feature.favorites.util.Fixtures
@@ -44,7 +46,13 @@ class FavoritesViewModelTest : BaseUnitTest() {
         coVerify { deleteAllFavoriteCharactersUseCase() }
 
         favoritesViewModel.state.test {
-            assertThat(awaitItem()).isEqualTo(FavoritesState(messageId = R.string.character_deleted))
+            assertThat(awaitItem()).isEqualTo(
+                FavoritesState(
+                    snackbarMessage = SnackbarMessage(
+                        text = UiText.ResourceString(R.string.character_deleted)
+                    )
+                )
+            )
         }
     }
 
@@ -55,7 +63,13 @@ class FavoritesViewModelTest : BaseUnitTest() {
         favoritesViewModel.onDeleteAllClick()
 
         favoritesViewModel.state.test {
-            assertThat(awaitItem()).isEqualTo(FavoritesState(messageId = R.string.error_message))
+            assertThat(awaitItem()).isEqualTo(
+                FavoritesState(
+                    snackbarMessage = SnackbarMessage(
+                        text = UiText.ResourceString(R.string.error_message)
+                    )
+                )
+            )
         }
     }
 
@@ -78,7 +92,7 @@ class FavoritesViewModelTest : BaseUnitTest() {
         favoritesViewModel.onSnackbarShown()
 
         favoritesViewModel.state.test {
-            assertThat(awaitItem()).isEqualTo(FavoritesState(messageId = null))
+            assertThat(awaitItem()).isEqualTo(FavoritesState(snackbarMessage = null))
         }
     }
 }

@@ -2,6 +2,8 @@ package com.guilherme.marvelcharacters.feature.favorites
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.guilherme.marvelcharacters.core.ui.SnackbarMessage
+import com.guilherme.marvelcharacters.core.ui.UiText
 import com.guilherme.marvelcharacters.domain.usecase.DeleteAllFavoriteCharactersUseCase
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharactersUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,14 +32,26 @@ internal class FavoritesViewModel(
         viewModelScope.launch {
             runCatching {
                 deleteAllFavoriteCharactersUseCase()
-                _state.update { it.copy(messageId = R.string.character_deleted) }
+                _state.update {
+                    it.copy(
+                        snackbarMessage = SnackbarMessage(
+                            text = UiText.ResourceString(R.string.character_deleted)
+                        )
+                    )
+                }
             }.onFailure {
-                _state.update { it.copy(messageId = R.string.error_message) }
+                _state.update {
+                    it.copy(
+                        snackbarMessage = SnackbarMessage(
+                            text = UiText.ResourceString(R.string.error_message)
+                        )
+                    )
+                }
             }
         }
     }
 
     fun onSnackbarShown() {
-        _state.update { it.copy(messageId = null) }
+        _state.update { it.copy(snackbarMessage = null) }
     }
 }
