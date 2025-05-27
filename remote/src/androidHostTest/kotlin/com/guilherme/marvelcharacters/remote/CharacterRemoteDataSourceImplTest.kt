@@ -1,6 +1,5 @@
 package com.guilherme.marvelcharacters.remote
 
-import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.remote.model.CharacterResponse
 import com.guilherme.marvelcharacters.remote.model.ContainerResponse
@@ -15,6 +14,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
+import kotlin.test.assertContentEquals
 
 @ExperimentalCoroutinesApi
 class CharacterRemoteDataSourceImplTest {
@@ -52,6 +52,7 @@ class CharacterRemoteDataSourceImplTest {
     @Test
     fun `getCharacters - returns character list on success`() = runTest {
         val characterName = "spider"
+        val expected = listOf(character)
 
         coEvery {
             service.getCharacters(
@@ -64,6 +65,6 @@ class CharacterRemoteDataSourceImplTest {
 
         val result = remoteDataSource.getCharacters(name = characterName)
 
-        assertThat(result).isEqualTo(listOf(character))
+        assertContentEquals(expected, result)
     }
 }

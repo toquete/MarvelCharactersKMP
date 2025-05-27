@@ -57,7 +57,9 @@ kotlin {
         commonTest {
             dependencies {
                 implementation(libs.kotlin.test)
+                implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.ktor.client.mock)
+                implementation(libs.mockk)
             }
         }
 
@@ -65,13 +67,6 @@ kotlin {
             dependencies {
                 implementation(libs.koin.android)
                 implementation(libs.ktor.client.okhttp)
-            }
-        }
-
-        getByName("androidHostTest") {
-            dependencies {
-                implementation(project(":core:testing"))
-                implementation(libs.mockwebserver)
             }
         }
     }
