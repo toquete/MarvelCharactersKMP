@@ -7,8 +7,8 @@ import io.ktor.client.call.*
 import io.ktor.client.engine.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
-import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
@@ -17,6 +17,11 @@ internal class KtorService(engine: HttpClientEngine): Service {
     private val httpClient = HttpClient(engine) {
         defaultRequest {
             url(BASE_URL)
+        }
+        install(Logging) {
+            logger = Logger.DEFAULT
+            level = LogLevel.ALL
+            format = LoggingFormat.OkHttp
         }
         install(ContentNegotiation) {
             json(
@@ -35,7 +40,7 @@ internal class KtorService(engine: HttpClientEngine): Service {
     ): Response<CharacterResponse> {
         return httpClient.get("characters") {
             url {
-                parameters {
+                parameters.apply {
                     append("ts", ts)
                     append("hash", hash)
                     append("apikey", apiKey)

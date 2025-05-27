@@ -54,7 +54,9 @@ class KtorServiceTest {
         val service = KtorService(mockEngine)
 
         val result = service.getCharacters(ts = "ts", hash = "hash", apiKey = "teste", nameStartsWith = "spider")
+        val query = mockEngine.requestHistory.last().url.encodedQuery
 
         assertEquals(expected, result)
+        assertEquals("ts=ts&hash=hash&apikey=teste&nameStartsWith=spider", query)
     }
 }

@@ -67,6 +67,7 @@ kotlin {
             dependencies {
                 implementation(libs.koin.android)
                 implementation(libs.ktor.client.okhttp)
+                implementation(libs.slf4j.simple)
             }
         }
     }
@@ -80,7 +81,7 @@ buildkonfig {
 
         keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
-        buildConfigField(STRING, "MARVEL_KEY", "\"${keystoreProperties["MARVEL_KEY"]}\"")
-        buildConfigField(STRING, "MARVEL_PRIVATE_KEY", "\"${keystoreProperties["MARVEL_PRIVATE_KEY"]}\"")
+        buildConfigField(STRING, "MARVEL_KEY", "${keystoreProperties["MARVEL_KEY"]}")
+        buildConfigField(STRING, "MARVEL_PRIVATE_KEY", "${keystoreProperties["MARVEL_PRIVATE_KEY"]}")
     }
 }
