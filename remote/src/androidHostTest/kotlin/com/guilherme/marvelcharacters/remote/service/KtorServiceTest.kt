@@ -1,0 +1,43 @@
+package com.guilherme.marvelcharacters.remote.service
+
+import com.guilherme.marvelcharacters.remote.model.CharacterResponse
+import com.guilherme.marvelcharacters.remote.model.ContainerResponse
+import com.guilherme.marvelcharacters.remote.model.ImageResponse
+import com.guilherme.marvelcharacters.remote.model.Response
+import com.guilherme.marvelcharacters.remote.util.readFile
+import io.ktor.client.engine.mock.*
+import io.ktor.http.*
+import kotlinx.coroutines.test.runTest
+import org.junit.Test
+import kotlin.test.assertEquals
+
+class KtorServiceTest {
+
+    @Test
+    fun `getCharacters should return parsed data class on success`() = runTest {
+        // Given
+        val expected = Response(
+            ContainerResponse(
+                listOf(
+                    CharacterResponse(
+                        id = 0,
+                        name = "Spider-Man",
+                        description = "The Amazing Spider-Man",
+                        thumbnail = ImageResponse(path = "", extension = "")
+                    )
+                )
+            )
+        )
+        val mockEngine = MockEngine { _ ->
+            respond(
+                content = readFile("get_characters_200.json"),
+                headers = headersOf(HttpHeaders.ContentType, "application/json")
+            )
+        }
+        val service = KtorService(mockEngine)
+
+        val result = service.getCharacters(ts = "ts", hash = "hash", apiKey = "teste", nameStartsWith = "spider")
+
+        assertEquals(expected, result)
+    }
+}

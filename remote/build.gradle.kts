@@ -44,19 +44,27 @@ kotlin {
                 implementation(project(":core:model"))
                 implementation(libs.kotlin.stdlib)
                 implementation(libs.kotlinx.serialization.json)
+
                 implementation(project.dependencies.platform(libs.koin.bom))
                 implementation(libs.koin.core)
+
                 implementation(libs.okio)
+
+                implementation(libs.bundles.ktor)
+            }
+        }
+
+        commonTest {
+            dependencies {
+                implementation(libs.kotlin.test)
+                implementation(libs.ktor.client.mock)
             }
         }
 
         androidMain {
             dependencies {
-                implementation(libs.retrofit)
-                implementation(libs.okHttp)
-                implementation(libs.retrofit.kotlinx.serialization.converter)
-
                 implementation(libs.koin.android)
+                implementation(libs.ktor.client.okhttp)
             }
         }
 
