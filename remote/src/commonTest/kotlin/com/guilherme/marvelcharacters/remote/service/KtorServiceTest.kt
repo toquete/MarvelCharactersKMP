@@ -7,7 +7,7 @@ import com.guilherme.marvelcharacters.remote.model.Response
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
 import kotlinx.coroutines.test.runTest
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class KtorServiceTest {
