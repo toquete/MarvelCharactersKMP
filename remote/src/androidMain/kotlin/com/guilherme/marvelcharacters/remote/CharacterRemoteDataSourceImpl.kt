@@ -14,7 +14,7 @@ internal class CharacterRemoteDataSourceImpl(
     override suspend fun getCharacters(name: String): List<Character> {
         val (ts, hash) = getKeys()
 
-        return api.getCharacters(ts, hash, BuildConfig.MARVEL_KEY, name)
+        return api.getCharacters(ts, hash, BuildKonfig.MARVEL_KEY, name)
             .container
             .results
             .map(CharacterResponse::toExternalModel)
@@ -22,7 +22,7 @@ internal class CharacterRemoteDataSourceImpl(
 
     private fun getKeys(): Pair<String, String> {
         val ts = System.currentTimeMillis().toString()
-        val hash = String(Hex.encodeHex(DigestUtils.md5(ts + BuildConfig.MARVEL_PRIVATE_KEY + BuildConfig.MARVEL_KEY)))
+        val hash = String(Hex.encodeHex(DigestUtils.md5(ts + BuildKonfig.MARVEL_PRIVATE_KEY + BuildKonfig.MARVEL_KEY)))
         return Pair(ts, hash)
     }
 }

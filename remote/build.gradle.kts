@@ -1,53 +1,83 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
+    alias(libs.plugins.buildkonfig)
 }
 
-apply(from = "$rootDir/tools/jacoco/android.gradle")
+kotlin {
+    androidLibrary {
+        namespace = "com.guilherme.marvelcharacters.remote"
+        compileSdk = 35
+        minSdk = 24
 
-android {
-    namespace = "com.guilherme.marvelcharacters.remote"
-    compileSdk = rootProject.extra["compileSdkVersion"] as Int
+        withHostTest {}
+    }
 
-    defaultConfig {
-        minSdk = rootProject.extra["minSdkVersion"] as Int
+    val xcfName = "remoteKit"
 
+    iosX64 {
+        binaries.framework {
+            baseName = xcfName
+        }
+    }
+
+    iosArm64 {
+        binaries.framework {
+            baseName = xcfName
+        }
+    }
+
+    iosSimulatorArm64 {
+        binaries.framework {
+            baseName = xcfName
+        }
+    }
+
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(project(":core:model"))
+                implementation(libs.kotlin.stdlib)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(project.dependencies.platform(libs.koin.bom))
+                implementation(libs.koin.core)
+            }
+        }
+
+        androidMain {
+            dependencies {
+                implementation(libs.retrofit)
+                implementation(libs.okHttp)
+                implementation(libs.retrofit.kotlinx.serialization.converter)
+                implementation(libs.commons.codec)
+
+                implementation(libs.koin.android)
+            }
+        }
+
+        getByName("androidHostTest") {
+            dependencies {
+                implementation(project(":core:testing"))
+                implementation(libs.mockwebserver)
+            }
+        }
+    }
+}
+
+buildkonfig {
+    packageName = "com.guilherme.marvelcharacters.remote"
+    defaultConfigs {
         val keystorePropertiesFile = rootProject.file("keystore.properties")
         val keystoreProperties = Properties()
 
         keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
-        buildConfigField("String", "MARVEL_KEY", "\"${keystoreProperties["MARVEL_KEY"]}\"")
-        buildConfigField("String", "MARVEL_PRIVATE_KEY", "\"${keystoreProperties["MARVEL_PRIVATE_KEY"]}\"")
+        buildConfigField(STRING, "MARVEL_KEY", "\"${keystoreProperties["MARVEL_KEY"]}\"")
+        buildConfigField(STRING, "MARVEL_PRIVATE_KEY", "\"${keystoreProperties["MARVEL_PRIVATE_KEY"]}\"")
     }
-    compileOptions {
-        sourceCompatibility = rootProject.extra["sourceCompatibilityVersion"] as JavaVersion
-        targetCompatibility = rootProject.extra["targetCompatibilityVersion"] as JavaVersion
-    }
-    kotlinOptions {
-        jvmTarget = rootProject.extra["jvmTargetVersion"].toString()
-    }
-    buildFeatures {
-        buildConfig = true
-    }
-}
-
-dependencies {
-    implementation(project(":core:model"))
-
-    implementation(libs.retrofit)
-    implementation(libs.okHttp)
-    implementation(libs.retrofit.kotlinx.serialization.converter)
-    implementation(libs.commons.codec)
-    implementation(libs.kotlinx.serialization.json)
-
-    implementation(platform(libs.koin.bom))
-    implementation(libs.koin.android)
-
-    testImplementation(project(":core:testing"))
-    testImplementation(libs.mockwebserver)
 }
