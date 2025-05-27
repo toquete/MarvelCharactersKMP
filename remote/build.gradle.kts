@@ -38,13 +38,15 @@ android {
 
 dependencies {
     implementation(project(":core:model"))
-    implementation(project(":core:common"))
 
     implementation(libs.retrofit)
     implementation(libs.okHttp)
     implementation(libs.retrofit.kotlinx.serialization.converter)
     implementation(libs.commons.codec)
     implementation(libs.kotlinx.serialization.json)
+
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.android)
 
     testImplementation(project(":core:testing"))
     testImplementation(libs.mockwebserver)

@@ -24,7 +24,9 @@ android {
 dependencies {
     implementation(project(":data"))
     implementation(project(":core:model"))
-    implementation(project(":core:common"))
+
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.android)
 
     testImplementation(project(":core:testing"))
 }

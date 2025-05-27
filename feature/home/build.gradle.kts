@@ -34,7 +34,6 @@ android {
 
 dependencies {
     implementation(project(":domain"))
-    implementation(project(":core:common"))
     implementation(project(":core:model"))
     implementation(project(":core:ui"))
 
@@ -52,6 +51,8 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation(libs.navigation.compose)
 
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
 
     implementation(libs.kotlinx.serialization.json)

@@ -24,7 +24,6 @@ android {
 
 dependencies {
     implementation(project(":core:model"))
-    implementation(project(":core:common"))
 
     implementation(libs.core.ktx)
     implementation(libs.datastore.preferences)
@@ -32,6 +31,9 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
+
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.android)
 
     testImplementation(project(":core:testing"))
 }
