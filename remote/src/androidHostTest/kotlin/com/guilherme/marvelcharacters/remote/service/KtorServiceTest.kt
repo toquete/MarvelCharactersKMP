@@ -4,7 +4,6 @@ import com.guilherme.marvelcharacters.remote.model.CharacterResponse
 import com.guilherme.marvelcharacters.remote.model.ContainerResponse
 import com.guilherme.marvelcharacters.remote.model.ImageResponse
 import com.guilherme.marvelcharacters.remote.model.Response
-import com.guilherme.marvelcharacters.remote.util.readFile
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
 import kotlinx.coroutines.test.runTest
@@ -16,6 +15,24 @@ class KtorServiceTest {
     @Test
     fun `getCharacters should return parsed data class on success`() = runTest {
         // Given
+        val response = """
+            {
+              "data": {
+                "results": [
+                  {
+                    "id": 0,
+                    "name": "Spider-Man",
+                    "description": "The Amazing Spider-Man",
+                    "thumbnail": {
+                      "path": "",
+                      "extension": ""
+                    }
+                  }
+                ]
+              }
+            }
+        """.trimIndent()
+
         val expected = Response(
             ContainerResponse(
                 listOf(
@@ -30,7 +47,7 @@ class KtorServiceTest {
         )
         val mockEngine = MockEngine { _ ->
             respond(
-                content = readFile("get_characters_200.json"),
+                content = response,
                 headers = headersOf(HttpHeaders.ContentType, "application/json")
             )
         }
