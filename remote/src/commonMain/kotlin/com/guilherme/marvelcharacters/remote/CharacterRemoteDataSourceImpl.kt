@@ -3,11 +3,11 @@ package com.guilherme.marvelcharacters.remote
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.remote.model.CharacterResponse
 import com.guilherme.marvelcharacters.remote.model.toExternalModel
-import com.guilherme.marvelcharacters.remote.service.KtorService
+import com.guilherme.marvelcharacters.remote.service.Service
 import okio.ByteString.Companion.encodeUtf8
 
 internal class CharacterRemoteDataSourceImpl(
-    private val service: KtorService
+    private val service: Service
 ) : CharacterRemoteDataSource {
 
     override suspend fun getCharacters(name: String): List<Character> {

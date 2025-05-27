@@ -5,25 +5,22 @@ import com.guilherme.marvelcharacters.remote.model.CharacterResponse
 import com.guilherme.marvelcharacters.remote.model.ContainerResponse
 import com.guilherme.marvelcharacters.remote.model.ImageResponse
 import com.guilherme.marvelcharacters.remote.model.Response
-import com.guilherme.marvelcharacters.remote.service.KtorService
-import io.mockk.MockKAnnotations
-import io.mockk.coEvery
-import io.mockk.impl.annotations.InjectMockKs
-import io.mockk.impl.annotations.MockK
+import com.guilherme.marvelcharacters.remote.service.Service
+import dev.mokkery.answering.returns
+import dev.mokkery.everySuspend
+import dev.mokkery.matcher.any
+import dev.mokkery.mock
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertContentEquals
 
 @ExperimentalCoroutinesApi
 class CharacterRemoteDataSourceImplTest {
 
-    @MockK
-    private lateinit var service: KtorService
+    private val service: Service = mock()
 
-    @InjectMockKs
-    private lateinit var remoteDataSource: CharacterRemoteDataSourceImpl
+    private val remoteDataSource = CharacterRemoteDataSourceImpl(service)
 
     private val characterResponse = CharacterResponse(
         id = 0,
@@ -44,17 +41,12 @@ class CharacterRemoteDataSourceImplTest {
 
     private val response = Response(ContainerResponse(listOf(characterResponse)))
 
-    @Before
-    fun setUp() {
-        MockKAnnotations.init(this)
-    }
-
     @Test
     fun `getCharacters - returns character list on success`() = runTest {
         val characterName = "spider"
         val expected = listOf(character)
 
-        coEvery {
+        everySuspend {
             service.getCharacters(
                 ts = any(),
                 hash = any(),

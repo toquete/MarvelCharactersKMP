@@ -12,7 +12,7 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
-internal class KtorService(engine: HttpClientEngine) {
+internal class KtorService(engine: HttpClientEngine): Service {
 
     private val httpClient = HttpClient(engine) {
         defaultRequest {
@@ -27,7 +27,7 @@ internal class KtorService(engine: HttpClientEngine) {
         }
     }
 
-    suspend fun getCharacters(
+    override suspend fun getCharacters(
         ts: String,
         hash: String,
         apiKey: String,
