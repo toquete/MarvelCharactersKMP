@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.guilherme.marvelcharacters.core.ui.SnackbarMessage
+import com.guilherme.marvelcharacters.core.ui.UiText
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharacterByIdUseCase
 import com.guilherme.marvelcharacters.domain.usecase.ToggleFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.feature.detail.navigation.DetailRoute
@@ -34,14 +36,28 @@ internal class DetailViewModel(
 
     fun onFabClick(isFavorite: Boolean) {
         viewModelScope.launch {
-            val message = if (isFavorite) R.string.characters_deleted else R.string.character_added
+            val message = if (isFavorite) R.string.character_deleted else R.string.character_added
+            val action = if (isFavorite) UiText.ResourceString(R.string.undo) else null
 
             runCatching {
                 toggleFavoriteCharacterUseCase(characterId, isFavorite)
             }.onSuccess {
-                _state.update { it.copy(messageId = message, showAction = isFavorite) }
+                _state.update {
+                    it.copy(
+                        snackbarMessage = SnackbarMessage(
+                            text = UiText.ResourceString(message),
+                            actionLabel = action
+                        )
+                    )
+                }
             }.onFailure {
-                _state.update { it.copy(messageId = R.string.error_message, showAction = false) }
+                _state.update {
+                    it.copy(
+                        snackbarMessage = SnackbarMessage(
+                            text = UiText.ResourceString(R.string.error_message)
+                        )
+                    )
+                }
             }
         }
     }
@@ -51,12 +67,18 @@ internal class DetailViewModel(
             runCatching {
                 toggleFavoriteCharacterUseCase(characterId, isFavorite = false)
             }.onFailure {
-                _state.update { it.copy(messageId = R.string.error_message, showAction = false) }
+                _state.update {
+                    it.copy(
+                        snackbarMessage = SnackbarMessage(
+                            text = UiText.ResourceString(R.string.error_message)
+                        )
+                    )
+                }
             }
         }
     }
 
     fun onSnackbarShown() {
-        _state.update { it.copy(messageId = null, showAction = false) }
+        _state.update { it.copy(snackbarMessage = null) }
     }
 }
