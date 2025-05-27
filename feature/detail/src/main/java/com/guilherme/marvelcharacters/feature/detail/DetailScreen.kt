@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.core.ui.SnackbarMessage
-import com.guilherme.marvelcharacters.core.ui.UiText
 import com.guilherme.marvelcharacters.core.ui.theme.AppTheme
 import com.guilherme.marvelcharacters.domain.model.FavoriteCharacter
 import org.koin.androidx.compose.koinViewModel
@@ -56,18 +55,9 @@ internal fun DetailContent(
     onUndoClick: () -> Unit = {},
     onSnackbarShown: () -> Unit = {}
 ) {
-    LaunchedEffect(state.messageId) {
-        state.messageId?.let {
-            val isActionPerformed = onShowSnackbar.invoke(
-                SnackbarMessage(
-                    text = UiText.ResourceString(it),
-                    actionLabel = if (state.showAction) {
-                        UiText.ResourceString(R.string.undo)
-                    } else {
-                        null
-                    }
-                )
-            )
+    LaunchedEffect(state.snackbarMessage) {
+        state.snackbarMessage?.let {
+            val isActionPerformed = onShowSnackbar.invoke(it)
 
             if (isActionPerformed) {
                 onUndoClick.invoke()
