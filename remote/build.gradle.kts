@@ -46,6 +46,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(project.dependencies.platform(libs.koin.bom))
                 implementation(libs.koin.core)
+                implementation(libs.okio)
             }
         }
 
@@ -54,7 +55,6 @@ kotlin {
                 implementation(libs.retrofit)
                 implementation(libs.okHttp)
                 implementation(libs.retrofit.kotlinx.serialization.converter)
-                implementation(libs.commons.codec)
 
                 implementation(libs.koin.android)
             }
