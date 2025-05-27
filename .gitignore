@@ -189,4 +189,8 @@ fabric.properties
 
 !/gradle/wrapper/gradle-wrapper.jar
 
+### Kotlin Multiplatform ###
+
+.kotlin/
+
 # End of https://www.gitignore.io/api/android,androidstudio
