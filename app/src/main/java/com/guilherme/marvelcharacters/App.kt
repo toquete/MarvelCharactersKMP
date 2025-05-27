@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -85,6 +86,7 @@ private fun AppContent(
     onNightModeButtonClick: () -> Unit = {}
 ) {
     val showAppBars = currentTopLevelDestination != null
+    val context = LocalContext.current
 
     Scaffold(
         contentWindowInsets = WindowInsets.navigationBars,
@@ -136,8 +138,8 @@ private fun AppContent(
             onNightModeButtonClick = onNightModeButtonClick,
             onShowSnackbar = { message ->
                 snackbarHostState.showSnackbar(
-                    message.text,
-                    message.actionLabel,
+                    message.text.asString(context),
+                    message.actionLabel?.asString(context),
                     message.withDismissAction,
                     message.duration
                 ) == SnackbarResult.ActionPerformed

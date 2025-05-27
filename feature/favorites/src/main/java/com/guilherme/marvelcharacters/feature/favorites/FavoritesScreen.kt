@@ -26,7 +26,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.core.ui.SnackbarMessage
+import com.guilherme.marvelcharacters.core.ui.UiText
 import com.guilherme.marvelcharacters.core.ui.theme.AppTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -64,11 +64,10 @@ internal fun FavoritesContent(
 ) {
     var isDialogOpen by rememberSaveable { mutableStateOf(false) }
     var isDropDownExpanded by rememberSaveable { mutableStateOf(false) }
-    val resources = LocalContext.current.resources
 
     LaunchedEffect(state.messageId) {
         state.messageId?.let {
-            onShowSnackbar.invoke(SnackbarMessage(resources.getText(it).toString()))
+            onShowSnackbar.invoke(SnackbarMessage(UiText.ResourceString(it)))
             onSnackbarShown.invoke()
         }
     }

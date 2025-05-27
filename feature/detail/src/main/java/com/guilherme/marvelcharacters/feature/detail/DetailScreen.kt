@@ -18,13 +18,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.core.ui.SnackbarMessage
+import com.guilherme.marvelcharacters.core.ui.UiText
 import com.guilherme.marvelcharacters.core.ui.theme.AppTheme
 import com.guilherme.marvelcharacters.domain.model.FavoriteCharacter
 import org.koin.androidx.compose.koinViewModel
@@ -56,15 +56,13 @@ internal fun DetailContent(
     onUndoClick: () -> Unit = {},
     onSnackbarShown: () -> Unit = {}
 ) {
-    val resources = LocalContext.current.resources
-
     LaunchedEffect(state.messageId) {
         state.messageId?.let {
             val isActionPerformed = onShowSnackbar.invoke(
                 SnackbarMessage(
-                    text = resources.getText(it).toString(),
+                    text = UiText.ResourceString(it),
                     actionLabel = if (state.showAction) {
-                        resources.getText(R.string.undo).toString()
+                        UiText.ResourceString(R.string.undo)
                     } else {
                         null
                     }
@@ -91,7 +89,11 @@ internal fun DetailContent(
                 }
             },
             actions = {
-                IconButton(onClick = { onFavoriteActionClick.invoke(state.character?.isFavorite ?: false) }) {
+                IconButton(
+                    onClick = {
+                        onFavoriteActionClick.invoke(state.character?.isFavorite ?: false)
+                    }
+                ) {
                     Icon(
                         imageVector = if (state.character?.isFavorite == true) {
                             Icons.Default.Favorite
