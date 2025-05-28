@@ -1,32 +1,59 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
+    alias(libs.plugins.mokkery)
 }
 
-apply(from = "$rootDir/tools/jacoco/android.gradle")
-
-android {
-    namespace = "com.guilherme.marvelcharacters.domain"
-    compileSdk = rootProject.extra["compileSdkVersion"] as Int
-
-    defaultConfig {
-        minSdk = rootProject.extra["minSdkVersion"] as Int
+kotlin {
+    androidLibrary {
+        namespace = "com.guilherme.marvelcharacters.domain"
+        compileSdk = 35
+        minSdk = 24
     }
-    compileOptions {
-        sourceCompatibility = rootProject.extra["sourceCompatibilityVersion"] as JavaVersion
-        targetCompatibility = rootProject.extra["targetCompatibilityVersion"] as JavaVersion
+
+    val xcfName = "domainKit"
+
+    iosX64 {
+        binaries.framework {
+            baseName = xcfName
+        }
     }
-    kotlinOptions {
-        jvmTarget = rootProject.extra["jvmTargetVersion"].toString()
+
+    iosArm64 {
+        binaries.framework {
+            baseName = xcfName
+        }
     }
-}
 
-dependencies {
-    implementation(project(":data"))
-    implementation(project(":core:model"))
+    iosSimulatorArm64 {
+        binaries.framework {
+            baseName = xcfName
+        }
+    }
 
-    implementation(platform(libs.koin.bom))
-    implementation(libs.koin.android)
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(project(":data"))
+                implementation(project(":core:model"))
+                implementation(libs.kotlin.stdlib)
 
-    testImplementation(project(":core:testing"))
+                implementation(project.dependencies.platform(libs.koin.bom))
+                implementation(libs.koin.core)
+            }
+        }
+
+        commonTest {
+            dependencies {
+                implementation(libs.kotlin.test)
+                implementation(libs.kotlinx.coroutines.test)
+            }
+        }
+
+        androidMain {
+            dependencies {
+                implementation(libs.koin.android)
+            }
+        }
+    }
 }
