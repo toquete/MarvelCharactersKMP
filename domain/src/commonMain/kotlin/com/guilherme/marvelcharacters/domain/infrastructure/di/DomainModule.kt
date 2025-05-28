@@ -9,16 +9,17 @@ import com.guilherme.marvelcharacters.domain.usecase.IsCharacterFavoriteUseCase
 import com.guilherme.marvelcharacters.domain.usecase.IsDarkModeEnabledUseCase
 import com.guilherme.marvelcharacters.domain.usecase.ToggleDarkModeUseCase
 import com.guilherme.marvelcharacters.domain.usecase.ToggleFavoriteCharacterUseCase
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val domainModule = module {
-    factory { DeleteAllFavoriteCharactersUseCase(characterRepository = get()) }
-    factory { GetCharactersUseCase(characterRepository = get()) }
-    factory { GetDarkModeUseCase(nightModeRepository = get()) }
-    factory { GetFavoriteCharacterByIdUseCase(repository = get()) }
-    factory { GetFavoriteCharactersUseCase(characterRepository = get()) }
-    factory { IsCharacterFavoriteUseCase(characterRepository = get()) }
-    factory { IsDarkModeEnabledUseCase(nightModeRepository = get()) }
-    factory { ToggleDarkModeUseCase(nightModeRepository = get()) }
-    factory { ToggleFavoriteCharacterUseCase(repository = get()) }
+    factoryOf(::DeleteAllFavoriteCharactersUseCase)
+    factoryOf(::GetCharactersUseCase)
+    factoryOf(::GetDarkModeUseCase)
+    factoryOf(::GetFavoriteCharacterByIdUseCase)
+    factoryOf(::GetFavoriteCharactersUseCase)
+    factoryOf(::IsCharacterFavoriteUseCase)
+    factoryOf(::IsDarkModeEnabledUseCase)
+    factoryOf(::ToggleDarkModeUseCase)
+    factoryOf(::ToggleFavoriteCharacterUseCase)
 }
