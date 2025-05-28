@@ -61,8 +61,6 @@ kotlin {
 
         androidMain {
             dependencies {
-                implementation(project(":core:testing"))
-                implementation(libs.core.ktx)
                 implementation(libs.koin.android)
             }
         }
