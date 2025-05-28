@@ -9,10 +9,9 @@ import com.guilherme.marvelcharacters.feature.home.infrastructure.di.homeModule
 import com.guilherme.marvelcharacters.remote.infrastructure.di.remoteModule
 
 val appModules = listOf(
-    cacheModule,
     dataModule,
     domainModule,
     detailModule,
     favoritesModule,
     homeModule
-) + remoteModule
+) + remoteModule + cacheModule
