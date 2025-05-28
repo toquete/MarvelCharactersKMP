@@ -45,6 +45,9 @@ kotlin {
 
                 implementation(libs.room.runtime)
                 implementation(libs.sqlite.bundled)
+
+                implementation(libs.datastore)
+                implementation(libs.datastore.preferences)
             }
         }
 
@@ -60,7 +63,6 @@ kotlin {
                 implementation(project(":core:testing"))
                 implementation(libs.core.ktx)
                 implementation(libs.koin.android)
-                implementation(libs.datastore.preferences)
             }
         }
     }
@@ -76,37 +78,3 @@ dependencies {
 room {
     schemaDirectory("$projectDir/schemas")
 }
-
-//apply(from = "$rootDir/tools/jacoco/android.gradle")
-//
-//android {
-//    namespace = "com.guilherme.marvelcharacters.cache"
-//    compileSdk = rootProject.extra["compileSdkVersion"] as Int
-//
-//    defaultConfig {
-//        minSdk = rootProject.extra["minSdkVersion"] as Int
-//    }
-//    compileOptions {
-//        sourceCompatibility = rootProject.extra["sourceCompatibilityVersion"] as JavaVersion
-//        targetCompatibility = rootProject.extra["targetCompatibilityVersion"] as JavaVersion
-//    }
-//    kotlinOptions {
-//        jvmTarget = rootProject.extra["jvmTargetVersion"].toString()
-//    }
-//}
-//
-//dependencies {
-//    implementation(project(":core:model"))
-//
-//    implementation(libs.core.ktx)
-//    implementation(libs.datastore.preferences)
-//
-//    implementation(libs.room.runtime)
-//    implementation(libs.sqlite.bundled)
-//    ksp(libs.room.compiler)
-//
-//    implementation(platform(libs.koin.bom))
-//    implementation(libs.koin.android)
-//
-//    testImplementation(project(":core:testing"))
-//}
