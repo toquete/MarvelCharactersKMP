@@ -36,18 +36,19 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
-                implementation(compose.runtime)
-                implementation(compose.foundation)
+                api(compose.runtime)
+                api(compose.foundation)
+                api(compose.components.resources)
                 api(compose.material3)
-                implementation(compose.materialIconsExtended)
-                implementation(compose.ui)
-                implementation(compose.components.uiToolingPreview)
+                api(compose.materialIconsExtended)
+                api(compose.ui)
+                api(compose.components.uiToolingPreview)
             }
         }
         androidMain {
             dependencies {
                 implementation(libs.core.ktx)
-                implementation(compose.preview)
+                api(compose.preview)
             }
         }
     }
