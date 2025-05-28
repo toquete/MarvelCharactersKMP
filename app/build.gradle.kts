@@ -10,6 +10,14 @@ apply(from = "$rootDir/tools/jacoco/android.gradle")
 android {
     namespace = "com.guilherme.marvelcharacters"
     compileSdk = rootProject.extra["compileSdkVersion"] as Int
+    packaging {
+        resources {
+            excludes += listOf(
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE-notice.md"
+            )
+        }
+    }
     defaultConfig {
         applicationId = "com.guilherme.marvelcharacters"
         minSdk = rootProject.extra["minSdkVersion"] as Int

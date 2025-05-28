@@ -108,3 +108,4 @@ kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref 
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "gradle" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
 mokkery = { id = "dev.mokkery", version.ref = "mokkery" }
+room = { id = "androidx.room", version.ref = "room" }

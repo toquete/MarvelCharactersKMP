@@ -15,8 +15,6 @@ kotlin {
         namespace = "com.guilherme.marvelcharacters.remote"
         compileSdk = 35
         minSdk = 24
-
-        withHostTest {}
     }
 
     val xcfName = "remoteKit"
