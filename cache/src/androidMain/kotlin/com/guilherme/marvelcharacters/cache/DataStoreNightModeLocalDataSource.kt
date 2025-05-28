@@ -1,10 +1,10 @@
 package com.guilherme.marvelcharacters.cache
 
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import com.guilherme.marvelcharacters.cache.PreferencesKeys.DARK_THEME_CONFIG
+import com.guilherme.marvelcharacters.core.model.DarkThemeConfig
 import com.guilherme.marvelcharacters.core.model.UserPreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -16,26 +16,28 @@ internal class DataStoreNightModeLocalDataSource(
 ) : NightModeLocalDataSource {
 
     private val userPreferences: Flow<UserPreferences> = dataStore.data.map { preferences ->
-        val nightMode = preferences[DARK_THEME_CONFIG] ?: AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        val darkThemeConfig = preferences[DARK_THEME_CONFIG]?.let {
+            DarkThemeConfig.entries[it]
+        } ?: DarkThemeConfig.FOLLOW_SYSTEM
 
-        UserPreferences(nightMode)
+        UserPreferences(darkThemeConfig)
     }
 
     override suspend fun isDarkModeEnabled(): Boolean {
-        return userPreferences.firstOrNull()?.nightMode == AppCompatDelegate.MODE_NIGHT_YES
+        return userPreferences.firstOrNull()?.darkThemeConfig == DarkThemeConfig.DARK
     }
 
     override suspend fun setDarkModeEnabled(isEnabled: Boolean) {
         dataStore.edit { preferences ->
             preferences[DARK_THEME_CONFIG] = if (isEnabled) {
-                AppCompatDelegate.MODE_NIGHT_YES
+                DarkThemeConfig.DARK.ordinal
             } else {
-                AppCompatDelegate.MODE_NIGHT_NO
+                DarkThemeConfig.LIGHT.ordinal
             }
         }
     }
 
     override suspend fun getDarkMode(): Int {
-        return userPreferences.first().nightMode
+        return userPreferences.first().darkThemeConfig.ordinal
     }
 }
