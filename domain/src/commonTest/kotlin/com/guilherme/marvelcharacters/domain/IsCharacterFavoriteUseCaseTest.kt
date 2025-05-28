@@ -1,33 +1,24 @@
 package com.guilherme.marvelcharacters.domain
 
-import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.data.repository.CharacterRepository
 import com.guilherme.marvelcharacters.domain.usecase.IsCharacterFavoriteUseCase
-import io.mockk.MockKAnnotations
-import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.impl.annotations.InjectMockKs
-import io.mockk.impl.annotations.RelaxedMockK
+import dev.mokkery.MockMode
+import dev.mokkery.answering.returns
+import dev.mokkery.every
+import dev.mokkery.mock
+import dev.mokkery.verifySuspend
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
-import org.junit.Test
+import kotlin.test.Test
+import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
 class IsCharacterFavoriteUseCaseTest {
 
-    @RelaxedMockK
-    private lateinit var characterRepository: CharacterRepository
-
-    @InjectMockKs
-    private lateinit var isCharacterFavoriteUseCase: IsCharacterFavoriteUseCase
-
-    @Before
-    fun setUp() {
-        MockKAnnotations.init(this)
-    }
+    private val characterRepository: CharacterRepository = mock(MockMode.autofill)
+    private val isCharacterFavoriteUseCase = IsCharacterFavoriteUseCase(characterRepository)
 
     @Test
     fun `invoke - check value is returned`() = runTest {
@@ -36,7 +27,7 @@ class IsCharacterFavoriteUseCaseTest {
 
         val result = isCharacterFavoriteUseCase(id)
 
-        coVerify { characterRepository.isCharacterFavorite(id) }
-        assertThat(result.first()).isTrue()
+        verifySuspend { characterRepository.isCharacterFavorite(id) }
+        assertTrue(result.first())
     }
 }
