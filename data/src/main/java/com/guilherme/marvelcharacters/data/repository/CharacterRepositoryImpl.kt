@@ -4,23 +4,18 @@ import com.guilherme.marvelcharacters.cache.CharacterLocalDataSource
 import com.guilherme.marvelcharacters.cache.FavoriteCharacterLocalDataSource
 import com.guilherme.marvelcharacters.core.model.Character
 import com.guilherme.marvelcharacters.remote.CharacterRemoteDataSource
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 
 internal class CharacterRepositoryImpl(
     private val remoteDataSource: CharacterRemoteDataSource,
     private val localDataSource: CharacterLocalDataSource,
-    private val favoriteLocalDataSource: FavoriteCharacterLocalDataSource,
-    private val dispatcher: CoroutineDispatcher
+    private val favoriteLocalDataSource: FavoriteCharacterLocalDataSource
 ) : CharacterRepository {
 
     override suspend fun getCharacters(name: String): List<Character> {
-        return withContext(dispatcher) {
-            localDataSource.getCharactersByName(name).ifEmpty {
-                remoteDataSource.getCharacters(name).also {
-                    localDataSource.insertAll(it)
-                }
+        return localDataSource.getCharactersByName(name).ifEmpty {
+            remoteDataSource.getCharacters(name).also {
+                localDataSource.insertAll(it)
             }
         }
     }

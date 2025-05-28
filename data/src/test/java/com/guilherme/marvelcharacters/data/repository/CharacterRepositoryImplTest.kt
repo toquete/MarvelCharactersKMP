@@ -12,15 +12,12 @@ import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class CharacterRepositoryImplTest {
-
-    private val testDispatcher = StandardTestDispatcher()
 
     @RelaxedMockK
     private lateinit var remoteDataSource: CharacterRemoteDataSource
@@ -39,13 +36,12 @@ class CharacterRepositoryImplTest {
         characterRepository = CharacterRepositoryImpl(
             remoteDataSource,
             localDataSource,
-            favoriteLocalDataSource,
-            testDispatcher
+            favoriteLocalDataSource
         )
     }
 
     @Test
-    fun `getCharacters - returns character list from remote`() = runTest(testDispatcher.scheduler) {
+    fun `getCharacters - returns character list from remote`() = runTest {
         coEvery { remoteDataSource.getCharacters(name = "spider") } returns Fixtures.characterList
         coEvery { localDataSource.getCharactersByName(name = "spider") } returns emptyList()
 
@@ -56,7 +52,7 @@ class CharacterRepositoryImplTest {
     }
 
     @Test
-    fun `getCharacters - returns character list from local`() = runTest(testDispatcher.scheduler) {
+    fun `getCharacters - returns character list from local`() = runTest {
         coEvery { localDataSource.getCharactersByName(name = "spider") } returns Fixtures.characterList
 
         val list = characterRepository.getCharacters(name = "spider")
@@ -65,7 +61,7 @@ class CharacterRepositoryImplTest {
     }
 
     @Test
-    fun `getCharacterById - returns character from local`() = runTest(testDispatcher.scheduler) {
+    fun `getCharacterById - returns character from local`() = runTest {
         coEvery { localDataSource.getCharacterById(id = 0) } returns Fixtures.character
 
         val list = characterRepository.getCharacterById(id = 0)
@@ -74,7 +70,7 @@ class CharacterRepositoryImplTest {
     }
 
     @Test
-    fun `isCharacterFavorite - returns if character is favorite`() = runTest(testDispatcher.scheduler) {
+    fun `isCharacterFavorite - returns if character is favorite`() = runTest {
         coEvery { favoriteLocalDataSource.isCharacterFavorite(id = any()) } returns flowOf(true)
 
         val result = characterRepository.isCharacterFavorite(id = 0)
@@ -83,7 +79,7 @@ class CharacterRepositoryImplTest {
     }
 
     @Test
-    fun `getFavoriteCharacters - returns favorite characters list`() = runTest(testDispatcher.scheduler) {
+    fun `getFavoriteCharacters - returns favorite characters list`() = runTest {
         coEvery { favoriteLocalDataSource.getFavoriteCharacters() } returns flowOf(Fixtures.characterList)
 
         val result = characterRepository.getFavoriteCharacters()
@@ -92,21 +88,21 @@ class CharacterRepositoryImplTest {
     }
 
     @Test
-    fun `insertFavoriteCharacter - check database call`() = runTest(testDispatcher.scheduler) {
+    fun `insertFavoriteCharacter - check database call`() = runTest {
         characterRepository.insertFavoriteCharacter(id = 0)
 
         coVerify { favoriteLocalDataSource.copyFavoriteCharacter(id = 0) }
     }
 
     @Test
-    fun `deleteFavoriteCharacter - check database call`() = runTest(testDispatcher.scheduler) {
+    fun `deleteFavoriteCharacter - check database call`() = runTest {
         characterRepository.deleteFavoriteCharacter(id = 0)
 
         coVerify { favoriteLocalDataSource.delete(id = 0) }
     }
 
     @Test
-    fun `deleteAllFavoriteCharacters - check database call`() = runTest(testDispatcher.scheduler) {
+    fun `deleteAllFavoriteCharacters - check database call`() = runTest {
         characterRepository.deleteAllFavoriteCharacters()
 
         coVerify { favoriteLocalDataSource.deleteAll() }
