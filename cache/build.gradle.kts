@@ -29,7 +29,7 @@ dependencies {
     implementation(libs.datastore.preferences)
 
     implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
+    implementation(libs.sqlite.bundled)
     ksp(libs.room.compiler)
 
     implementation(platform(libs.koin.bom))
