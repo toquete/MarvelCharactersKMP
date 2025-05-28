@@ -1,8 +1,6 @@
 package com.guilherme.marvelcharacters.cache.infrastructure.di
 
 import android.content.Context
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.guilherme.marvelcharacters.cache.CharacterLocalDataSource
@@ -11,16 +9,16 @@ import com.guilherme.marvelcharacters.cache.DataStoreNightModeLocalDataSource
 import com.guilherme.marvelcharacters.cache.FavoriteCharacterLocalDataSource
 import com.guilherme.marvelcharacters.cache.FavoriteCharacterLocalDataSourceImpl
 import com.guilherme.marvelcharacters.cache.NightModeLocalDataSource
+import com.guilherme.marvelcharacters.cache.createDataStore
 import com.guilherme.marvelcharacters.cache.dao.CharacterDatabase
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 private const val DATABASE = "character_database"
-private const val USER_PREFERENCES = "user_preferences"
 
 val cacheModule = module {
     single { appDatabase(androidContext()) }
-    single { PreferenceDataStoreFactory.create(produceFile = { androidContext().preferencesDataStoreFile(USER_PREFERENCES) }) }
+    single { createDataStore(androidContext()) }
 
     factory { get<CharacterDatabase>().characterDao() }
     factory { get<CharacterDatabase>().favoriteCharacterDao() }
