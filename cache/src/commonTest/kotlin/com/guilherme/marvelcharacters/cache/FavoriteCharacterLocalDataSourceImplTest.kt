@@ -1,70 +1,62 @@
 package com.guilherme.marvelcharacters.cache
 
-import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.cache.dao.FavoriteCharacterDao
 import com.guilherme.marvelcharacters.cache.util.Fixtures
-import io.mockk.MockKAnnotations
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.impl.annotations.InjectMockKs
-import io.mockk.impl.annotations.RelaxedMockK
+import dev.mokkery.MockMode
+import dev.mokkery.answering.returns
+import dev.mokkery.every
+import dev.mokkery.mock
+import dev.mokkery.verifySuspend
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
-import org.junit.Test
+import kotlin.test.Test
+import kotlin.test.assertContentEquals
+import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
 class FavoriteCharacterLocalDataSourceImplTest {
 
-    @RelaxedMockK
-    private lateinit var dao: FavoriteCharacterDao
-
-    @InjectMockKs
-    private lateinit var localDataSource: FavoriteCharacterLocalDataSourceImpl
-
-    @Before
-    fun setUp() {
-        MockKAnnotations.init(this)
-    }
+    private val dao: FavoriteCharacterDao = mock(MockMode.autofill)
+    private val localDataSource = FavoriteCharacterLocalDataSourceImpl(dao)
 
     @Test
     fun `getFavoriteCharacters - return list of characters`() = runTest {
-        coEvery { dao.getFavoriteCharacters() } returns flowOf(Fixtures.favoriteCharacterEntityList)
+        every { dao.getFavoriteCharacters() } returns flowOf(Fixtures.favoriteCharacterEntityList)
 
         val result = localDataSource.getFavoriteCharacters()
 
-        assertThat(result.first()).containsExactly(Fixtures.character)
+        assertContentEquals(Fixtures.characterList, result.first())
     }
 
     @Test
     fun `isCharacterFavorite - return if character is favorite`() = runTest {
-        coEvery { dao.isCharacterFavorite(id = 0) } returns flowOf(true)
+        every { dao.isCharacterFavorite(id = 0) } returns flowOf(true)
 
         val result = localDataSource.isCharacterFavorite(id = 0)
 
-        assertThat(result.first()).isTrue()
+        assertTrue(result.first())
     }
 
     @Test
     fun `copyFavoriteCharacter - check dao is called`() = runTest {
         localDataSource.copyFavoriteCharacter(id = 0)
 
-        coVerify { dao.copyFavoriteCharacter(id = 0) }
+        verifySuspend { dao.copyFavoriteCharacter(id = 0) }
     }
 
     @Test
     fun `deleteAll - check dao is called`() = runTest {
         localDataSource.deleteAll()
 
-        coVerify { dao.deleteAll() }
+        verifySuspend { dao.deleteAll() }
     }
 
     @Test
     fun `delete - check dao is called`() = runTest {
         localDataSource.delete(id = 0)
 
-        coVerify { dao.delete(id = 0) }
+        verifySuspend { dao.delete(id = 0) }
     }
 }
