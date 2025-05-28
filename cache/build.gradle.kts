@@ -11,8 +11,6 @@ kotlin {
         namespace = "com.guilherme.marvelcharacters.cache"
         compileSdk = 35
         minSdk = 24
-
-        withHostTest {}
     }
 
     val xcfName = "cacheKit"
