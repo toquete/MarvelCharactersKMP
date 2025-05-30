@@ -5,8 +5,9 @@ import androidx.navigation.toRoute
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.core.testing.util.BaseUnitTest
-import com.guilherme.marvelcharacters.core.ui.SnackbarMessage
-import com.guilherme.marvelcharacters.core.ui.UiText
+import com.guilherme.marvelcharacters.core.ui.Resources
+import com.guilherme.marvelcharacters.core.ui.SnackbarMessageMP
+import com.guilherme.marvelcharacters.core.ui.UiTextMP
 import com.guilherme.marvelcharacters.domain.model.FavoriteCharacter
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharacterByIdUseCase
 import com.guilherme.marvelcharacters.domain.usecase.ToggleFavoriteCharacterUseCase
@@ -81,9 +82,9 @@ class DetailViewModelTest : BaseUnitTest() {
             assertThat(awaitItem()).isEqualTo(
                 DetailState(
                     character = favoriteCharacter,
-                    snackbarMessage = SnackbarMessage(
-                        text = UiText.ResourceString(R.string.character_deleted),
-                        actionLabel = UiText.ResourceString(R.string.undo)
+                    snackbarMessage = SnackbarMessageMP(
+                        text = UiTextMP.ResourceString(Resources.String.CharacterDeleted),
+                        actionLabel = UiTextMP.ResourceString(Resources.String.Undo)
                     )
                 )
             )
@@ -109,8 +110,8 @@ class DetailViewModelTest : BaseUnitTest() {
             assertThat(awaitItem()).isEqualTo(
                 DetailState(
                     character = favoriteCharacter,
-                    snackbarMessage = SnackbarMessage(
-                        text = UiText.ResourceString(R.string.character_added)
+                    snackbarMessage = SnackbarMessageMP(
+                        text = UiTextMP.ResourceString(Resources.String.CharacterAdded)
                     )
                 )
             )
@@ -134,8 +135,8 @@ class DetailViewModelTest : BaseUnitTest() {
             assertThat(awaitItem()).isEqualTo(
                 DetailState(
                     character = favoriteCharacter,
-                    snackbarMessage = SnackbarMessage(
-                        text = UiText.ResourceString(R.string.error_message)
+                    snackbarMessage = SnackbarMessageMP(
+                        text = UiTextMP.ResourceString(Resources.String.ErrorMessage)
                     )
                 )
             )
@@ -162,8 +163,8 @@ class DetailViewModelTest : BaseUnitTest() {
         detailViewModel.state.test {
             assertThat(awaitItem()).isEqualTo(
                 DetailState(
-                    snackbarMessage = SnackbarMessage(
-                        text = UiText.ResourceString(R.string.error_message)
+                    snackbarMessage = SnackbarMessageMP(
+                        text = UiTextMP.ResourceString(Resources.String.ErrorMessage)
                     )
                 )
             )
