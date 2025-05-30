@@ -47,9 +47,17 @@ kotlin {
         }
         androidMain {
             dependencies {
-                implementation(libs.core.ktx)
-                api(compose.preview)
+                api(libs.core.ktx)
+                api(project.dependencies.platform(libs.androidx.compose.bom))
+                api(libs.androidx.compose.ui.tooling.preview)
+                api(libs.androidx.compose.ui.tooling)
+                api(libs.androidx.customview.poolingcontainer)
+                api(libs.androidx.emoji2)
             }
         }
     }
+}
+
+compose.resources {
+    packageOfResClass = "com.guilherme.marvelcharacters.resources"
 }

@@ -10,10 +10,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        jcenter()
     }
 }
-rootProject.name = "Marvel Characters"
+rootProject.name = "Marvel_Characters"
 include(":app")
 include(":cache")
 include(":data")

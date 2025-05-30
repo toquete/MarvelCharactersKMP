@@ -18,20 +18,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.guilherme.marvelcharacters.core.model.Character
-import com.guilherme.marvelcharacters.core.ui.SnackbarMessage
-import com.guilherme.marvelcharacters.core.ui.theme.AppTheme
-import com.guilherme.marvelcharacters.domain.model.FavoriteCharacter
-import org.koin.androidx.compose.koinViewModel
+import com.guilherme.marvelcharacters.core.ui.Resources
+import com.guilherme.marvelcharacters.core.ui.SnackbarMessageMP
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun DetailScreen(
     onNavigateUp: () -> Unit,
-    onShowSnackbar: suspend (SnackbarMessage) -> Boolean,
+    onShowSnackbar: suspend (SnackbarMessageMP) -> Boolean,
     viewModel: DetailViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -50,7 +47,7 @@ internal fun DetailScreen(
 internal fun DetailContent(
     state: DetailState,
     onNavigateUp: () -> Unit = {},
-    onShowSnackbar: suspend (SnackbarMessage) -> Boolean = { _ -> false },
+    onShowSnackbar: suspend (SnackbarMessageMP) -> Boolean = { _ -> false },
     onFavoriteActionClick: (isFavorite: Boolean) -> Unit = {},
     onUndoClick: () -> Unit = {},
     onSnackbarShown: () -> Unit = {}
@@ -101,28 +98,8 @@ internal fun DetailContent(
                 .weight(1f)
                 .verticalScroll(rememberScrollState()),
             text = state.character?.character?.description?.ifEmpty {
-                stringResource(R.string.no_description_available)
+                stringResource(Resources.String.NoDescriptionAvailable)
             }.orEmpty()
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun DetailContentPreview() {
-    AppTheme {
-        DetailContent(
-            state = DetailState(
-                character = FavoriteCharacter(
-                    character = Character(
-                        id = 1,
-                        name = "Spider-Man",
-                        description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                        thumbnail = ""
-                    ),
-                    isFavorite = false
-                )
-            )
         )
     }
 }

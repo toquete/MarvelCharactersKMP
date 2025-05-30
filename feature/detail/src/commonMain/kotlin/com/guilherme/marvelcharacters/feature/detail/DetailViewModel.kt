@@ -4,8 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.guilherme.marvelcharacters.core.ui.SnackbarMessage
-import com.guilherme.marvelcharacters.core.ui.UiText
+import com.guilherme.marvelcharacters.core.ui.Resources
+import com.guilherme.marvelcharacters.core.ui.SnackbarMessageMP
+import com.guilherme.marvelcharacters.core.ui.UiTextMP
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharacterByIdUseCase
 import com.guilherme.marvelcharacters.domain.usecase.ToggleFavoriteCharacterUseCase
 import com.guilherme.marvelcharacters.feature.detail.navigation.DetailRoute
@@ -36,16 +37,16 @@ internal class DetailViewModel(
 
     fun onFabClick(isFavorite: Boolean) {
         viewModelScope.launch {
-            val message = if (isFavorite) R.string.character_deleted else R.string.character_added
-            val action = if (isFavorite) UiText.ResourceString(R.string.undo) else null
+            val message = if (isFavorite) Resources.String.CharacterDeleted else Resources.String.CharacterAdded
+            val action = if (isFavorite) UiTextMP.ResourceString(Resources.String.Undo) else null
 
             runCatching {
                 toggleFavoriteCharacterUseCase(characterId, isFavorite)
             }.onSuccess {
                 _state.update {
                     it.copy(
-                        snackbarMessage = SnackbarMessage(
-                            text = UiText.ResourceString(message),
+                        snackbarMessage = SnackbarMessageMP(
+                            text = UiTextMP.ResourceString(message),
                             actionLabel = action
                         )
                     )
@@ -53,8 +54,8 @@ internal class DetailViewModel(
             }.onFailure {
                 _state.update {
                     it.copy(
-                        snackbarMessage = SnackbarMessage(
-                            text = UiText.ResourceString(R.string.error_message)
+                        snackbarMessage = SnackbarMessageMP(
+                            text = UiTextMP.ResourceString(Resources.String.ErrorMessage)
                         )
                     )
                 }
@@ -69,8 +70,8 @@ internal class DetailViewModel(
             }.onFailure {
                 _state.update {
                     it.copy(
-                        snackbarMessage = SnackbarMessage(
-                            text = UiText.ResourceString(R.string.error_message)
+                        snackbarMessage = SnackbarMessageMP(
+                            text = UiTextMP.ResourceString(Resources.String.ErrorMessage)
                         )
                     )
                 }

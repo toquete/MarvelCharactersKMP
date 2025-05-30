@@ -3,7 +3,7 @@ package com.guilherme.marvelcharacters.feature.detail.navigation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.guilherme.marvelcharacters.core.ui.SnackbarMessage
+import com.guilherme.marvelcharacters.core.ui.SnackbarMessageMP
 import com.guilherme.marvelcharacters.feature.detail.DetailScreen
 import kotlinx.serialization.Serializable
 
@@ -16,7 +16,7 @@ fun NavController.navigateToDetail(id: Int) {
 
 fun NavGraphBuilder.detailScreen(
     onNavigateUp: () -> Unit,
-    onShowSnackbar: suspend (SnackbarMessage) -> Boolean
+    onShowSnackbar: suspend (SnackbarMessageMP) -> Boolean
 ) {
     composable<DetailRoute> {
         DetailScreen(
