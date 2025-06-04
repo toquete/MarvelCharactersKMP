@@ -3,8 +3,9 @@ package com.guilherme.marvelcharacters.feature.favorites
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.core.testing.util.BaseUnitTest
-import com.guilherme.marvelcharacters.core.ui.SnackbarMessage
-import com.guilherme.marvelcharacters.core.ui.UiText
+import com.guilherme.marvelcharacters.core.ui.Resources
+import com.guilherme.marvelcharacters.core.ui.SnackbarMessageMP
+import com.guilherme.marvelcharacters.core.ui.UiTextMP
 import com.guilherme.marvelcharacters.domain.usecase.DeleteAllFavoriteCharactersUseCase
 import com.guilherme.marvelcharacters.domain.usecase.GetFavoriteCharactersUseCase
 import com.guilherme.marvelcharacters.feature.favorites.util.Fixtures
@@ -48,8 +49,8 @@ class FavoritesViewModelTest : BaseUnitTest() {
         favoritesViewModel.state.test {
             assertThat(awaitItem()).isEqualTo(
                 FavoritesState(
-                    snackbarMessage = SnackbarMessage(
-                        text = UiText.ResourceString(R.string.character_deleted)
+                    snackbarMessage = SnackbarMessageMP(
+                        text = UiTextMP.ResourceString(Resources.String.CharacterDeleted)
                     )
                 )
             )
@@ -65,8 +66,8 @@ class FavoritesViewModelTest : BaseUnitTest() {
         favoritesViewModel.state.test {
             assertThat(awaitItem()).isEqualTo(
                 FavoritesState(
-                    snackbarMessage = SnackbarMessage(
-                        text = UiText.ResourceString(R.string.error_message)
+                    snackbarMessage = SnackbarMessageMP(
+                        text = UiTextMP.ResourceString(Resources.String.ErrorMessage)
                     )
                 )
             )

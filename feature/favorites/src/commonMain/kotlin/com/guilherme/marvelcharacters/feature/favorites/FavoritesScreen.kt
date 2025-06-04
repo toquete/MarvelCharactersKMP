@@ -26,21 +26,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.guilherme.marvelcharacters.core.model.Character
-import com.guilherme.marvelcharacters.core.ui.SnackbarMessage
-import com.guilherme.marvelcharacters.core.ui.theme.AppTheme
-import org.koin.androidx.compose.koinViewModel
+import com.guilherme.marvelcharacters.core.ui.Resources
+import com.guilherme.marvelcharacters.core.ui.SnackbarMessageMP
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun FavoritesScreen(
     viewModel: FavoritesViewModel = koinViewModel(),
     onCharacterClick: (character: Character) -> Unit = {},
-    onShowSnackbar: suspend (SnackbarMessage) -> Boolean = { _ -> false }
+    onShowSnackbar: suspend (SnackbarMessageMP) -> Boolean = { _ -> false }
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     FavoritesContent(
@@ -58,7 +57,7 @@ internal fun FavoritesContent(
     state: FavoritesState,
     onCharacterClick: (character: Character) -> Unit = {},
     onDeleteAllClick: () -> Unit = {},
-    onShowSnackbar: suspend (SnackbarMessage) -> Boolean = { _ -> false },
+    onShowSnackbar: suspend (SnackbarMessageMP) -> Boolean = { _ -> false },
     onSnackbarShown: () -> Unit = {}
 ) {
     var isDialogOpen by rememberSaveable { mutableStateOf(false) }
@@ -73,7 +72,7 @@ internal fun FavoritesContent(
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
-            title = { Text(stringResource(R.string.favorites)) },
+            title = { Text(stringResource(Resources.String.Favorites)) },
             actions = {
                 if (state.characters.isEmpty()) return@TopAppBar
                 IconButton(onClick = { isDropDownExpanded = !isDropDownExpanded }) {
@@ -87,7 +86,7 @@ internal fun FavoritesContent(
                     onDismissRequest = { isDropDownExpanded = !isDropDownExpanded }
                 ) {
                     DropdownMenuItem(
-                        text = { Text(stringResource(R.string.delete_dialog_title)) },
+                        text = { Text(stringResource(Resources.String.DeleteDialogTitle)) },
                         onClick = {
                             isDialogOpen = !isDialogOpen
                             isDropDownExpanded = !isDropDownExpanded
@@ -125,7 +124,7 @@ internal fun FavoritesContent(
 }
 
 @Composable
-private fun DeleteAllCharactersDialog(
+internal fun DeleteAllCharactersDialog(
     onDismissRequest: () -> Unit = {},
     onDeleteAllClick: () -> Unit = {}
 ) {
@@ -133,48 +132,15 @@ private fun DeleteAllCharactersDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             TextButton(onClick = onDeleteAllClick) {
-                Text(stringResource(R.string.delete))
+                Text(stringResource(Resources.String.Delete))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismissRequest) {
-                Text(stringResource(R.string.cancel))
+                Text(stringResource(Resources.String.Cancel))
             }
         },
-        title = { Text(stringResource(R.string.delete_dialog_title)) },
-        text = { Text(stringResource(R.string.delete_dialog_message)) }
+        title = { Text(stringResource(Resources.String.DeleteDialogTitle)) },
+        text = { Text(stringResource(Resources.String.DeleteDialogMessage)) }
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun FavoritesContentPreview() {
-    AppTheme {
-        FavoritesContent(
-            state = FavoritesState(
-                characters = listOf(
-                    Character(
-                        id = 1,
-                        name = "Spider-Man",
-                        description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                        thumbnail = ""
-                    ),
-                    Character(
-                        id = 2,
-                        name = "Hulk",
-                        description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                        thumbnail = ""
-                    )
-                )
-            )
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun DeleteAllCharactersDialogPreview() {
-    AppTheme {
-        DeleteAllCharactersDialog()
-    }
 }
