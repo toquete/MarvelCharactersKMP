@@ -10,4 +10,13 @@
     <string name="delete_dialog_message">Delete all favorite characters?</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="app_name">Marvel Characters</string>
+    <string name="search_hint">Search Marvel characters</string>
+    <string name="start_message">Use the search box above!</string>
+    <string name="empty_state_message">No characters with that name. Try again!</string>
+    <string name="character">Character</string>
+    <string name="search">Search</string>
+    <string name="toggle_theme">Toggle Theme</string>
+    <string name="request_error_message">There was an error with your request. Try again later!</string>
+    <string name="network_error_message">Are you connected to the internet?</string>
 </resources>
