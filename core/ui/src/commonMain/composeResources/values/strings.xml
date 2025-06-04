@@ -4,4 +4,10 @@
     <string name="character_deleted">Character deleted!</string>
     <string name="undo">Undo</string>
     <string name="error_message">An error occurred!</string>
+    <string name="favorites">Favorites</string>
+    <string name="characters_deleted">Characters deleted!</string>
+    <string name="delete_dialog_title">Delete all</string>
+    <string name="delete_dialog_message">Delete all favorite characters?</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 </resources>
