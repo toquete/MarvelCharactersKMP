@@ -3,6 +3,7 @@ package com.guilherme.marvelcharacters.feature.home
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.guilherme.marvelcharacters.core.testing.util.BaseUnitTest
+import com.guilherme.marvelcharacters.core.ui.Resources
 import com.guilherme.marvelcharacters.domain.usecase.GetCharactersUseCase
 import com.guilherme.marvelcharacters.feature.home.util.Fixtures
 import io.mockk.coEvery
@@ -47,7 +48,7 @@ class HomeViewModelTest : BaseUnitTest() {
 
             assertThat(awaitItem()).isEqualTo(HomeState())
             assertThat(awaitItem()).isEqualTo(HomeState(errorMessageId = null, isLoading = true))
-            assertThat(awaitItem()).isEqualTo(HomeState(errorMessageId = R.string.empty_state_message, isLoading = false))
+            assertThat(awaitItem()).isEqualTo(HomeState(errorMessageId = Resources.String.EmptyStateMessage, isLoading = false))
         }
     }
 
@@ -60,7 +61,7 @@ class HomeViewModelTest : BaseUnitTest() {
 
             assertThat(awaitItem()).isEqualTo(HomeState())
             assertThat(awaitItem()).isEqualTo(HomeState(errorMessageId = null, isLoading = true))
-            assertThat(awaitItem()).isEqualTo(HomeState(errorMessageId = R.string.request_error_message, isLoading = false))
+            assertThat(awaitItem()).isEqualTo(HomeState(errorMessageId = Resources.String.RequestErrorMessage, isLoading = false))
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.guilherme.marvelcharacters.feature.home
 
-import androidx.appcompat.app.AppCompatDelegate
 import com.google.common.truth.Truth.assertThat
+import com.guilherme.marvelcharacters.core.model.DarkThemeConfig
 import com.guilherme.marvelcharacters.core.testing.util.BaseUnitTest
 import com.guilherme.marvelcharacters.domain.usecase.GetDarkModeUseCase
 import com.guilherme.marvelcharacters.domain.usecase.IsDarkModeEnabledUseCase
@@ -28,11 +28,11 @@ class NightModeViewModelTest : BaseUnitTest() {
 
     @Test
     fun `init - get night mode`() {
-        coEvery { getDarkModeUseCase() } returns AppCompatDelegate.MODE_NIGHT_YES
+        coEvery { getDarkModeUseCase() } returns DarkThemeConfig.DARK.ordinal
 
         nightModeViewModel = getViewModel()
 
-        assertThat(nightModeViewModel.nightMode.value).isEqualTo(AppCompatDelegate.MODE_NIGHT_YES)
+        assertThat(nightModeViewModel.nightMode.value).isEqualTo(DarkThemeConfig.DARK.ordinal)
     }
 
     @Test

@@ -33,15 +33,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.guilherme.marvelcharacters.core.model.Character
-import org.koin.androidx.compose.koinViewModel
+import com.guilherme.marvelcharacters.core.ui.Resources
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun HomeScreen(
@@ -75,7 +75,7 @@ internal fun HomeContent(
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
-            title = { Text(stringResource(R.string.app_name)) },
+            title = { Text(stringResource(Resources.String.AppName)) },
             actions = {
                 IconButton(onClick = onNightModeButtonClick) {
                     Icon(
@@ -122,7 +122,7 @@ internal fun HomeContent(
                 onClick = { onSearchButtonClick.invoke(characterText) },
                 enabled = isSearchButtonEnabled
             ) {
-                Text(stringResource(R.string.search))
+                Text(stringResource(Resources.String.Search))
             }
         }
         Box(
@@ -153,27 +153,4 @@ internal fun HomeContent(
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HomeContentPreview() {
-    HomeContent(
-        state = HomeState(
-            characters = listOf(
-                Character(
-                    id = 1,
-                    name = "Spider-Man",
-                    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                    thumbnail = ""
-                ),
-                Character(
-                    id = 2,
-                    name = "Hulk",
-                    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                    thumbnail = ""
-                )
-            )
-        )
-    )
 }

@@ -1,8 +1,8 @@
 package com.guilherme.marvelcharacters.feature.home
 
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.guilherme.marvelcharacters.core.model.DarkThemeConfig
 import com.guilherme.marvelcharacters.domain.usecase.GetDarkModeUseCase
 import com.guilherme.marvelcharacters.domain.usecase.IsDarkModeEnabledUseCase
 import com.guilherme.marvelcharacters.domain.usecase.ToggleDarkModeUseCase
@@ -17,7 +17,7 @@ class NightModeViewModel(
     private val isDarkModeEnabledUseCase: IsDarkModeEnabledUseCase
 ) : ViewModel() {
 
-    private val _nightMode = MutableStateFlow(AppCompatDelegate.MODE_NIGHT_NO)
+    private val _nightMode = MutableStateFlow(DarkThemeConfig.LIGHT.ordinal)
     val nightMode: StateFlow<Int> = _nightMode
 
     init {
